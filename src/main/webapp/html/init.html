@@ -1,0 +1,57 @@
+<!doctype html>
+
+<html lang="en">
+
+<head th:replace="snippets.html :: name_head"></head>
+
+<body>
+
+<nav th:replace="snippets.html :: name_site_navbar"></nav>
+
+
+<div class="container">
+
+<div class="row">
+<div class="col-6">
+	
+	<div class="card">
+  	<div class="card-header">
+    	Initialize Application
+  	</div>
+  	<div class="card-body">
+  		Provide an email and password to be used as "admin"
+		<form class="form" id="init-form" method="POST" th:action="@{/site/init}">
+			<div class="form-group">
+				<label for="email" class="col-sm-10 col-form-label">Email</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" name="email" id="email" placeholder="enter email">
+			    </div>
+			</div>
+			<div class="form-group">
+			    <label for="password" class="col-sm-10 col-form-label">Password</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" name="password" id="password" placeholder="password">
+			    </div>
+			</div>
+			<input type="hidden" name="role" id="role" value="admin">
+			<button type="submit" class="btn btn-primary" id="login">Go</button>
+		</form>
+	</div>
+	<div class="card-footer text-danger">
+		[[${info.getMessage()}]]
+	</div>
+	
+	</div>
+	
+	
+
+</div> <!-- Col -->
+</div> <!-- Row -->
+
+</div> <!-- Container-->
+
+<footer th:replace="snippets.html :: name_footer"></footer>
+
+</body>
+
+</html>
