@@ -1,26 +1,11 @@
-package com.increff.employee.pojo;
+package com.increff.employee.model;
 
-import javax.persistence.*;
+public class ProductForm {
 
-@Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"barcode"})})
-public class ProductPojo {
-
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int id;
     private String barcode;
     private int brandcategory;
     private String name;
     private double mrp;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getBarcode() {
         return barcode;

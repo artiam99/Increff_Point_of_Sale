@@ -1,5 +1,6 @@
 package com.increff.employee.model;
 
+
 public class BrandMasterForm {
 
     private String brand;

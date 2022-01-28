@@ -1,31 +1,31 @@
 package com.increff.employee.service;
-import java.util.List;
 
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.increff.employee.dao.BrandMasterDao;
 import com.increff.employee.pojo.BrandMasterPojo;
 import com.increff.employee.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
-public class BrandMasterService {
+public class BrandMasterService { // Todo - Explore intellij
 
     @Autowired
     private BrandMasterDao dao;
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional(rollbackOn = ApiException.class) // Todo - Use Spring Transaction.
     public void add(BrandMasterPojo p) throws ApiException {
         normalize(p);
-        if(StringUtil.isEmpty(p.getBrand())) {
-            throw new ApiException("brand cannot be empty");
+        if (StringUtil.isEmpty(p.getBrand()) || StringUtil.isEmpty(p.getCategory())) {
+            throw new ApiException("brand or category cannot be empty");
         }
+
         BrandMasterPojo p1 = dao.selectBrandCategory(p.getBrand(), p.getCategory());
 
-        if(p1 != null)
-        {
+        if (p1 != null) {
             throw new ApiException("this brand and category already exist");
         }
 
@@ -47,7 +47,7 @@ public class BrandMasterService {
         return dao.selectAll();
     }
 
-    @Transactional(rollbackOn  = ApiException.class)
+    @Transactional(rollbackOn = ApiException.class)
     public void update(int id, BrandMasterPojo p) throws ApiException {
         normalize(p);
         BrandMasterPojo ex = getCheck(id);
@@ -66,6 +66,6 @@ public class BrandMasterService {
     }
 
     protected static void normalize(BrandMasterPojo p) {
-        p.setBrand(StringUtil.toLowerCase(p.getBrand()));
+        p.setBrand(StringUtil.toLowerCase(p.getBrand())); // Todo - add trimming
     }
 }

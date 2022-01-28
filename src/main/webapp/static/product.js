@@ -1,15 +1,15 @@
 
-function getBrandMasterUrl(){
+function getProductUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	return baseUrl + "/api/brand";
+	return baseUrl + "/api/product";
 }
 
 //BUTTON ACTIONS
-function addBrandMaster(event){
+function addProduct(event){
 	//Set the values to update
-	var $form = $("#brand-form");
+	var $form = $("#product-form");
 	var json = toJson($form);
-	var url = getBrandMasterUrl();
+	var url = getProductUrl();
 
 	$.ajax({
 	   url: url,
@@ -20,8 +20,8 @@ function addBrandMaster(event){
        },
 	   success: function(response) {
 
-	        $('#brand-form').trigger("reset");
-	   		getBrandMasterList();
+	        $('#product-form').trigger("reset");
+	   		getProductList();
 	   },
 	   error: handleAjaxError
 	});
@@ -29,14 +29,14 @@ function addBrandMaster(event){
 	return false;
 }
 
-function updateBrandMaster(event){
-	$('#edit-brand-modal').modal('toggle');
+function updateProduct(event){
+	$('#edit-product-modal').modal('toggle');
 	//Get the ID
-	var id = $("#brand-edit-form input[name=id]").val();
-	var url = getBrandMasterUrl() + "/" + id;
+	var id = $("#product-edit-form input[name=id]").val();
+	var url = getProductUrl() + "/" + id;
 
 	//Set the values to update
-	var $form = $("#brand-edit-form");
+	var $form = $("#product-edit-form");
 	var json = toJson($form);
 
 	$.ajax({
@@ -47,7 +47,7 @@ function updateBrandMaster(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-	   		getBrandMasterList();
+	   		getProductList();
 	   },
 	   error: handleAjaxError
 	});
@@ -56,26 +56,27 @@ function updateBrandMaster(event){
 }
 
 
-function getBrandMasterList(){
-	var url = getBrandMasterUrl();
+function getProductList(){
+	var url = getProductUrl();
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayBrandMasterList(data);
+	            console.log(data);
+	   		displayProductList(data);
 	   },
 	   error: handleAjaxError
 	});
 }
 
-function deleteBrandMaster(id){
-	var url = getBrandMasterUrl() + "/" + id;
+function deleteProduct(id){
+	var url = getProductUrl() + "/" + id;
 
 	$.ajax({
 	   url: url,
 	   type: 'DELETE',
 	   success: function(data) {
-	   		getBrandMasterList();
+	   		getProductList();
 	   },
 	   error: handleAjaxError
 	});
@@ -88,7 +89,7 @@ var processCount = 0;
 
 
 function processData(){
-	var file = $('#brandFile')[0].files[0];
+	var file = $('#productFile')[0].files[0];
 	readFileData(file, readFileDataCallback);
 }
 
@@ -110,7 +111,7 @@ function uploadRows(){
 	processCount++;
 
 	var json = JSON.stringify(row);
-	var url = getBrandMasterUrl();
+	var url = getProductUrl();
 
 	//Make ajax call
 	$.ajax({
@@ -122,7 +123,6 @@ function uploadRows(){
        },
 	   success: function(response) {
 	   		uploadRows();
-	   		getBrandMasterList();
 	   },
 	   error: function(response){
 	   		row.error=response.responseText
@@ -139,31 +139,33 @@ function downloadErrors(){
 
 //UI DISPLAY METHODS
 
-function displayBrandMasterList(data){
-	var $tbody = $('#brand-table').find('tbody');
+function displayProductList(data){
+	var $tbody = $('#product-table').find('tbody');
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
 		var ind = parseInt(i) + parseInt(1);
-		var buttonHtml = '<button onclick="deleteBrandMaster(' + e.id + ')">delete</button>'
-		buttonHtml += ' <button onclick="displayEditBrandMaster(' + e.id + ')">edit</button>'
+		var buttonHtml = '<button onclick="deleteProduct(' + e.id + ')">delete</button>'
+		buttonHtml += ' <button onclick="displayEditProduct(' + e.id + ')">edit</button>'
 		var row = '<tr>'
 		+ '<td>' + ind + '</td>'
-		+ '<td>' + e.brand + '</td>'
-		+ '<td>'  + e.category + '</td>'
+		+ '<td>' + e.barcode + '</td>'
+		+ '<td>'  + e.brandcategory + '</td>'
+		+ '<td>' + e.name + '</td>'
+        		+ '<td>'  + e.mrp + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 	}
 }
 
-function displayEditBrandMaster(id){
-	var url = getBrandMasterUrl() + "/" + id;
+function displayEditProduct(id){
+	var url = getProductUrl() + "/" + id;
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayBrandMaster(data);
+	   		displayProduct(data);
 	   },
 	   error: handleAjaxError
 	});
@@ -171,9 +173,9 @@ function displayEditBrandMaster(id){
 
 function resetUploadDialog(){
 	//Reset file name
-	var $file = $('#brandFile');
+	var $file = $('#productFile');
 	$file.val('');
-	$('#brandFileName').html("Choose File");
+	$('#productFileName').html("Choose File");
 	//Reset various counts
 	processCount = 0;
 	fileData = [];
@@ -189,35 +191,37 @@ function updateUploadDialog(){
 }
 
 function updateFileName(){
-	var $file = $('#brandFile');
+	var $file = $('#productFile');
 	var fileName = $file.val();
-	$('#brandFileName').html(fileName);
+	$('#productFileName').html(fileName);
 }
 
 function displayUploadData(){
  	resetUploadDialog();
-	$('#upload-brand-modal').modal('toggle');
-	getBrandMasterList();
+	$('#upload-product-modal').modal('toggle');
 }
 
-function displayBrandMaster(data){
-	$("#brand-edit-form input[name=brand]").val(data.brand);
-	$("#brand-edit-form input[name=category]").val(data.category);
-	$("#brand-edit-form input[name=id]").val(data.id);
-	$('#edit-brand-modal').modal('toggle');
+function displayProduct(data){
+	$("#product-edit-form input[name=barcode]").val(data.barcode);
+    $("#product-edit-form input[name=brandcategory]").val(data.brandcategory);
+    $("#product-edit-form input[name=name]").val(data.name);
+    $("#product-edit-form input[name=mrp]").val(data.mrp);
+	$("#product-edit-form input[name=id]").val(data.id);
+	$('#edit-product-modal').modal('toggle');
 }
 
 
 //INITIALIZATION CODE
 function init(){
-	$('#add-brand').click(addBrandMaster);
-	$('#update-brand').click(updateBrandMaster);
+	$('#add-product').click(addProduct);
+	$('#update-product').click(updateProduct);
+	$('#refresh-data').click(getProductList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
-    $('#brandFile').on('change', updateFileName)
+    $('#productFile').on('change', updateFileName)
 }
 
 $(document).ready(init);
-$(document).ready(getBrandMasterList);
+$(document).ready(getProductList);
 
