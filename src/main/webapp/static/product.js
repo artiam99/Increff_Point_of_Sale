@@ -123,6 +123,7 @@ function uploadRows(){
        },
 	   success: function(response) {
 	   		uploadRows();
+	   		getProductList();
 	   },
 	   error: function(response){
 	   		row.error=response.responseText
@@ -199,6 +200,7 @@ function updateFileName(){
 function displayUploadData(){
  	resetUploadDialog();
 	$('#upload-product-modal').modal('toggle');
+	getProductList();
 }
 
 function displayProduct(data){

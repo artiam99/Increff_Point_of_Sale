@@ -144,11 +144,8 @@ function displayBrandMasterList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var ind = parseInt(i) + parseInt(1);
-		var buttonHtml = '<button onclick="deleteBrandMaster(' + e.id + ')">delete</button>'
-		buttonHtml += ' <button onclick="displayEditBrandMaster(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button type="button" class="btn btn-info" onclick="displayEditBrandMaster(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
-		+ '<td>' + ind + '</td>'
 		+ '<td>' + e.brand + '</td>'
 		+ '<td>'  + e.category + '</td>'
 		+ '<td>' + buttonHtml + '</td>'

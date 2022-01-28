@@ -10,7 +10,7 @@
 
 <div class="container">
 
-    <h3>Brands</h3>
+    <h1>Brands</h1>
 
     <!-- Top row with form-->
     <div class="row">
@@ -28,9 +28,9 @@
                         <input type="text" class="form-control" name="category" id="inputCategory" placeholder="enter category">
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary" id="add-brand">Add</button>
+                <button type="button" class="btn btn-info" id="add-brand">Add</button>
                 &ensp;
-                <button type="button" class="btn btn-primary" id="upload-data">Upload</button>
+                <button type="button" class="btn btn-info" id="upload-data">Upload</button>
             </form>
         </div>
     </div>
@@ -45,9 +45,8 @@
         <!-- Table -->
         <div class="col-12">
             <table class="table table-striped" id="brand-table">
-                <thead>
+                <thead class="thead-dark">
                 <tr>
-                    <th scope="col">ID</th>
                     <th scope="col">Brand</th>
                     <th scope="col">Category</th>
                     <th scope="col">Actions</th>
@@ -55,19 +54,16 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>1</td>
                     <td>Nestle</td>
                     <td>Chocolate</td>
                     <td>Edit | Delete</td>
                 </tr>
                 <tr>
-                    <td>2</td>
                     <td>Nestle</td>
                     <td>Coffee</td>
                     <td>Edit | Delete</td>
                 </tr>
                 <tr>
-                    <td>3</td>
                     <td>Cadbury</td>
                     <td>Chocolate</td>
                     <td>Edit | Delete</td>
@@ -114,7 +110,7 @@
     </div>
 
 
-    <!-- Brand Master Edit Modal -->
+    <!-- Brand Master upload Modal -->
     <div class="modal" tabindex="-1" role="dialog" id="upload-brand-modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

@@ -10,17 +10,26 @@
 
 <div class="container">
 
-<h3>Home</h3>
+	<h1>Home</h1>
 
- <!-- Top row with form-->
-<div class="row">
-	 <div class="col-2">
-	 	<a th:href="@{/ui/employee}" title="Employees"> <i class="fas fa-users"></i> </a>
-	 </div>	
-	 <div class="col-2">
-	 	<a th:href="@{/ui/admin}" title="Admin"> <i class="fas fa-cog"></i> </a>
-	 </div>	
-</div> 
+	 <!-- Top row with form-->
+	<div class="row" style="margin: 50px;">
+		 <div class="col-2">
+			<a th:href="@{/ui/home}" title="Brands"> <i class="fas fa-users"></i> <h3>Brand</h3>  </a>
+		 </div>
+		<div class="col-2">
+			<a th:href="@{/ui/home}" title="Products"> <i class="fas fa-users"></i> <h3>Product</h3> </a>
+		</div>
+		<div class="col-2">
+			<a th:href="@{/ui/home}" title="Inventory"> <i class="fas fa-users"></i> <h3>Inventory</h3> </a>
+		</div>
+		<div class="col-2">
+			<a th:href="@{/ui/home}" title="Order"> <i class="fas fa-users"></i> <h3>Order</h3> </a>
+		</div>
+		<div class="col-2">
+			<a th:href="@{/ui/home}" title="Report"> <i class="fas fa-users"></i> <h3>Report</h3> </a>
+		</div>
+	</div>
 
 
 
