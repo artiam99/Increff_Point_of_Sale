@@ -68,6 +68,19 @@ public class BrandMasterApiController {
         service.update(id, p);
     }
 
+    @ApiOperation(value = "Search by Brand & Category")
+    @RequestMapping(path = "/api/brand/search", method = RequestMethod.POST)
+    public List<BrandMasterData> search(@RequestBody BrandMasterForm f) throws ApiException {
+        BrandMasterPojo p = convert(f);
+
+        List<BrandMasterPojo> list = service.search(p);
+        List<BrandMasterData> list2 = new ArrayList<BrandMasterData>();
+        for (BrandMasterPojo p1 : list) {
+            list2.add(convert(p1));
+        }
+        return list2;
+    }
+
 
     private static BrandMasterData convert(BrandMasterPojo p) {
         BrandMasterData d = new BrandMasterData();

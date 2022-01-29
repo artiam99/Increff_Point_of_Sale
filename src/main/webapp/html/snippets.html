@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="baseUrl" th:attr="content=${baseUrl}">
+  <link rel="icon" type="image/x-icon" href="../static/fav.ico">
+  <title>PoS</title>
 
 <script src="https://kit.fontawesome.com/c30beb553f.js" crossorigin="anonymous"></script>
 
@@ -47,13 +49,14 @@
   </div>
 </nav>
 
-<footer class="footer  mt-1" th:fragment="name_footer">
+<footer class="footer  mt-1" th:fragment="name_footer" style="height: 5%; padding-bottom: 5px;">
 	<b>Copyright PoSify 2022</b>
 	&nbsp;
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 	<script th:src="@{/static/app.js}"/></script>
 	<script th:src="@{/static/papaparse.min.js}"/></script>
+    <script th:src="@{/static/notify.js}"/></script>
 	
 </footer>
 

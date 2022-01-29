@@ -1,15 +1,18 @@
 
 function getBrandMasterUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	console.log(baseUrl);
 	return baseUrl + "/api/brand";
 }
 
 //BUTTON ACTIONS
 function addBrandMaster(event){
+
 	//Set the values to update
-	var $form = $("#brand-form");
+	var $form = $("#brand-add-form");
 	var json = toJson($form);
 	var url = getBrandMasterUrl();
+
 
 	$.ajax({
 	   url: url,
@@ -20,7 +23,8 @@ function addBrandMaster(event){
        },
 	   success: function(response) {
 
-	        $('#brand-form').trigger("reset");
+            $('#add-brand-modal').modal('toggle');
+	        $('#brand-add-form').trigger("reset");
 	   		getBrandMasterList();
 	   },
 	   error: handleAjaxError
@@ -30,7 +34,7 @@ function addBrandMaster(event){
 }
 
 function updateBrandMaster(event){
-	$('#edit-brand-modal').modal('toggle');
+
 	//Get the ID
 	var id = $("#brand-edit-form input[name=id]").val();
 	var url = getBrandMasterUrl() + "/" + id;
@@ -47,6 +51,7 @@ function updateBrandMaster(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
+	        $('#edit-brand-modal').modal('toggle');
 	   		getBrandMasterList();
 	   },
 	   error: handleAjaxError
@@ -61,6 +66,25 @@ function getBrandMasterList(){
 	$.ajax({
 	   url: url,
 	   type: 'GET',
+	   success: function(data) {
+	   		displayBrandMasterList(data);
+	   },
+	   error: handleAjaxError
+	});
+}
+
+function searchBrandMasterList(){
+
+    var $form = $("#brand-form");
+    var json = toJson($form);
+	var url = getBrandMasterUrl() + "/search";
+	$.ajax({
+	   url: url,
+	   type: 'POST',
+	   data: json,
+	   headers: {
+              	'Content-Type': 'application/json'
+              },
 	   success: function(data) {
 	   		displayBrandMasterList(data);
 	   },
@@ -90,6 +114,7 @@ var processCount = 0;
 function processData(){
 	var file = $('#brandFile')[0].files[0];
 	readFileData(file, readFileDataCallback);
+
 }
 
 function readFileDataCallback(results){
@@ -126,6 +151,7 @@ function uploadRows(){
 	   },
 	   error: function(response){
 	   		row.error=response.responseText
+	   		document.getElementById("download-errors").disabled = false;
 	   		errorData.push(row);
 	   		uploadRows();
 	   }
@@ -144,7 +170,8 @@ function displayBrandMasterList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml = ' <button type="button" class="btn btn-info" onclick="displayEditBrandMaster(' + e.id + ')">Edit</button>'
+		var buttonHtml= /*'<button type="button" class="btn btn-info" onclick="deleteBrandMaster(' + e.id + ')">delete</button>'
+            buttonHtml +=*/ ' <button type="button" class="btn btn-info" onclick="displayEditBrandMaster(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
 		+ '<td>' + e.brand + '</td>'
 		+ '<td>'  + e.category + '</td>'
@@ -189,12 +216,15 @@ function updateFileName(){
 	var $file = $('#brandFile');
 	var fileName = $file.val();
 	$('#brandFileName').html(fileName);
+	document.getElementById("process-data").disabled = false;
 }
 
 function displayUploadData(){
  	resetUploadDialog();
 	$('#upload-brand-modal').modal('toggle');
 	getBrandMasterList();
+	document.getElementById("download-errors").disabled = true;
+	document.getElementById("process-data").disabled = true;
 }
 
 function displayBrandMaster(data){
@@ -205,14 +235,28 @@ function displayBrandMaster(data){
 }
 
 
+function displayBrandMasterModal(){
+	$('#add-brand-modal').modal('toggle');
+}
+
+function cancelBrandModal()
+{
+    $('#add-brand-modal').modal('toggle');
+    $('#brand-add-form').trigger("reset");
+}
+
 //INITIALIZATION CODE
 function init(){
-	$('#add-brand').click(addBrandMaster);
+	$('#add-brand').click(displayBrandMasterModal);
+	$('#search-brand').click(searchBrandMasterList);
+	$('#modal-add-brand').click(addBrandMaster);
+	$('#modal-cancel-brand').click(cancelBrandModal);
+	$('#modal-cut-brand').click(cancelBrandModal);
 	$('#update-brand').click(updateBrandMaster);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
-    $('#brandFile').on('change', updateFileName)
+    $('#brandFile').on('change', updateFileName);
 }
 
 $(document).ready(init);

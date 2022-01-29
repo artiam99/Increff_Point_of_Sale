@@ -18,6 +18,8 @@ public class BrandMasterDao extends AbstractDao {
     private static String delete_id = "delete from BrandMasterPojo p where id=:id";
     private static String select_id = "select p from BrandMasterPojo p where id=:id";
     private static String select_brand_category = "select p from BrandMasterPojo p where brand=:brand and category=:category";
+    private static String select_brand = "select p from BrandMasterPojo p where brand=:brand";
+    private static String select_category = "select p from BrandMasterPojo p where category=:category";
     private static String select_all = "select p from BrandMasterPojo p";
 
     @PersistenceContext
@@ -40,11 +42,23 @@ public class BrandMasterDao extends AbstractDao {
         return getSingle(query);
     }
 
-    public BrandMasterPojo selectBrandCategory(String brand, String category) {
+    public List<BrandMasterPojo> selectBrandCategory(String brand, String category) {
         TypedQuery<BrandMasterPojo> query = getQuery(select_brand_category, BrandMasterPojo.class);
         query.setParameter("brand", brand);
         query.setParameter("category", category);
-        return getSingle(query);
+        return query.getResultList();
+    }
+
+    public List<BrandMasterPojo> selectBrand(String brand) {
+        TypedQuery<BrandMasterPojo> query = getQuery(select_brand, BrandMasterPojo.class);
+        query.setParameter("brand", brand);
+        return query.getResultList();
+    }
+
+    public List<BrandMasterPojo> selectCategory(String category) {
+        TypedQuery<BrandMasterPojo> query = getQuery(select_category, BrandMasterPojo.class);
+        query.setParameter("category", category);
+        return query.getResultList();
     }
 
     public List<BrandMasterPojo> selectAll() {

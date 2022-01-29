@@ -20,13 +20,13 @@ public class BrandMasterService { // Todo - Explore intellij
     public void add(BrandMasterPojo p) throws ApiException {
         normalize(p);
         if (StringUtil.isEmpty(p.getBrand()) || StringUtil.isEmpty(p.getCategory())) {
-            throw new ApiException("brand or category cannot be empty");
+            throw new ApiException("Brand or category cannot be empty.");
         }
 
-        BrandMasterPojo p1 = dao.selectBrandCategory(p.getBrand(), p.getCategory());
+        List<BrandMasterPojo> listP = dao.selectBrandCategory(p.getBrand(), p.getCategory());
 
-        if (p1 != null) {
-            throw new ApiException("this brand and category already exist");
+        if (listP.size() != 0) {
+            throw new ApiException("This brand and category already exist.");
         }
 
         dao.insert(p);
@@ -50,10 +50,41 @@ public class BrandMasterService { // Todo - Explore intellij
     @Transactional(rollbackOn = ApiException.class)
     public void update(int id, BrandMasterPojo p) throws ApiException {
         normalize(p);
+
+        if(StringUtil.isEmpty(p.getBrand()) || StringUtil.isEmpty(p.getCategory())) {
+            throw new ApiException("Brand or category cannot be empty.");
+        }
+
+        List<BrandMasterPojo> listP = dao.selectBrandCategory(p.getBrand(), p.getCategory());
+
+        if (listP.size() != 0) {
+            throw new ApiException("This brand and category already exist.");
+        }
+
+
         BrandMasterPojo ex = getCheck(id);
         ex.setCategory(p.getCategory());
         ex.setBrand(p.getBrand());
         dao.update(ex);
+    }
+
+    @Transactional
+    public List<BrandMasterPojo> search(BrandMasterPojo p) {
+        normalize(p);
+
+        if(StringUtil.isEmpty(p.getBrand()) && StringUtil.isEmpty(p.getCategory())) {
+            return dao.selectAll();
+        }
+
+        if(StringUtil.isEmpty(p.getBrand())) {
+            return dao.selectCategory(p.getCategory());
+        }
+
+        if(StringUtil.isEmpty(p.getCategory())) {
+            return dao.selectBrand(p.getBrand());
+        }
+
+        return dao.selectBrandCategory(p.getBrand(), p.getCategory());
     }
 
     @Transactional
@@ -66,6 +97,7 @@ public class BrandMasterService { // Todo - Explore intellij
     }
 
     protected static void normalize(BrandMasterPojo p) {
-        p.setBrand(StringUtil.toLowerCase(p.getBrand())); // Todo - add trimming
+        p.setBrand(StringUtil.toLowerCase(p.getBrand())); // Todo - add
+        p.setCategory(StringUtil.toLowerCase(p.getCategory()));
     }
 }
