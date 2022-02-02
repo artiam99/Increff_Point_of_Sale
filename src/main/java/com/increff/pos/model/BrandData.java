@@ -1,6 +1,6 @@
 package com.increff.pos.model;
 
-public class BrandMasterData extends BrandMasterForm {
+public class BrandData extends BrandForm {
 
     private int id;
 

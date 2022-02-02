@@ -37,4 +37,9 @@ public class AppUiController {
 	public ModelAndView product() {
 		return mav("product.html");
 	}
+
+	@RequestMapping(value = "/ui/inventory")
+	public ModelAndView inventory() {
+		return mav("inventory.html");
+	}
 }

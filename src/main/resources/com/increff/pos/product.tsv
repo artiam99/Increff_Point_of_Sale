@@ -1,4 +1,4 @@
-brand	category
-BrandMster One  Three
-BrandMster Two  Four
-BrandMster Three    Five
+barcode	brandcategory	name	mrp
+barcode1	4	chocolate	43.2
+barcode2	4	chocolate	43.2
+barcode3	4	chocolate	43.2

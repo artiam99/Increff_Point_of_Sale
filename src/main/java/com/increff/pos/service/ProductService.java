@@ -21,15 +21,25 @@ public class ProductService {
     @Transactional(rollbackOn = ApiException.class)
     public void add(ProductPojo p) throws ApiException {
         normalize(p);
+
         if(StringUtil.isEmpty(p.getBarcode())) {
-            throw new ApiException("brand cannot be empty");
+            throw new ApiException("barcode cannot be empty.");
         }
-//        BrandMasterPojo p1 = dao.selectBrandCategory(p.getBrand(), p.getCategory());
-//
-//        if(p1 != null)
-//        {
-//            throw new ApiException("this brand and category already exist");
-//        }
+
+        if(StringUtil.isEmpty(p.getName())) {
+            throw new ApiException("Product name cannot be empty.");
+        }
+
+        if(p.getMrp() <= 0) {
+            throw new ApiException("MRP must by greater than zero.");
+        }
+
+        ProductPojo p1 = dao.selectBarcode(p.getBarcode());
+
+        if(p1 != null)
+        {
+            throw new ApiException("This barcode already exists.");
+        }
 
         dao.insert(p);
     }
@@ -39,9 +49,21 @@ public class ProductService {
         dao.delete(id);
     }
 
-    @Transactional(rollbackOn = ApiException.class)
+    @Transactional
     public ProductPojo get(int id) throws ApiException {
         return getCheck(id);
+    }
+
+    @Transactional
+    public ProductPojo getByBarcode(String barcode) throws ApiException {
+        ProductPojo p = dao.selectBarcode(barcode);
+
+        if (p == null) {
+
+            throw new ApiException("Product with barcode: " + barcode + ", does not exit.");
+        }
+
+        return p;
     }
 
     @Transactional
@@ -51,7 +73,9 @@ public class ProductService {
 
     @Transactional(rollbackOn  = ApiException.class)
     public void update(int id, ProductPojo p) throws ApiException {
+
         normalize(p);
+
         ProductPojo ex = getCheck(id);
         ex.setBarcode(p.getBarcode());
         ex.setBrandcategory(p.getBrandcategory());
@@ -62,14 +86,17 @@ public class ProductService {
 
     @Transactional
     public ProductPojo getCheck(int id) throws ApiException {
+
         ProductPojo p = dao.select(id);
         if (p == null) {
-            throw new ApiException("BrandMaster with given ID does not exit, id: " + id);
+            throw new ApiException("Product with given ID does not exit, id: " + id);
         }
+
         return p;
     }
 
     protected static void normalize(ProductPojo p) {
-        p.setBarcode(StringUtil.toLowerCase(p.getBarcode()));
+
+        p.setName(StringUtil.toLowerCase(p.getName()));
     }
 }

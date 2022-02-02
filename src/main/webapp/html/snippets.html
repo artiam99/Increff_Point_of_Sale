@@ -1,11 +1,11 @@
-<head th:fragment="name_head">
+<head th:fragment="name_head" xmlns="">
 
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="baseUrl" th:attr="content=${baseUrl}">
   <link rel="icon" type="image/x-icon" href="../static/fav.ico">
-  <title>PoS</title>
+  <title>PoSify</title>
 
 <script src="https://kit.fontawesome.com/c30beb553f.js" crossorigin="anonymous"></script>
 
@@ -14,7 +14,7 @@
 
 </head>
 
-<nav class="navbar navbar-expand-lg navbar-light mb-1" th:fragment="name_site_navbar">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-1" th:fragment="name_site_navbar">
   <span style="width: 5%;">
     <a class="navbar-brand" th:href="@{/}">
       <h1 style="color: yellow;"><b><i>PoSify</i></b></h1>
@@ -23,7 +23,7 @@
 
 </nav>
 
-<nav class="navbar navbar-expand-lg navbar-light  mb-1" th:fragment="name_app_navbar">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-1" th:fragment="name_app_navbar">
   <span class="navbar-brand" style="width: 5%;">
     <a class="navbar-brand" th:href="@{/}">
       <h1 style="color: yellow;"><b><i>PoSify</i></b></h1>
@@ -35,13 +35,16 @@
   <div class="collapse navbar-collapse" id="navbarNav" style="padding-left: 60px;">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" th:href="@{/ui/home}" style="color: white; font-weight: 600; font-size: 25px;">Home&ensp;</a>
+        <a class="nav-link" th:href="@{/ui/home}"  style="font-weight: 600; font-size: 20px;">Home&ensp;</a>
       </li>
       <li class="nav-item">
-         <a class="nav-link" th:href="@{/ui/brand}" style="color: white; font-weight: 600; font-size: 25px;">Brands&ensp;</a>
+         <a class="nav-link" th:href="@{/ui/brand}"  style="font-weight: 600; font-size: 20px;">Brands&ensp;</a>
       </li>
       <li class="nav-item">
-         <a class="nav-link" th:href="@{/ui/product}" style="color: white; font-weight: 600; font-size: 25px;">Products&ensp;</a>
+         <a class="nav-link" th:href="@{/ui/product}" style="font-weight: 600; font-size: 20px;">Products&ensp;</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/ui/inventory}" style="font-weight: 600; font-size: 20px;">Inventory&ensp;</a>
       </li>
     </ul>
     

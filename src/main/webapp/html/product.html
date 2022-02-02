@@ -10,41 +10,22 @@
 
 <div class="container">
 
-    <h2>Products</h1>
+    <h2>Products</h2>
 
     <!-- Top row with form-->
-    <div class="row">
+    <div class="row" style="padding-top: 0.3rem;">
         <div class="col-12">
             <form class="form-inline" id="product-form">
                 <div class="form-group">
-                    <label for="inputBarcode" class="col-sm-2 col-form-label">Barcode</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="barcode" id="inputBarcode" placeholder="enter barcode">
+                        <input type="text" class="form-control" name="search" id="product-filter" placeholder="search">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="inputBrandcategory" class="col-sm-2 col-form-label">Brand-Category</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="brandcategory" id="inputBrandcategory" placeholder="enter brand-category">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="name" id="inputName" placeholder="enter name">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputMrp" class="col-sm-2 col-form-label">MRP</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="mrp" id="inputMrp" placeholder="enter MRP">
-                    </div>
-                </div>
-                <button type="button" class="btn btn-primary" id="add-product">Add</button>
-                &nbsp;
-                <button type="button" class="btn btn-primary" id="refresh-data">Refresh</button>
-                &nbsp;
-                <button type="button" class="btn btn-primary" id="upload-data">Upload</button>
+                <button type="button" class="btn btn-secondary" id="search-product"><i class="fa fa-search"></i></button>
+
+                <button type="button" class="btn btn-info" id="add-product" style="margin-left: 60%;">Add</button>
+                &ensp;
+                <button type="button" class="btn btn-info" id="upload-data">Upload</button>
             </form>
         </div>
     </div>
@@ -55,53 +36,81 @@
         &nbsp;
     </div>
     <div class="row">
-
-        <!-- Table -->
         <div class="col-12">
-            <table class="table table-striped" id="product-table">
-                <thead>
+         <table class="table table-striped" id="product-table">
+            <thead class="thead-dark">
                 <tr>
-                    <th scope="col">ID</th>
                     <th scope="col">Barcode</th>
-                    <th scope="col">Brand-Category</th>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Category</th>
                     <th scope="col">Name</th>
-                    <th scope="col">MRP</th>
+                    <th scope="col">MRP (&#8377;)</th>
                     <th scope="col">Actions</th>
                 </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>1@#123</td>
-                    <td>2</td>
-                    <td>Chocolate</td>
-                    <td>35.00</td>
-                    <td>Edit | Delete</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>1@#124</td>
-                    <td>3</td>
-                    <td>Chocolate2</td>
-                    <td>35.00</td>
-                    <td>Edit | Delete</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>1@#125</td>
-                    <td>4</td>
-                    <td>Chocolate3</td>
-                    <td>35.00</td>
-                    <td>Edit | Delete</td>
-                </tr>
+            </thead>
+                <tbody id="product-table-body">
                 </tbody>
             </table>
 
         </div>
     </div>
 
+    <!-- Product Add Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="add-product-modal" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Product</h5>
+                    <button type="button" class="close" id="modal-cut-product" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline" id="product-add-form">
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputBarcode" class="col-sm-2 col-form-label">Barcode</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="barcode" placeholder="enter barcode">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputBrand" class="col-sm-2 col-form-label">Brand</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="brand" placeholder="enter brand">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputCategory" class="col-sm-2 col-form-label">Category</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="category" placeholder="enter category">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="name" placeholder="enter name">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputMrp" class="col-sm-2 col-form-label">MRP(&#8377;)</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" name="mrp" placeholder="enter mrp">
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="id" >
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modal-cancel-product">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="modal-add-product">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Product Edit Modal -->
-    <div class="modal" tabindex="-1" role="dialog" id="edit-product-modal">
+    <div class="modal" tabindex="-1" role="dialog" id="edit-product-modal" data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -112,30 +121,34 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-inline" id="product-edit-form">
-                        <div class="form-group">
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
                             <label for="inputBarcode" class="col-sm-2 col-form-label">Barcode</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="barcode" placeholder="enter barcode">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="inputBrandcategory" class="col-sm-2 col-form-label">Brand-Category</label>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputBrand" class="col-sm-2 col-form-label">Brand</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="brandcategory" placeholder="enter brand-category">
+                                <input type="text" class="form-control" name="brand" placeholder="enter brand">
                             </div>
                         </div>
-
-                        <div class="form-group">
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputCategory" class="col-sm-2 col-form-label">Category</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="category" placeholder="enter category">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
                             <label for="inputName" class="col-sm-2 col-form-label">Name</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="name" placeholder="enter name">
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="inputMrp" class="col-sm-2 col-form-label">MRP</label>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputMrp" class="col-sm-2 col-form-label">MRP(&#8377;)</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="mrp" placeholder="enter mrp">
+                                <input type="number" class="form-control" name="mrp" placeholder="enter mrp">
                             </div>
                         </div>
                         <input type="hidden" name="id" >
@@ -150,8 +163,8 @@
     </div>
 
 
-    <!-- Product Edit Modal -->
-    <div class="modal" tabindex="-1" role="dialog" id="upload-product-modal">
+    <!-- Product Upload Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="upload-product-modal" data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 

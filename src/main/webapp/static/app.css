@@ -20,14 +20,21 @@ body {
 
 .container
 {
-    padding-top: 20px;
+    padding-top: 5px;
 }
 
-nav
-{
-    background-color: #0275d8;
+.navbar {
+    padding: 0rem 1rem;
 }
 
+.navbar-brand {
+    padding-top: 0.1rem;
+    padding-bottom: 0.2rem;
+}
+
+.form-horizontal .control-label {
+  text-align: left;
+}
 
 .fas{
     font-size: 4rem;

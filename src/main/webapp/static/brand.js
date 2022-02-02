@@ -1,17 +1,16 @@
 
-function getBrandMasterUrl(){
+function getBrandUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
-	console.log(baseUrl);
 	return baseUrl + "/api/brand";
 }
 
 //BUTTON ACTIONS
-function addBrandMaster(event){
+function addBrand(event){
 
 	//Set the values to update
 	var $form = $("#brand-add-form");
 	var json = toJson($form);
-	var url = getBrandMasterUrl();
+	var url = getBrandUrl();
 
 
 	$.ajax({
@@ -25,7 +24,7 @@ function addBrandMaster(event){
 
             $('#add-brand-modal').modal('toggle');
 	        $('#brand-add-form').trigger("reset");
-	   		getBrandMasterList();
+	   		getBrandList();
 	   },
 	   error: handleAjaxError
 	});
@@ -33,11 +32,11 @@ function addBrandMaster(event){
 	return false;
 }
 
-function updateBrandMaster(event){
+function updateBrand(event){
 
 	//Get the ID
 	var id = $("#brand-edit-form input[name=id]").val();
-	var url = getBrandMasterUrl() + "/" + id;
+	var url = getBrandUrl() + "/" + id;
 
 	//Set the values to update
 	var $form = $("#brand-edit-form");
@@ -52,7 +51,7 @@ function updateBrandMaster(event){
        },
 	   success: function(response) {
 	        $('#edit-brand-modal').modal('toggle');
-	   		getBrandMasterList();
+	   		getBrandList();
 	   },
 	   error: handleAjaxError
 	});
@@ -61,23 +60,23 @@ function updateBrandMaster(event){
 }
 
 
-function getBrandMasterList(){
-	var url = getBrandMasterUrl();
+function getBrandList(){
+	var url = getBrandUrl();
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayBrandMasterList(data);
+	   		displayBrandList(data);
 	   },
 	   error: handleAjaxError
 	});
 }
 
-function searchBrandMasterList(){
+function searchBrandList(){
 
     var $form = $("#brand-form");
     var json = toJson($form);
-	var url = getBrandMasterUrl() + "/search";
+	var url = getBrandUrl() + "/search";
 	$.ajax({
 	   url: url,
 	   type: 'POST',
@@ -86,20 +85,20 @@ function searchBrandMasterList(){
               	'Content-Type': 'application/json'
               },
 	   success: function(data) {
-	   		displayBrandMasterList(data);
+	   		displayBrandList(data);
 	   },
 	   error: handleAjaxError
 	});
 }
 
-function deleteBrandMaster(id){
-	var url = getBrandMasterUrl() + "/" + id;
+function deleteBrand(id){
+	var url = getBrandUrl() + "/" + id;
 
 	$.ajax({
 	   url: url,
 	   type: 'DELETE',
 	   success: function(data) {
-	   		getBrandMasterList();
+	   		getBrandList();
 	   },
 	   error: handleAjaxError
 	});
@@ -135,7 +134,7 @@ function uploadRows(){
 	processCount++;
 
 	var json = JSON.stringify(row);
-	var url = getBrandMasterUrl();
+	var url = getBrandUrl();
 
 	//Make ajax call
 	$.ajax({
@@ -147,7 +146,7 @@ function uploadRows(){
        },
 	   success: function(response) {
 	   		uploadRows();
-	   		getBrandMasterList();
+	   		getBrandList();
 	   },
 	   error: function(response){
 	   		row.error=response.responseText
@@ -165,13 +164,13 @@ function downloadErrors(){
 
 //UI DISPLAY METHODS
 
-function displayBrandMasterList(data){
+function displayBrandList(data){
 	var $tbody = $('#brand-table').find('tbody');
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml= /*'<button type="button" class="btn btn-info" onclick="deleteBrandMaster(' + e.id + ')">delete</button>'
-            buttonHtml +=*/ ' <button type="button" class="btn btn-info" onclick="displayEditBrandMaster(' + e.id + ')">Edit</button>'
+		var buttonHtml= /*'<button type="button" class="btn btn-info" onclick="deleteBrand(' + e.id + ')">delete</button>'
+            buttonHtml +=*/ ' <button type="button" class="btn btn-info" onclick="displayEditBrand(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
 		+ '<td>' + e.brand + '</td>'
 		+ '<td>'  + e.category + '</td>'
@@ -181,16 +180,34 @@ function displayBrandMasterList(data){
 	}
 }
 
-function displayEditBrandMaster(id){
-	var url = getBrandMasterUrl() + "/" + id;
+function displayEditBrand(id){
+	var url = getBrandUrl() + "/" + id;
 	$.ajax({
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	   		displayBrandMaster(data);
+	   		displayBrand(data);
 	   },
 	   error: handleAjaxError
 	});
+}
+
+function brandFilter() {
+
+    var value = document.getElementById("brand-filter").value;
+    value = value.trim();
+    value = value.toLowerCase();
+
+    if(value === '')
+    {
+        getBrandList();
+
+        return;
+    }
+
+    $("#brand-table-body tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    });
 }
 
 function resetUploadDialog(){
@@ -222,12 +239,12 @@ function updateFileName(){
 function displayUploadData(){
  	resetUploadDialog();
 	$('#upload-brand-modal').modal('toggle');
-	getBrandMasterList();
+	getBrandList();
 	document.getElementById("download-errors").disabled = true;
 	document.getElementById("process-data").disabled = true;
 }
 
-function displayBrandMaster(data){
+function displayBrand(data){
 	$("#brand-edit-form input[name=brand]").val(data.brand);
 	$("#brand-edit-form input[name=category]").val(data.category);
 	$("#brand-edit-form input[name=id]").val(data.id);
@@ -235,7 +252,7 @@ function displayBrandMaster(data){
 }
 
 
-function displayBrandMasterModal(){
+function displayBrandModal(){
 	$('#add-brand-modal').modal('toggle');
 }
 
@@ -247,18 +264,22 @@ function cancelBrandModal()
 
 //INITIALIZATION CODE
 function init(){
-	$('#add-brand').click(displayBrandMasterModal);
-	$('#search-brand').click(searchBrandMasterList);
-	$('#modal-add-brand').click(addBrandMaster);
+	$('#add-brand').click(displayBrandModal);
+	$('#search-brand').click(brandFilter);
+	$('#modal-add-brand').click(addBrand);
 	$('#modal-cancel-brand').click(cancelBrandModal);
 	$('#modal-cut-brand').click(cancelBrandModal);
-	$('#update-brand').click(updateBrandMaster);
+	$('#update-brand').click(updateBrand);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
     $('#brandFile').on('change', updateFileName);
+
+    document.getElementById('brand-filter').addEventListener('submit', function(e) {
+        e.preventDefault();
+    });
 }
 
 $(document).ready(init);
-$(document).ready(getBrandMasterList);
+$(document).ready(getBrandList);
 

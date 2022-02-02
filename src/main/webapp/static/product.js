@@ -7,7 +7,7 @@ function getProductUrl(){
 //BUTTON ACTIONS
 function addProduct(event){
 	//Set the values to update
-	var $form = $("#product-form");
+	var $form = $("#product-add-form");
 	var json = toJson($form);
 	var url = getProductUrl();
 
@@ -20,7 +20,8 @@ function addProduct(event){
        },
 	   success: function(response) {
 
-	        $('#product-form').trigger("reset");
+            $('#add-product-modal').modal('toggle');
+	        $('#product-add-form').trigger("reset");
 	   		getProductList();
 	   },
 	   error: handleAjaxError
@@ -30,7 +31,7 @@ function addProduct(event){
 }
 
 function updateProduct(event){
-	$('#edit-product-modal').modal('toggle');
+
 	//Get the ID
 	var id = $("#product-edit-form input[name=id]").val();
 	var url = getProductUrl() + "/" + id;
@@ -47,6 +48,7 @@ function updateProduct(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
+	        $('#edit-product-modal').modal('toggle');
 	   		getProductList();
 	   },
 	   error: handleAjaxError
@@ -62,7 +64,6 @@ function getProductList(){
 	   url: url,
 	   type: 'GET',
 	   success: function(data) {
-	            console.log(data);
 	   		displayProductList(data);
 	   },
 	   error: handleAjaxError
@@ -77,6 +78,36 @@ function deleteProduct(id){
 	   type: 'DELETE',
 	   success: function(data) {
 	   		getProductList();
+	   },
+	   error: handleAjaxError
+	});
+}
+
+function searchProductList(){
+
+    var barcode = $('#product-form').find('input[name="barcode"]').val();
+    barcode = barcode.trim();
+
+    if(barcode === '')
+    {
+        getProductList();
+
+        return;
+    }
+
+	var url = getProductUrl() + '/search';
+
+	var json = JSON.stringify({ message: barcode});
+
+	$.ajax({
+	   url: url,
+	   type: 'POST',
+	   data: json,
+       	   headers: {
+                     	'Content-Type': 'application/json'
+                     },
+	   success: function(data) {
+	   		displayProductList(data);
 	   },
 	   error: handleAjaxError
 	});
@@ -127,11 +158,31 @@ function uploadRows(){
 	   },
 	   error: function(response){
 	   		row.error=response.responseText
+	   		document.getElementById("download-errors").disabled = false;
 	   		errorData.push(row);
 	   		uploadRows();
 	   }
 	});
 
+}
+
+function productFilter() {
+
+    var value = document.getElementById("product-filter").value;
+    value = value.trim();
+    value = value.toLowerCase();
+
+
+    if(value === '')
+    {
+        getProductList();
+
+        return;
+    }
+
+    $("#product-table-body tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    });
 }
 
 function downloadErrors(){
@@ -145,13 +196,11 @@ function displayProductList(data){
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var ind = parseInt(i) + parseInt(1);
-		var buttonHtml = '<button onclick="deleteProduct(' + e.id + ')">delete</button>'
-		buttonHtml += ' <button onclick="displayEditProduct(' + e.id + ')">edit</button>'
+		var buttonHtml = ' <button type="button" class="btn btn-info" onclick="displayEditProduct(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
-		+ '<td>' + ind + '</td>'
 		+ '<td>' + e.barcode + '</td>'
-		+ '<td>'  + e.brandcategory + '</td>'
+		+ '<td>'  + e.brand + '</td>'
+		+ '<td>'  + e.category + '</td>'
 		+ '<td>' + e.name + '</td>'
         		+ '<td>'  + e.mrp + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
@@ -195,29 +244,47 @@ function updateFileName(){
 	var $file = $('#productFile');
 	var fileName = $file.val();
 	$('#productFileName').html(fileName);
+	document.getElementById("process-data").disabled = false;
 }
 
 function displayUploadData(){
  	resetUploadDialog();
 	$('#upload-product-modal').modal('toggle');
 	getProductList();
+	document.getElementById("download-errors").disabled = true;
+    document.getElementById("process-data").disabled = true;
 }
 
 function displayProduct(data){
 	$("#product-edit-form input[name=barcode]").val(data.barcode);
-    $("#product-edit-form input[name=brandcategory]").val(data.brandcategory);
+    $("#product-edit-form input[name=brand").val(data.brand);
+    $("#product-edit-form input[name=category").val(data.category);
     $("#product-edit-form input[name=name]").val(data.name);
     $("#product-edit-form input[name=mrp]").val(data.mrp);
 	$("#product-edit-form input[name=id]").val(data.id);
 	$('#edit-product-modal').modal('toggle');
 }
 
+function displayProductModal(){
+	$('#add-product-modal').modal('toggle');
+}
+
+function cancelProductModal()
+{
+    $('#add-product-modal').modal('toggle');
+    $('#product-add-form').trigger("reset");
+}
+
+
 
 //INITIALIZATION CODE
 function init(){
-	$('#add-product').click(addProduct);
+	$('#add-product').click(displayProductModal);
+	$('#search-product').click(productFilter);
+	$('#modal-add-product').click(addProduct);
+	$('#modal-cancel-product').click(cancelProductModal);
+	$('#modal-cut-product').click(cancelProductModal);
 	$('#update-product').click(updateProduct);
-	$('#refresh-data').click(getProductList);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
@@ -226,4 +293,3 @@ function init(){
 
 $(document).ready(init);
 $(document).ready(getProductList);
-

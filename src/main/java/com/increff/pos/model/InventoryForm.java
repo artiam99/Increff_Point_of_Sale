@@ -1,12 +1,11 @@
 package com.increff.pos.model;
 
-public class ProductForm {
+public class InventoryForm {
 
     private String barcode;
     private String brand;
-    private String category;
     private String name;
-    private double mrp;
+    private int quantity;
 
     public String getBarcode() {
         return barcode;
@@ -24,14 +23,6 @@ public class ProductForm {
         this.brand = brand;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public String getName() {
         return name;
     }
@@ -40,11 +31,11 @@ public class ProductForm {
         this.name = name;
     }
 
-    public double getMrp() {
-        return mrp;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setMrp(double mrp) {
-        this.mrp = mrp;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
