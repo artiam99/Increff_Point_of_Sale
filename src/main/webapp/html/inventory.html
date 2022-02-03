@@ -17,13 +17,14 @@
         <div class="col-12">
             <form class="form-inline" id="inventory-form">
                 <div class="form-group">
+                    <label for="inputBrand" class="col-sm-2 col-form-label">Brand</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="search" id="inventory-filter" placeholder="search">
+                        <input type="text" class="form-control" name="barcode" id="barcode-search" placeholder="enter barcode">
                     </div>
                 </div>
-                <button type="button" class="btn btn-secondary" id="search-inventory"><i class="fa fa-search"></i></button>
+                <button type="button" class="btn btn-secondary" id="search-inventory"><i class="fa fa-search"></i> Search</button>
                 &ensp;
-                <button type="button" class="btn btn-info" id="upload-data" style="margin-left: 60%;">Upload</button>
+                <button type="button" class="btn btn-info" id="upload-data" style="margin-left: 53%;">Upload</button>
             </form>
         </div>
     </div>
@@ -62,28 +63,28 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="margin-left: 5%;">
                     <form class="form-inline" id="inventory-edit-form">
                         <div class="form-group" style="width: 100%; padding-bottom: 1%;">
-                            <label for="inputBarcode" class="col-sm-2 col-form-label">Barcode</label>
+                            <label for="inputBarcode" class="col-sm-2 col-form-label" style="padding-left: 0; display: block;">Barcode</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="barcode" placeholder="enter barcode" readonly="true">
                             </div>
                         </div>
                         <div class="form-group" style="width: 100%; padding-bottom: 1%;">
-                            <label for="inputBrand" class="col-sm-2 col-form-label">Brand</label>
+                            <label for="inputBrand" class="col-sm-2 col-form-label" style="padding-left: 0; display: block;">Brand</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="brand" placeholder="enter brand" readonly="true">
                             </div>
                         </div>
                         <div class="form-group" style="width: 100%; padding-bottom: 1%;">
-                            <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                            <label for="inputName" class="col-sm-2 col-form-label" style="padding-left: 0; display: block;">Name</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="name" placeholder="enter name" readonly="true">
                             </div>
                         </div>
                         <div class="form-group" style="width: 100%; padding-bottom: 1%;">
-                            <label for="inputQuantity" class="col-sm-2 col-form-label">Quantity</label>
+                            <label for="inputQuantity" class="col-sm-2 col-form-label" style="padding-left: 0; display: block;">Quantity</label>
                             <div class="col-sm-10">
                                 <input type="number" class="form-control" name="quantity" placeholder="enter quantity">
                             </div>

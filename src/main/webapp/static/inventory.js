@@ -4,6 +4,41 @@ function getInventoryUrl(){
 	return baseUrl + "/api/inventory";
 }
 
+function searchByBarcode(event){
+
+	//Set the values to update
+	var $form = $("#inventory-form");
+	var json = toJson($form);
+	var url = getInventoryUrl() + '/search';
+
+	var json2 = {barcode: JSON.parse(json).barcode.trim(), brand: "", name: "", quantity: 0};
+
+    if(json2.barcode === "")
+    {
+        getInventoryList();
+
+        return;
+    }
+
+	json = JSON.stringify(json2);
+
+	$.ajax({
+	   url: url,
+	   type: 'POST',
+	   data: json,
+	   headers: {
+       	'Content-Type': 'application/json'
+       },
+	   success: function(data) {
+
+	   		displayInventoryList(data);
+	   },
+	   error: handleAjaxError
+	});
+
+	return false;
+}
+
 function updateInventory(event) {
 
 	//Get the ID
@@ -14,6 +49,12 @@ function updateInventory(event) {
 	var $form = $("#inventory-edit-form");
 	var json = toJson($form);
 
+	if(!isInt(JSON.parse(json).quantity))
+    {
+        $.notify("Quantity must be Integer.")
+
+        return;
+    }
 
 	$.ajax({
 	   url: url,
@@ -92,7 +133,19 @@ function uploadRows() {
 	processCount++;
 
 	var json = JSON.stringify(row);
+
+	if(!isInt(JSON.parse(json).quantity))
+    {
+        row.error="Quantity must be Integer.";
+        document.getElementById("download-errors").disabled = false;
+        errorData.push(row);
+       	uploadRows();
+
+        return;
+    }
+
 	var url = getInventoryUrl() + '/search';
+
 
 	//Make ajax call
 	$.ajax({
@@ -112,12 +165,17 @@ function uploadRows() {
 
 	   },
 	   error: function(response){
-	   		row.error=response.responseText
+	   		row.error=JSON.parse(response.responseText).message;
 	   		document.getElementById("download-errors").disabled = false;
 	   		errorData.push(row);
 	   		uploadRows();
 	   }
 	});
+}
+
+function isInt(n)
+{
+    return n % 1 === 0;
 }
 
 function updateInventoryUpload(id, json, row) {
@@ -136,7 +194,7 @@ function updateInventoryUpload(id, json, row) {
 	   		getInventoryList();
 	   },
 	   error: function(response){
-              	   		row.error=response.responseText
+              	   		row.error=JSON.parse(response.responseText).message;
               	   		document.getElementById("download-errors").disabled = false;
               	   		errorData.push(row);
               	   		updateUploadDialog();
@@ -146,25 +204,6 @@ function updateInventoryUpload(id, json, row) {
 	return false;
 }
 
-function inventoryFilter() {
-
-    var value = document.getElementById("inventory-filter").value;
-    value = value.trim();
-    value = value.toLowerCase();
-
-
-    if(value === '')
-    {
-        getInventoryList();
-
-        return;
-    }
-
-    $("#inventory-table-body tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-    });
-}
-
 function downloadErrors(){
 	writeFileData(errorData);
 }
@@ -172,6 +211,22 @@ function downloadErrors(){
 //UI DISPLAY METHODS
 
 function displayInventoryList(data) {
+
+data=data.sort(function(a,b){
+		if(a.brand===b.brand){
+			if(a.name<b.name){
+				return -1;
+			}else{
+				return 1;
+			}
+		}else{
+		if(a.brand<b.brand){
+			return -1;
+		}else{
+			return 1;
+		}
+		}
+	});
 
 	var $tbody = $('#inventory-table').find('tbody');
 	$tbody.empty();
@@ -256,7 +311,7 @@ function displayInventory(data) {
 //INITIALIZATION CODE
 function init() {
 
-	$('#search-inventory').click(inventoryFilter);
+	$('#search-inventory').click(searchByBarcode);
 	$('#update-inventory').click(updateInventory);
 	$('#upload-data').click(displayUploadData);
 	$('#process-data').click(processData);

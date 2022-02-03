@@ -2,6 +2,8 @@ package com.increff.pos.controller;
 
 import java.util.List;
 
+import com.increff.pos.model.BrandData;
+import com.increff.pos.model.BrandForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,5 +58,11 @@ public class ProductApiController {
     public void update(@PathVariable int id, @RequestBody ProductForm f) throws ApiException {
 
         dto.update(id, f);
+    }
+
+    @ApiOperation(value = "Search by Brand & Category")
+    @RequestMapping(path = "/search", method = RequestMethod.POST)
+    public List<ProductData> search(@RequestBody ProductForm f) throws ApiException {
+        return dto.searchProductData(f);
     }
 }

@@ -25,6 +25,7 @@ function addBrand(event){
             $('#add-brand-modal').modal('toggle');
 	        $('#brand-add-form').trigger("reset");
 	   		getBrandList();
+	   		getAllBrand()
 	   },
 	   error: handleAjaxError
 	});
@@ -52,6 +53,7 @@ function updateBrand(event){
 	   success: function(response) {
 	        $('#edit-brand-modal').modal('toggle');
 	   		getBrandList();
+	   		getAllBrand()
 	   },
 	   error: handleAjaxError
 	});
@@ -65,25 +67,6 @@ function getBrandList(){
 	$.ajax({
 	   url: url,
 	   type: 'GET',
-	   success: function(data) {
-	   		displayBrandList(data);
-	   },
-	   error: handleAjaxError
-	});
-}
-
-function searchBrandList(){
-
-    var $form = $("#brand-form");
-    var json = toJson($form);
-	var url = getBrandUrl() + "/search";
-	$.ajax({
-	   url: url,
-	   type: 'POST',
-	   data: json,
-	   headers: {
-              	'Content-Type': 'application/json'
-              },
 	   success: function(data) {
 	   		displayBrandList(data);
 	   },
@@ -126,6 +109,8 @@ function uploadRows(){
 	updateUploadDialog();
 	//If everything processed then return
 	if(processCount==fileData.length){
+	    getBrandList();
+	    getAllBrand()
 		return;
 	}
 
@@ -146,10 +131,10 @@ function uploadRows(){
        },
 	   success: function(response) {
 	   		uploadRows();
-	   		getBrandList();
+
 	   },
 	   error: function(response){
-	   		row.error=response.responseText
+	   		row.error=JSON.parse(response.responseText).message;
 	   		document.getElementById("download-errors").disabled = false;
 	   		errorData.push(row);
 	   		uploadRows();
@@ -180,6 +165,84 @@ function displayBrandList(data){
 	}
 }
 
+function getAllBrand(){
+	var url = getBrandUrl();
+	$.ajax({
+	   url: url,
+	   type: 'GET',
+	   success: function(data) {
+	   		displaySearchBrandCategory(data);
+	   },
+	   error: handleAjaxError
+	});
+}
+function displaySearchBrandCategory(data){
+	var $brandBody=$('#searchForm').find('#enterInputBrand');
+	var $categoryBody=$('#searchForm').find('#enterInputCategory');
+	$brandBody.empty();
+	$categoryBody.empty();
+	var brandSet =new Set();
+	var categorySet=new Set();
+
+	for(var i in data){
+		var e=data[i];
+		brandSet.add(e.brand);
+		categorySet.add(e.category);
+	}
+
+	brandSet = Array.from(brandSet);
+	categorySet = Array.from(categorySet);
+	categorySet.sort();
+
+	var row='<option value="select">select</option>';
+    $brandBody.append(row);
+    $categoryBody.append(row);
+
+	for(var i in brandSet){
+		row='<option value='+brandSet[i]+'>'+brandSet[i]+'</option>';
+			$brandBody.append(row);
+	}
+	for(var i in categorySet){
+
+		row='<option value='+categorySet[i]+'>'+categorySet[i]+'</option>';
+			$categoryBody.append(row);
+	}
+}
+
+
+function searchBrandCategory(){
+    var brand = $("#enterInputBrand :selected").text();
+    var category = $("#enterInputCategory :selected").text();
+	var obj = {brand, category};
+
+	if(obj.brand === "select")
+	{
+	    obj.brand = "";
+	}
+
+	if(obj.category === "select")
+    {
+    	    obj.category = "";
+   	}
+
+	var json = JSON.stringify(obj);
+
+	var url = getBrandUrl() + "/search";
+    	$.ajax({
+    	   url: url,
+    	   type: 'POST',
+    	   data: json,
+    	   headers: {
+                  	'Content-Type': 'application/json'
+                  },
+    	   success: function(data) {
+    	   		displayBrandList(data);
+    	   },
+    	   error: handleAjaxError
+    	});
+}
+
+
 function displayEditBrand(id){
 	var url = getBrandUrl() + "/" + id;
 	$.ajax({
@@ -190,24 +253,6 @@ function displayEditBrand(id){
 	   },
 	   error: handleAjaxError
 	});
-}
-
-function brandFilter() {
-
-    var value = document.getElementById("brand-filter").value;
-    value = value.trim();
-    value = value.toLowerCase();
-
-    if(value === '')
-    {
-        getBrandList();
-
-        return;
-    }
-
-    $("#brand-table-body tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-    });
 }
 
 function resetUploadDialog(){
@@ -265,7 +310,6 @@ function cancelBrandModal()
 //INITIALIZATION CODE
 function init(){
 	$('#add-brand').click(displayBrandModal);
-	$('#search-brand').click(brandFilter);
 	$('#modal-add-brand').click(addBrand);
 	$('#modal-cancel-brand').click(cancelBrandModal);
 	$('#modal-cut-brand').click(cancelBrandModal);
@@ -274,12 +318,9 @@ function init(){
 	$('#process-data').click(processData);
 	$('#download-errors').click(downloadErrors);
     $('#brandFile').on('change', updateFileName);
-
-    document.getElementById('brand-filter').addEventListener('submit', function(e) {
-        e.preventDefault();
-    });
+    $('#search-brand').click(searchBrandCategory);
 }
 
 $(document).ready(init);
 $(document).ready(getBrandList);
-
+$(document).ready(getAllBrand);

@@ -44,7 +44,7 @@ public class InventoryDto {
     }
 
     @Transactional
-    public InventoryData getId(InventoryForm form) throws ApiException {
+    public List<InventoryData> getId(InventoryForm form) throws ApiException {
 
         ProductPojo p = productService.getByBarcode(form.getBarcode());
         InventoryPojo i = ConvertUtil.convertInventoryFormtoInventoryPojo(form, p);
@@ -52,7 +52,13 @@ public class InventoryDto {
         InventoryPojo i2 = inventoryService.getByProductid(i);
         ProductPojo p1 = productService.get(i2.getProductid());
 
-        return ConvertUtil.convertInventoryPojotoInventoryData(i2, p1, brandService.get(p1.getBrandcategory()));
+        InventoryData d = ConvertUtil.convertInventoryPojotoInventoryData(i2, p1, brandService.get(p1.getBrandcategory()));
+
+        List<InventoryData> list = new ArrayList<>();
+
+        list.add(d);
+
+        return list;
     }
 
     public List<InventoryData> getAll() throws ApiException {

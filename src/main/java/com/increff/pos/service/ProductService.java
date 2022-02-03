@@ -67,6 +67,12 @@ public class ProductService {
     }
 
     @Transactional
+    public List<ProductPojo> getByBrandCategory(int brandcategory) {
+
+        return dao.selectBrandCategory(brandcategory);
+    }
+
+    @Transactional
     public List<ProductPojo> getAll() {
         return dao.selectAll();
     }
@@ -77,6 +83,17 @@ public class ProductService {
         normalize(p);
 
         ProductPojo ex = getCheck(id);
+
+        if(!ex.getBarcode().equals(p.getBarcode()))
+        {
+            ProductPojo p1 = dao.selectBarcode(p.getBarcode());
+
+            if(p1 != null)
+            {
+                throw new ApiException("This barcode already exists.");
+            }
+        }
+
         ex.setBarcode(p.getBarcode());
         ex.setBrandcategory(p.getBrandcategory());
         ex.setName(p.getName());

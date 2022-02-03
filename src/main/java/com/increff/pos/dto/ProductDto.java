@@ -80,4 +80,22 @@ public class ProductDto {
 
         productService.update(id, p);
     }
+
+    public List<ProductData> searchProductData(ProductForm f) throws ApiException  {
+        List<BrandPojo> brandPojo = brandService.search(ConvertUtil.convertProductFormtoBrandPojo(f));
+
+        List<ProductData> list2 = new ArrayList<>();
+
+        for(BrandPojo p: brandPojo)
+        {
+            List<ProductPojo> list1 = productService.getByBrandCategory(p.getId());
+
+            for(ProductPojo p1: list1)
+            {
+                list2.add(ConvertUtil.convertProductPojotoProductData(p1, brandService.get(p1.getBrandcategory())));
+            }
+        }
+
+        return list2;
+    }
 }

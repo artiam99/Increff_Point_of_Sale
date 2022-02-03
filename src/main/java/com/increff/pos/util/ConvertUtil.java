@@ -26,6 +26,13 @@ public class ConvertUtil {
         return b;
     }
 
+    public static BrandPojo convertProductFormtoBrandPojo(ProductForm f) {
+        BrandPojo b = new BrandPojo();
+        b.setCategory(f.getCategory());
+        b.setBrand(f.getBrand());
+        return b;
+    }
+
     public static ProductPojo convertProductFormtoProductPojo(ProductForm f,BrandPojo b){
         ProductPojo p = new ProductPojo();
         p.setName(f.getName());

@@ -32,10 +32,6 @@ body {
     padding-bottom: 0.2rem;
 }
 
-.form-horizontal .control-label {
-  text-align: left;
-}
-
 .fas{
     font-size: 4rem;
 }

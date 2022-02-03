@@ -34,7 +34,7 @@ public class InventoryApiController {
 
     @ApiOperation(value = "Gets a Inventory by Barcode")
     @RequestMapping(path = "/search", method = RequestMethod.POST)
-    public InventoryData getId(@RequestBody InventoryForm f) throws ApiException {
+    public List<InventoryData> getId(@RequestBody InventoryForm f) throws ApiException {
 
         return dto.getId(f);
     }
