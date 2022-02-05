@@ -82,6 +82,30 @@ public class ProductDto {
     }
 
     public List<ProductData> searchProductData(ProductForm f) throws ApiException  {
+
+        if(f.getBarcode() != "")
+        {
+            ProductPojo p = productService.getByBarcode(f.getBarcode());
+
+            List<ProductData> list = new ArrayList<>();
+
+            ProductData pd = ConvertUtil.convertProductPojotoProductData(p, brandService.get(p.getBrandcategory()));
+
+            if(f.getBrand() != "" && !f.getBrand().equals(pd.getBrand()))
+            {
+                return list;
+            }
+
+            if(f.getCategory() != "" && !f.getCategory().equals(pd.getCategory()))
+            {
+                return list;
+            }
+
+            list.add(pd);
+
+            return list;
+        }
+
         List<BrandPojo> brandPojo = brandService.search(ConvertUtil.convertProductFormtoBrandPojo(f));
 
         List<ProductData> list2 = new ArrayList<>();

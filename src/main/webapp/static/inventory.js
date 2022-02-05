@@ -157,7 +157,9 @@ function uploadRows() {
        },
 	   success: function(response) {
 
-            response.quantity = JSON.parse(json).quantity;
+	        response = response[0];
+
+	        response.quantity = JSON.parse(json).quantity;
 
 	        updateInventoryUpload(response.id, JSON.stringify(response), row);
 

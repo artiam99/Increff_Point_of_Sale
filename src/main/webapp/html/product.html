@@ -16,15 +16,16 @@
     <div class="row" style="padding-top: 0.3rem;">
         <div class="col-12">
             <form class="form-inline" id="searchForm" style="display:inline-block; width: 100%;">
-                <label for="" style="display:inline-block">Brand</label>
+                <label for="" style="display:inline-block">Barcode</label>
+                <input type="text" class="form-control" name="barcode" id="barcode-search" placeholder="enter barcode" style="width: 15%;">
+                <label for="" style="margin-left: 2%; display:inline-block">Brand</label>
                 <select name="searchBrand" id="enterInputBrand" style="color: #495057; width: 15%; height: calc(1.5em + .75rem + 2px); border: 1px solid #ced4da;border-radius: 0.25rem; padding-left: 1%;">
                 </select>
                 <label for="" style="display:inline-block; margin-left:2%">Category</label>
                 <select name="searchCategory" id="enterInputCategory" style="color: #495057; width: 15%; height: calc(1.5em + .75rem + 2px); border: 1px solid #ced4da;border-radius: 0.25rem; padding-left: 1%;">
                 </select>
                 <button type="button" class="btn btn-secondary" id="search-product" style="margin-left:2%"><i class="fa fa-search"></i> Search</button>
-                <button type="button" class="btn btn-info" id="add-product" style="margin-left: 30%;">Add</button>
-                &ensp;
+                <button type="button" class="btn btn-info" id="add-product" style="margin-left: 8%; margin-right: 5px;">Add</button>
                 <button type="button" class="btn btn-info" id="upload-data">Upload</button>
             </form>
         </div>

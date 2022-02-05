@@ -3,6 +3,8 @@ package com.increff.pos.util;
 import com.increff.pos.model.*;
 import com.increff.pos.pojo.*;
 
+import java.util.List;
+
 public class ConvertUtil {
     public static BrandData convertBrandPojotoBrandData(BrandPojo p) {
         BrandData d = new BrandData();
@@ -68,6 +70,44 @@ public class ConvertUtil {
         d.setBrand(b.getBrand());
         d.setBarcode(p.getBarcode());
         d.setQuantity(i.getQuantity());
+        return d;
+    }
+
+    public static InventoryPojo convertProductPojotoInventoryPojo(ProductPojo p) {
+        InventoryPojo i = new InventoryPojo();
+        i.setProductid(p.getId());
+        return i;
+    }
+
+    public static OrderData convertOrderPojotoOrderData(OrderPojo p, List<OrderItemPojo> orderItemPojos) {
+        OrderData d = new OrderData();
+        d.setId(p.getId());
+        d.setDatetime(p.getDatetime());
+        double billAmount = 0;
+        for (OrderItemPojo orderItemPojo : orderItemPojos) {
+            billAmount += orderItemPojo.getQuantity() * orderItemPojo.getSellingPrice();
+        }
+        d.setBillAmount(billAmount);
+        return d;
+    }
+
+    public static OrderItemPojo convertOrderItemFormtoOrderItemPojo(OrderItemForm f) {
+
+        OrderItemPojo p = new OrderItemPojo();
+        p.setQuantity(f.getQuantity());
+        p.setSellingPrice(f.getSellingPrice());
+        return p;
+    }
+
+    public static OrderItemData convertOrderItemPojotoOrderItemData(OrderItemPojo orderItemPojo,
+                                                                    ProductPojo productPojo, BrandPojo brandPojo) {
+        OrderItemData d = new OrderItemData();
+        d.setId(orderItemPojo.getId());
+        d.setBarcode(productPojo.getBarcode());
+        d.setBrand(brandPojo.getBrand());
+        d.setName(productPojo.getName());
+        d.setQuantity(orderItemPojo.getQuantity());
+        d.setSellingPrice(orderItemPojo.getSellingPrice());
         return d;
     }
 }

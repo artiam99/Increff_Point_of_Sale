@@ -403,9 +403,13 @@ function displaySearchBrandCategoryEdit(data){
 }
 
 function searchBrandCategory(){
+
+    var barcode = $("#barcode-search").val();
+    barcode = barcode.trim();
+
     var brand = $("#enterInputBrand :selected").text();
     var category = $("#enterInputCategory :selected").text();
-	var obj = {barcode: "", brand, category, mrp: 0, name: ""};
+	var obj = {barcode, brand, category, mrp: 0, name: ""};
 
 	if(obj.brand === "select")
 	{
