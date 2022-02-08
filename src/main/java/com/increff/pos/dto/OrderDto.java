@@ -1,26 +1,21 @@
 package com.increff.pos.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.increff.pos.model.ProductData;
-import com.increff.pos.pojo.InventoryPojo;
-import com.increff.pos.pojo.OrderItemPojo;
-import com.increff.pos.pojo.ProductPojo;
+import com.increff.pos.model.*;
+import com.increff.pos.pojo.*;
+import com.increff.pos.service.*;
 import com.increff.pos.util.ConvertUtil;
 import com.increff.pos.util.StringUtil;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.increff.pos.model.OrderData;
-import com.increff.pos.model.OrderItemForm;
-import com.increff.pos.pojo.OrderPojo;
-import com.increff.pos.service.ApiException;
-import com.increff.pos.service.InventoryService;
-import com.increff.pos.service.OrderItemService;
-import com.increff.pos.service.OrderService;
-import com.increff.pos.service.ProductService;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class OrderDto {
@@ -29,9 +24,13 @@ public class OrderDto {
     @Autowired
     private ProductService productService;
     @Autowired
+    private BrandService brandService;
+    @Autowired
     private InventoryService inventoryService;
     @Autowired
     private OrderItemService orderItemService;
+    @Autowired
+    private OrderItemDto orderItemDto;
 
 
     public OrderPojo addOrder(List<OrderItemForm> orderItems) throws ApiException {
@@ -44,6 +43,7 @@ public class OrderDto {
         orderService.checkInventoryAvailability(orderItems);
         OrderPojo orderPojo = new OrderPojo();
         orderPojo.setDatetime(StringUtil.getDateTime());
+        orderPojo.setInvoice(false);
         orderService.add(orderPojo);
 
         List<OrderItemPojo> list = new ArrayList<>();
@@ -124,10 +124,6 @@ public class OrderDto {
 
         orderItemService.deleteByOrderId(id);
 
-        OrderPojo orderPojo = new OrderPojo();
-        orderPojo.setDatetime(StringUtil.getDateTime());
-        orderService.update(id, orderPojo);
-
 
         List<OrderItemPojo> list = new ArrayList<>();
 
@@ -156,11 +152,35 @@ public class OrderDto {
 
     }
 
+    @Transactional(rollbackFor = ApiException.class)
+    public List<BillData> generateInvoice(int id, OrderItemForm[] orderItemForms) throws ApiException {
+        List<BillData> reqBill = new ArrayList<BillData>();
+        int newId = 1;
+        for(OrderItemForm p:orderItemForms) {
+            BillData item = new BillData();
+            item.setBarcode(p.getBarcode());
+            item.setBrand(p.getBrand());
+            item.setName(p.getName());
+            item.setQuantity(p.getQuantity());
+            item.setSellingPrice(p.getSellingPrice());
+            item.setId(newId);
+            reqBill.add(item);
+            newId++;
+        }
+
+        OrderPojo orderPojo = orderService.get(id);
+        orderPojo.setInvoice(true);
+        orderService.update(id, orderPojo);
+
+        return reqBill;
+    }
+
     public OrderData get(int id) throws ApiException {
         OrderPojo orderPojo = orderService.get(id);
 
         return ConvertUtil.convertOrderPojotoOrderData(orderPojo, orderItemService.getByOrderId(orderPojo.getId()));
     }
+
 
     public List<OrderData> getAll() {
         List<OrderPojo> list = orderService.getAll();
@@ -176,5 +196,79 @@ public class OrderDto {
                     }
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<SalesData> sales(SalesForm f)  throws ApiException {
+
+        List<OrderPojo> list = orderService.getAll();
+
+        HashMap<String, Pair<Integer, Double>> hmap = new HashMap<>();
+
+        for(OrderPojo p: list)
+        {
+            String orderDate = StringUtil.trimDate(p.getDatetime());
+
+            if(StringUtil.isAfter(f.getStartDate(), orderDate) && StringUtil.isAfter(orderDate, f.getEndDate()))
+            {
+                List<OrderItemData> list2 = orderItemDto.get(p.getId());
+
+                for(OrderItemData d: list2)
+                {
+                    String barcode = d.getBarcode();
+                    int quantity = d.getQuantity();
+                    double revenue = d.getSellingPrice() * d.getQuantity();
+
+                    Integer ob1 = new Integer(quantity);
+                    Double ob2 = new Double(revenue);
+
+                    if(hmap.get(barcode) == null)
+                    {
+                        Pair<Integer, Double> pair = new Pair<Integer, Double>(ob1, ob2);
+
+                        hmap.put(barcode, pair);
+                    }
+                    else
+                    {
+                        Pair<Integer, Double> pair = new Pair<Integer, Double>(hmap.get(barcode).getKey() + ob1, hmap.get(barcode).getValue() + ob2);
+
+                        hmap.put(barcode, pair);
+                    }
+                }
+            }
+        }
+
+        List<SalesData> list3 = new ArrayList<>();
+
+        if(hmap.size() == 0)
+        {
+            return list3;
+        }
+
+        for (Map.Entry mapElement : hmap.entrySet()) {
+            String barcode = (String)mapElement.getKey();
+
+            Pair<Integer, Double> pair = (Pair<Integer, Double>)mapElement.getValue();
+            int quantity = pair.getKey().intValue();
+            double revenue = pair.getValue().doubleValue();
+
+            SalesData sd = new SalesData();
+
+            ProductPojo pp = productService.getByBarcode(barcode);
+            BrandPojo bp = brandService.get(pp.getBrandcategory());
+
+            sd.setBarcode(barcode);
+            sd.setBrand(bp.getBrand());
+            sd.setCategory(bp.getCategory());
+            sd.setName(pp.getName());
+            sd.setQuantity(quantity);
+            sd.setRevenue(revenue);
+
+            if((f.getBrand() == "" || f.getBrand().equals(sd.getBrand())) && (f.getCategory() == "" || f.getCategory().equals(sd.getCategory())))
+            {
+                list3.add(sd);
+            }
+        }
+
+        return list3;
     }
 }

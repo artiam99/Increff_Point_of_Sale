@@ -1,12 +1,12 @@
 package com.increff.pos.model;
 
-public class InventoryForm {
-
+public class SalesData {
     private String barcode;
     private String brand;
     private String category;
     private String name;
     private int quantity;
+    private double revenue;
 
     public String getBarcode() {
         return barcode;
@@ -46,5 +46,13 @@ public class InventoryForm {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public double getRevenue() {
+        return revenue;
+    }
+
+    public void setRevenue(double revenue) {
+        this.revenue = revenue;
     }
 }

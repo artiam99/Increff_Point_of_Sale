@@ -42,6 +42,7 @@ function addProduct(event){
             $('#add-product-modal').modal('toggle');
 	        $('#product-add-form').trigger("reset");
 	   		getProductList();
+	   		$.notify("Product added successfully.", "success");
 	   },
 	   error: handleAjaxError
 	});
@@ -59,6 +60,24 @@ function updateProduct(event){
 	var $form = $("#product-edit-form");
 	var json = toJson($form);
     var obj = JSON.parse(json);
+
+    obj.barcode = obj.barcode.trim();
+    obj.name = obj.name.trim();
+
+    if(obj.barcode === "")
+    {
+        $.notify("Barcode cannot be empty.", "error");
+
+        return;
+    }
+
+    if(obj.name === "")
+    {
+        $.notify("Name cannot be empty.", "error");
+
+        return;
+    }
+
 
     if(obj.brand === "select")
     {
@@ -82,6 +101,7 @@ function updateProduct(event){
 	   success: function(response) {
 	        $('#edit-product-modal').modal('toggle');
 	   		getProductList();
+	   		$.notify("Product updated successfully.", "success");
 	   },
 	   error: handleAjaxError
 	});
@@ -276,7 +296,8 @@ function updateUploadDialog(){
 
 function updateFileName(){
 	var $file = $('#productFile');
-	var fileName = $file.val();
+	var path = $file.val();
+    var fileName = path.replace(/^C:\\fakepath\\/, "");
 	$('#productFileName').html(fileName);
 	document.getElementById("process-data").disabled = false;
 }
@@ -321,8 +342,9 @@ function displaySearchBrandCategory(data){
 	categorySet = Array.from(categorySet);
 	categorySet.sort();
 
-	var row='<option value="select">select</option>';
+	var row='<option value="select">select brand</option>';
     $brandBody.append(row);
+    row='<option value="select">select category</option>';
     $categoryBody.append(row);
 
 	for(var i in brandSet){
@@ -356,8 +378,9 @@ function displaySearchBrandCategoryAdd(data){
     categorySet.sort();
 
 
-	var row='<option value="select">select</option>';
+	var row='<option value="select">select brand</option>';
     $brandBody.append(row);
+    row='<option value="select">select category</option>';
     $categoryBody.append(row);
 
 	for(var i in brandSet){
@@ -389,7 +412,7 @@ function displaySearchBrandCategoryEdit(data){
 	categorySet = Array.from(categorySet);
 	categorySet.sort();
 
-	var row='<option value="select">select</option>';
+	var row='';
 
 	for(var i in brandSet){
 		row='<option value='+brandSet[i]+'>'+brandSet[i]+'</option>';
@@ -411,12 +434,12 @@ function searchBrandCategory(){
     var category = $("#enterInputCategory :selected").text();
 	var obj = {barcode, brand, category, mrp: 0, name: ""};
 
-	if(obj.brand === "select")
+	if(obj.brand === "select brand")
 	{
 	    obj.brand = "";
 	}
 
-	if(obj.category === "select")
+	if(obj.category === "select category")
     {
     	    obj.category = "";
    	}

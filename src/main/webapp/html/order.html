@@ -17,14 +17,13 @@
         <div class="col-12">
             <form class="form-inline" id="order-form">
                 <div class="form-group" style="width: 50%;">
-                    <label for="inputOrderId" class="col-sm-2 col-form-label">Order Id</label>
+                    <label for="inputOrderId" class="col-sm-2 col-form-label">Order ID</label>
                     <input type="text" class="form-control" name="orderId" id="orderid-search" placeholder="enter order id">
-                    <button type="button" class="btn btn-secondary" id="search-order" style="margin-left: 5%">
-                        <i class="fa fa-search" aria-hidden="true"></i> Search
-                    </button>
+                    <button type="button" class="btn btn-secondary" id="search-order" style="margin-left: 3%">Search</button>
                 </div>
 
-                <button type="button" class="btn btn-info" id="add-order" style="margin-left: 42%;">Add</button>
+                <button type="button" class="btn btn-info" id="add-order" style="margin-left: 35%; margin-right: 5px;">Add</button>
+                <button type="button" class="btn btn-info" id="report-sales">Report</button>
             </form>
         </div>
     </div>
@@ -41,28 +40,13 @@
             <table class="table table-striped" id="order-table">
                 <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Order Id</th>
+                    <th scope="col">Order ID</th>
                     <th scope="col">Date & Time</th>
                     <th scope="col">Bill Amount  (&#8377;)</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Action(s)</th>
                 </tr>
                 </thead>
                 <tbody id="order-table-body">
-                <tr>
-                    <td scope="col">1001</td>
-                    <td scope="col">12th jan 2022</td>
-                    <td scope="col">Edit | Invoice</td>
-                </tr>
-                <tr>
-                    <td scope="col">1002</td>
-                    <td scope="col">12th jan 2022</td>
-                    <td scope="col">Edit | Invoice</td>
-                </tr>
-                <tr>
-                    <td scope="col">1003</td>
-                    <td scope="col">13th jan 2022</td>
-                    <td scope="col">Edit | Invoice</td>
-                </tr>
                 </tbody>
             </table>
 
@@ -87,7 +71,7 @@
                         </div>
                         <div class="form-group" style="width: 120%; padding-bottom: 1%;">
                             <label for="inputQuantity" style="padding-left: 0; display: block; margin-right: 20.5%">Quantity</label>
-                                <input type="number" class="form-control" name="quantity" placeholder="enter quantity">
+                                <input type="number" class="form-control" name="quantity" placeholder="enter quantity" id="inputQuantity">
                         </div>
                         <div class="form-group" style="width: 120%; padding-bottom: 1%;">
                             <label for="inputSellingPrice" style="padding-left: 0; display: block; margin-right: 8%">Selling Price (&#8377;)</label>
@@ -104,7 +88,7 @@
                             <input type="text" class="form-control" name="name" readonly id="inputName">
                         </div>
                     </form>
-                    <button type="button" class="btn btn-primary" id="modal-add-orderItem" style="margin-left: 80%;">Add Product</button>
+                    <button type="button" class="btn btn-primary" id="modal-add-orderItem" style="margin-left: 83%;">Add Product</button>
                     <br/><br/>
                     <table class="table table-striped" id="orderitem-table-add">
                         <thead class="thead-dark">
@@ -124,7 +108,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="modal-cancel-order">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="submit-order">Submit Order</button>
+                    <button type="button" class="btn btn-primary" id="submit-order">Submit</button>
                 </div>
             </div>
         </div>
@@ -149,7 +133,7 @@
                         </div>
                         <div class="form-group" style="width: 120%; padding-bottom: 1%;">
                             <label for="inputQuantity" style="padding-left: 0; display: block; margin-right: 20.5%">Quantity</label>
-                                <input type="number" class="form-control" name="quantity" placeholder="enter Quantity">
+                                <input type="number" class="form-control" name="quantity" placeholder="enter quantity" id="inputQuantityEdit">
                         </div>
                         <div class="form-group" style="width: 120%; padding-bottom: 1%;">
                             <label for="inputSellingPrice" style="padding-left: 0; display: block; margin-right: 8%">Selling Price (&#8377;)</label>
@@ -167,7 +151,7 @@
                             <input type="text" class="form-control" name="name" readonly id="inputNameEdit">
                         </div>
                     </form>
-                    <button type="button" class="btn btn-primary" id="modal-edit-orderItem" style="margin-left: 80%;">Add Product</button>
+                    <button type="button" class="btn btn-primary" id="modal-edit-orderItem" style="margin-left: 83%;">Add Product</button>
                     <br/><br/>
                     <table class="table table-striped" id="orderitem-table-edit">
                         <thead class="thead-dark">
@@ -187,7 +171,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="modal-cancel-edit-order">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="edit-order">Update Order</button>
+                    <button type="button" class="btn btn-primary" id="edit-order">Submit</button>
                 </div>
             </div>
         </div>
@@ -217,6 +201,55 @@
                         <tbody>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Report Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="report-sales-modal" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sales Report</h5>
+                    <button type="button" class="close" id="modal-cut-sales-report" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="margin-left: 5%;">
+                    <form class="form-inline" id="sales-report-form">
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputStartDate" style="padding-left: 0; padding-right: 4%; display: block;">Start Date</label>
+                            <div>
+                                <input type="date" class="form-control" name="startDate" style="width: 108.5%;">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputEndDate" style="padding-left: 0; padding-right: 5.5%; display: block;">End Date</label>
+                            <div>
+                                <input type="date" class="form-control" name="endDate" style="width: 108.5%;">
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputBrand" class="col-sm-2 col-form-label" style="padding-left: 0; display: block;">Brand</label>
+                            <div class="col-sm-10">
+                                <select name="brand" id="enterInputBrandReport" style="color: #495057; width: 61.3%; height: calc(1.5em + .75rem + 2px); border: 1px solid #ced4da;border-radius: 0.25rem; padding-left: 2%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputCategory" class="col-sm-2 col-form-label" style="padding-left: 0; display: block;">Category</label>
+                            <div class="col-sm-10">
+                                <!--<input type="text" class="form-control" name="category" placeholder="enter category">-->
+                                <select name="category" id="enterInputCategoryReport" style="color: #495057; width: 61.3%; height: calc(1.5em + .75rem + 2px); border: 1px solid #ced4da;border-radius: 0.25rem; padding-left: 2%;">
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modal-cancel-sales-report">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="modal-report-sales">Download</button>
                 </div>
             </div>
         </div>

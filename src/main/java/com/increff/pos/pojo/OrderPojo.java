@@ -9,6 +9,7 @@ public class OrderPojo {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
     private String datetime;
+    private boolean invoice;
 
     public int getId() {
         return id;
@@ -24,5 +25,12 @@ public class OrderPojo {
 
     public void setDatetime(String datetime) {
         this.datetime = datetime;
+    }
+
+    public boolean getInvoice() {
+        return invoice;
+    }
+    public void setInvoice(boolean invoice) {
+        this.invoice = invoice;
     }
 }

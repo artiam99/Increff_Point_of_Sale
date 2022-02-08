@@ -1,4 +1,10 @@
 
+function getBrandUrl(){
+	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	return baseUrl + "/api/brand";
+}
+
+
 function getOrderUrl(){
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/order";
@@ -14,6 +20,11 @@ function getProductUrl(){
 	return baseUrl + "/api/product";
 }
 
+function isInt(n)
+{
+    return n % 1 === 0;
+}
+
 //BUTTON ACTIONS
 function addOrderItem(event){
 
@@ -23,7 +34,56 @@ function addOrderItem(event){
 	var barcode = JSON.parse(json).barcode;
     barcode = barcode.trim();
     var quantity = JSON.parse(json).quantity;
+    quantity = quantity.trim();
     var sellingPrice = JSON.parse(json).sellingPrice;
+    sellingPrice = sellingPrice.trim();
+
+    if(barcode === "")
+    {
+        $.notify("Barcode cannot be empty.")
+
+        return;
+    }
+
+    if(quantity === "")
+    {
+        $.notify("Quantity cannot be empty.")
+
+        return;
+    }
+
+    if(sellingPrice === "")
+    {
+        $.notify("Selling price cannot be empty.")
+
+        return;
+    }
+
+    if(!isInt(quantity))
+    {
+        $.notify("Quantity must be Integer.")
+
+        return;
+    }
+
+    var num = Number(quantity);
+
+    if(num <= 0)
+    {
+        $.notify("Quantity must be positive.")
+
+        return;
+    }
+
+    num = Number(sellingPrice);
+
+    if(num <= 0)
+    {
+        $.notify("Selling Price must be positive.")
+
+        return;
+    }
+
     var obj = {barcode, brand: "", category:"", mrp: 0, name: ""};
 
     json = JSON.stringify(obj);
@@ -107,7 +167,6 @@ function addOrderItemTable(obj)
     {
         $('#order-add-form').trigger("reset");
         $('#order-add-form-second').trigger("reset");
-        $("#order-add-form input[name=quantity]").val(1);
 
         return;
     }
@@ -116,7 +175,7 @@ function addOrderItemTable(obj)
 
     var $tbody = $('#orderitem-table-add').find('tbody');
 
-    var buttonHtml= ' <button type="button" class="btn btn-danger" onclick="deleteAddOrderItemTable(\'' + obj.barcode + '\')">Delete</button>'
+    var buttonHtml= ' <button type="button" class="btn btn-danger" onclick="deleteAddOrderItemTable(\'' + obj.barcode + '\')">Remove</button>'
     var row = '<tr>'
         + '<td>' + obj.barcode + '</td>'
         + '<td>'  + obj.brand + '</td>'
@@ -130,7 +189,6 @@ function addOrderItemTable(obj)
 
         $('#order-add-form').trigger("reset");
         $('#order-add-form-second').trigger("reset");
-        $("#order-add-form input[name=quantity]").val(1);
 }
 
 function checkEditTable(obj)
@@ -181,7 +239,6 @@ function editOrderItemTable(obj)
     {
         $('#order-edit-form').trigger("reset");
         $('#order-edit-form-second').trigger("reset");
-        $("#order-edit-form input[name=quantity]").val(1);
 
         return;
     }
@@ -190,7 +247,7 @@ function editOrderItemTable(obj)
 
     var $tbody = $('#orderitem-table-edit').find('tbody');
 
-    var buttonHtml= ' <button type="button" class="btn btn-danger" onclick="deleteEditOrderItemTable(\'' + obj.barcode + '\')">Delete</button>'
+    var buttonHtml= ' <button type="button" class="btn btn-danger" onclick="deleteEditOrderItemTable(\'' + obj.barcode + '\')">Remove</button>'
     var row = '<tr>'
         + '<td>' + obj.barcode + '</td>'
         + '<td>'  + obj.brand + '</td>'
@@ -204,7 +261,6 @@ function editOrderItemTable(obj)
 
         $('#order-edit-form').trigger("reset");
         $('#order-edit-form-second').trigger("reset");
-        $("#order-edit-form input[name=quantity]").val(1);
 }
 
 function viewOrderItemTable(obj)
@@ -307,9 +363,9 @@ function submitOrder(){
                     $('#add-order-modal').modal('toggle');
                     $('#order-add-form').trigger("reset");
                     $('#order-add-form-second').trigger("reset");
-                    $("#order-add-form input[name=quantity]").val(1);
 
                     getOrderList();
+                    $.notify("Order submitted successfully.", "success");
         	   },
          error: handleAjaxError
     });
@@ -326,7 +382,55 @@ function editOrderItem(event){
 	var barcode = JSON.parse(json).barcode;
     barcode = barcode.trim();
     var quantity = JSON.parse(json).quantity;
+    quantity = quantity.trim();
     var sellingPrice = JSON.parse(json).sellingPrice;
+    sellingPrice = sellingPrice.trim();
+
+    if(barcode === "")
+    {
+        $.notify("Barcode cannot be empty.")
+
+        return;
+    }
+
+    if(quantity === "")
+    {
+        $.notify("Quantity cannot be empty.")
+
+        return;
+    }
+
+    if(sellingPrice === "")
+    {
+        $.notify("Selling price cannot be empty.")
+
+        return;
+    }
+
+    if(!isInt(quantity))
+    {
+        $.notify("Quantity must be Integer.")
+
+        return;
+    }
+
+    var num = Number(quantity);
+
+    if(num <= 0)
+    {
+        $.notify("Quantity must be positive.")
+
+        return;
+    }
+
+    num = Number(sellingPrice);
+
+    if(num <= 0)
+    {
+        $.notify("Selling Price must be positive.")
+
+        return;
+    }
     var obj = {barcode, brand: "", category:"", mrp: 0, name: ""};
 
     json = JSON.stringify(obj);
@@ -386,9 +490,9 @@ function updateOrder(event){
                     $('#edit-order-modal').modal('toggle');
                     $('#order-edit-form').trigger("reset");
                     $('#order-edit-form-second').trigger("reset");
-                    $("#order-edit-form input[name=quantity]").val(1);
 
                     getOrderList();
+                    $.notify("Order updated successfully.", "success");
         	   },
          error: handleAjaxError
     });
@@ -440,8 +544,19 @@ function displayOrderList(data){
         }
 
         orderId += st;
-		var buttonHtml= ' <button type="button" class="btn btn-info" onclick="displayEditOrder(' + e.id + ')">Edit</button>'
+		var buttonHtml;
+		if(e.invoice === true)
+        {
+            buttonHtml = ' <button type="button" class="btn btn-info" disabled>Edit</button>'
+        }
+        else
+        {
+            buttonHtml = ' <button type="button" class="btn btn-info" onclick="displayEditOrder(' + e.id + ')">Edit</button>'
+        }
 		buttonHtml+= ' <button type="button" class="btn btn-info" onclick="displayViewOrder(' + e.id + ')">View</button>'
+        buttonHtml+= ' <button type="button" class="btn btn-warning" onclick="generateInvoice(' + e.id + ')">Invoice</button>'
+
+
 		var row = '<tr>'
 		+ '<td>' + orderId + '</td>'
 		+ '<td>'  + e.datetime + '</td>'
@@ -547,8 +662,6 @@ function displayOrder(id, data){
         editOrderItemTable(d);
     });
 
-
-    $("#order-edit-form input[name=quantity]").val(1);
     $("#order-edit-form input[name=id]").val(id);
 	$('#edit-order-modal').modal('toggle');
 }
@@ -568,7 +681,6 @@ function displayViewOrderModal(data){
 
 
 function displayOrderModal(){
-    $("#order-add-form input[name=quantity]").val(1);
 	$('#add-order-modal').modal('toggle');
 }
 
@@ -577,7 +689,6 @@ function cancelOrderModal()
     $('#add-order-modal').modal('toggle');
     $('#order-add-form').trigger("reset");
     $('#order-add-form-second').trigger("reset");
-    $("#order-add-form input[name=quantity]").val(1);
     tableData = [];
     var $tbody = $('#orderitem-table-add').find('tbody');
     $tbody.empty();
@@ -588,7 +699,6 @@ function cancelEditOrderModal()
     $('#edit-order-modal').modal('toggle');
     $('#order-edit-form').trigger("reset");
     $('#order-edit-form-second').trigger("reset");
-    $("#order-edit-form input[name=quantity]").val(1);
     tableData = [];
     var $tbody = $('#orderitem-table-edit').find('tbody');
     $tbody.empty();
@@ -626,6 +736,7 @@ function getProductDetails(barcode){
                         $('#inputMrp').val("");
                         $('#inputBrand').val("");
                         $('#inputName').val("");
+                        $('#inputQuantity').val("");
 
                         return;
                     }
@@ -635,12 +746,14 @@ function getProductDetails(barcode){
         	   		$('#inputMrp').val(data.mrp);
         	   		$('#inputBrand').val(data.brand);
                     $('#inputName').val(data.name);
+                    $('#inputQuantity').val(1);
         	   },
         	   error: function(error)
         	   {
                     $('#inputMrp').val("");
                     $('#inputBrand').val("");
                     $('#inputName').val("");
+                    $('#inputQuantity').val("");
         	   }
     });
 }
@@ -669,6 +782,7 @@ function getProductDetailsEdit(barcode){
                         $('#inputMrpEdit').val("");
                         $('#inputBrandEdit').val("");
                         $('#inputNameEdit').val("");
+                        $('#inputQuantityEdit').val("");
 
                         return;
                     }
@@ -678,14 +792,213 @@ function getProductDetailsEdit(barcode){
         	   		$('#inputMrpEdit').val(data.mrp);
         	   		$('#inputBrandEdit').val(data.brand);
                     $('#inputNameEdit').val(data.name);
+                    $('#inputQuantityEdit').val(1);
         	   },
         	   error: function(error)
         	   {
                     $('#inputMrpEdit').val("");
                     $('#inputBrandEdit').val("");
                     $('#inputNameEdit').val("");
+                    $('#inputQuantityEdit').val("");
         	   }
     });
+}
+
+function downloadBillPdf(blob){
+	let link = document.createElement('a');
+	link.href = window.URL.createObjectURL(blob);
+	var currentdate = new Date();
+	link.download = "bill_"+ currentdate.getDate() + "/"
+	+ (currentdate.getMonth()+1)  + "/"
+	+ currentdate.getFullYear() + "@"
+	+ currentdate.getHours() + "h_"
+	+ currentdate.getMinutes() + "m_"
+	+ currentdate.getSeconds()+"s.pdf";
+	link.click();
+}
+
+
+function generateInvoice(id)
+{
+    var url = getOrderItemUrl() + "/" + id;
+    $.ajax({
+       url: url,
+       type: 'GET',
+       success: function(dataRec) {
+        var url=getOrderUrl() + "/invoice/" + id;
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(dataRec),
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            success: function(data) {
+
+
+            // process recieved pdf
+            let binaryString = window.atob(data);
+
+            let binaryLen = binaryString.length;
+
+            let bytes = new Uint8Array(binaryLen);
+
+            for (let i = 0; i < binaryLen; i++) {
+                let ascii = binaryString.charCodeAt(i);
+                bytes[i] = ascii;
+            }
+            let blob = new Blob([bytes], {type: "application/pdf"});
+              //openBillPdf(blob);
+            downloadBillPdf(blob);
+
+            getOrderList();
+       },
+       error: handleAjaxError
+    });
+    },
+    error: handleAjaxError
+});
+}
+
+function getAllBrand(){
+	var url = getBrandUrl();
+	$.ajax({
+	   url: url,
+	   type: 'GET',
+	   success: function(data) {
+	        displaySearchBrandCategory(data);
+	   },
+	   error: handleAjaxError
+	});
+}
+
+function displaySearchBrandCategory(data){
+
+	var $brandReportBody=$('#sales-report-form').find('#enterInputBrandReport');
+    var $categoryReportBody=$('#sales-report-form').find('#enterInputCategoryReport');
+    $brandReportBody.empty();
+    $categoryReportBody.empty();
+
+	var brandSet =new Set();
+	var categorySet=new Set();
+
+	for(var i in data){
+		var e=data[i];
+		brandSet.add(e.brand);
+		categorySet.add(e.category);
+	}
+
+	brandSet = Array.from(brandSet);
+	categorySet = Array.from(categorySet);
+	categorySet.sort();
+
+	var row='<option value="select">select brand</option>';
+    $brandReportBody.append(row);
+    row='<option value="select">select category</option>';
+    $categoryReportBody.append(row);
+
+	for(var i in brandSet){
+		row='<option value='+brandSet[i]+'>'+brandSet[i]+'</option>';
+			$brandReportBody.append(row);
+	}
+	for(var i in categorySet){
+
+		row='<option value='+categorySet[i]+'>'+categorySet[i]+'</option>';
+			$categoryReportBody.append(row);
+	}
+}
+
+function downloadReport(){
+    var $form = $("#sales-report-form");
+    var json = toJson($form);
+
+    var obj = JSON.parse(json);
+
+    if(obj.startDate == "")
+    {
+        obj.startDate = "1950-01-01";
+    }
+
+    if(obj.endDate == "")
+    {
+        obj.endDate = "2150-01-01";
+    }
+
+
+	if(obj.brand === "select")
+	{
+	    obj.brand = "";
+	}
+
+	if(obj.category === "select")
+    {
+    	    obj.category = "";
+   	}
+
+	var json = JSON.stringify(obj);
+
+	console.log(json);
+
+
+	var url = getOrderUrl() + "/sales";
+    	$.ajax({
+    	   url: url,
+    	   type: 'POST',
+    	   data: json,
+    	   headers: {
+                  	'Content-Type': 'application/json'
+                  },
+    	   success: function(response) {
+
+    	        if(response.length === 0)
+    	        {
+    	            $.notify("No Order exists for this filter.");
+
+    	            return;
+    	        }
+
+    	        for(var i = 0 ; i < response.length ; i++)
+                {
+                    response[i].revenue = parseFloat(response[i].revenue).toFixed(2);
+                }
+
+    	   		var config = {
+                            		quoteChar: '',
+                            		escapeChar: '',
+                            		delimiter: "\t"
+                            	};
+
+                            	var data = Papa.unparse(response, config);
+                                var blob = new Blob([data], {type: 'text/tsv;charset=utf-8;'});
+                                var fileUrl =  null;
+                                var currentdate = new Date();
+                                var inventoryreportname = "sales-report.tsv";
+                                if (navigator.msSaveBlob) {
+                                    fileUrl = navigator.msSaveBlob(blob, brandreportname);
+                                } else {
+                                    fileUrl = window.URL.createObjectURL(blob);
+                                }
+                                var tempLink = document.createElement('a');
+                                tempLink.href = fileUrl;
+                                tempLink.setAttribute('download', inventoryreportname);
+                                tempLink.click();
+
+                                $('#report-sales-modal').modal('toggle');
+                                $('#sales-report-form').trigger("reset");
+    	   },
+    	   error: handleAjaxError
+    	});
+}
+
+
+function displaySalesReportModal(){
+	$('#report-sales-modal').modal('toggle');
+}
+
+function cancelSalesReportModal()
+{
+    $('#report-sales-modal').modal('toggle');
+    $('#sales-report-form').trigger("reset");
 }
 
 //INITIALIZATION CODE
@@ -700,6 +1013,10 @@ function init(){
 	$('#modal-cancel-edit-order').click(cancelEditOrderModal);
     $('#modal-cut-edit-order').click(cancelEditOrderModal);
     $('#modal-cut-view-order').click(cancelViewOrderModal);
+    $('#report-sales').click(displaySalesReportModal);
+    $('#modal-report-sales').click(downloadReport);
+    $('#modal-cancel-sales-report').click(cancelSalesReportModal);
+    $('#modal-cut-sales-report').click(cancelSalesReportModal);
 	$('#edit-order').click(updateOrder);
 	$("#inputBarcode").on('input',function(){
     	      	getProductDetails($(this).val());
@@ -711,3 +1028,4 @@ function init(){
 
 $(document).ready(init);
 $(document).ready(getOrderList);
+$(document).ready(getAllBrand);

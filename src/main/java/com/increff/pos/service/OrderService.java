@@ -62,6 +62,7 @@ public class OrderService {
     public void update(int id, OrderPojo p) throws ApiException {
         OrderPojo newP = getCheck(id);
         newP.setDatetime(p.getDatetime());
+        newP.setInvoice(p.getInvoice());
         dao.update(newP);
     }
 

@@ -35,6 +35,13 @@ public class ConvertUtil {
         return b;
     }
 
+    public static BrandPojo convertInventoryFormtoBrandPojo(InventoryForm f) {
+        BrandPojo b = new BrandPojo();
+        b.setCategory(f.getCategory());
+        b.setBrand(f.getBrand());
+        return b;
+    }
+
     public static ProductPojo convertProductFormtoProductPojo(ProductForm f,BrandPojo b){
         ProductPojo p = new ProductPojo();
         p.setName(f.getName());
@@ -55,6 +62,17 @@ public class ConvertUtil {
         return d;
     }
 
+    public static InventoryData convertProductPojotoInventoryData(ProductPojo p, InventoryPojo i, BrandPojo b){
+        InventoryData d = new InventoryData();
+        d.setBrand(b.getBrand());
+        d.setCategory(b.getCategory());
+        d.setId(p.getId());
+        d.setName(p.getName());
+        d.setQuantity(i.getQuantity());
+        d.setBarcode(p.getBarcode());
+        return d;
+    }
+
     public static InventoryPojo convertInventoryFormtoInventoryPojo(InventoryForm f, ProductPojo p) {
         InventoryPojo i = new InventoryPojo();
         i.setProductid(p.getId());
@@ -68,6 +86,7 @@ public class ConvertUtil {
         d.setId(i.getId());
         d.setName(p.getName());
         d.setBrand(b.getBrand());
+        d.setCategory(b.getCategory());
         d.setBarcode(p.getBarcode());
         d.setQuantity(i.getQuantity());
         return d;
@@ -83,6 +102,7 @@ public class ConvertUtil {
         OrderData d = new OrderData();
         d.setId(p.getId());
         d.setDatetime(p.getDatetime());
+        d.setInvoice(p.getInvoice());
         double billAmount = 0;
         for (OrderItemPojo orderItemPojo : orderItemPojos) {
             billAmount += orderItemPojo.getQuantity() * orderItemPojo.getSellingPrice();

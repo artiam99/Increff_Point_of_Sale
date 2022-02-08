@@ -6,6 +6,8 @@ public class OrderData {
     private String datetime;
     private double billAmount;
 
+    private boolean invoice;
+
     public int getId() {
         return id;
     }
@@ -28,5 +30,13 @@ public class OrderData {
 
     public void setBillAmount(double billAmount) {
         this.billAmount = billAmount;
+    }
+
+    public boolean getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(boolean invoice) {
+        this.invoice = invoice;
     }
 }

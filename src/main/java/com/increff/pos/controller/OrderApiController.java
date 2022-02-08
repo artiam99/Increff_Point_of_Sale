@@ -1,10 +1,14 @@
 package com.increff.pos.controller;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.increff.pos.model.OrderData;
+import com.increff.pos.model.*;
+import com.increff.pos.util.GeneratePDF;
+import com.increff.pos.util.GenerateXML;
+import org.apache.fop.apps.FOPException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import com.increff.pos.model.OrderItemForm;
 import com.increff.pos.dto.OrderDto;
 import com.increff.pos.service.ApiException;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 
 @Api
@@ -56,5 +62,21 @@ public class OrderApiController {
 
         List<OrderItemForm> orderItems = new LinkedList<OrderItemForm>(Arrays.asList(orderItemForms));
         dto.updateOrder(id, orderItems);
+    }
+
+    @ApiOperation(value = "Generates invoice")
+    @RequestMapping(value = "/invoice/{id}",method = RequestMethod.POST)
+    public void generateInvoice(@PathVariable int id, @RequestBody OrderItemForm[] orderItemForms, HttpServletResponse response)
+            throws ApiException, ParserConfigurationException, TransformerException, FOPException, IOException {
+        List<BillData> list = dto.generateInvoice(id, orderItemForms);
+        GenerateXML.createXml(list);
+        byte[] encodedBytes = GeneratePDF.createPDF();
+        GeneratePDF.createResponse(response, encodedBytes);
+    }
+
+    @ApiOperation(value = "Get sales data")
+    @RequestMapping(path = "/sales", method = RequestMethod.POST)
+    public List<SalesData> sales(@RequestBody SalesForm f) throws ApiException {
+        return dto.sales(f);
     }
 }

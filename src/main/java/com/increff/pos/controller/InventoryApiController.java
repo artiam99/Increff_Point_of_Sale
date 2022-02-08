@@ -52,4 +52,10 @@ public class InventoryApiController {
 
         dto.update(id, f);
     }
+
+    @ApiOperation(value = "Search by Brand & Category")
+    @RequestMapping(path = "/filter", method = RequestMethod.POST)
+    public List<InventoryData> search(@RequestBody InventoryForm f) throws ApiException {
+        return dto.searchInventoryData(f);
+    }
 }
