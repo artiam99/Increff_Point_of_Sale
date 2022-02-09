@@ -46,22 +46,36 @@
     <xsl:template match="bill">
         <fo:block text-align="center">
             <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-width="50%" />
-                <fo:table-column column-width="50%" />
+                <fo:table-column column-width="70%" />
+                <fo:table-column column-width="30%" />
                 <fo:table-body>
                     <fo:table-row>
                         <fo:table-cell>
                             <fo:block font-size="12pt" font-family="sans-serif"
                                       color="black" text-align="left" padding-top="3pt">
-                                Date :
-                                <xsl:value-of select="date" />
+                                Order ID :
+                                <fo:inline font-weight="bold"><xsl:value-of select="orderId" /></fo:inline>
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell>
                             <fo:block font-size="12pt" font-family="sans-serif"
-                                      color="black" text-align="right" padding-top="3pt">
-                                Time :
-                                <xsl:value-of select="time" />
+                                      color="black" text-align="left" padding-top="3pt">
+                                Order Date-Time   :
+                                <xsl:value-of select="dateTime" />
+                            </fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                    <fo:table-row>
+                        <fo:table-cell>
+                            <fo:block font-size="12pt" font-family="sans-serif"
+                                      color="black" text-align="left" padding-top="3pt">
+                            </fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell>
+                            <fo:block font-size="12pt" font-family="sans-serif"
+                                      color="black" text-align="left" padding-top="3pt">
+                                Invoice Date-Time :
+                                <xsl:value-of select="date" />   <xsl:value-of select="time" />
                             </fo:block>
                         </fo:table-cell>
                     </fo:table-row>
@@ -78,52 +92,52 @@
                 <fo:table-body>
                     <fo:table-row>
                         <fo:table-cell padding-top="30pt">
-                            <fo:block font-size="15pt" font-family="sans-serif"
+                            <fo:block font-size="15pt" font-family="sans-serif" border-top-style="solid"
                                       background-color="black" color="white" text-align="center"
                                       padding-top="3pt">
-                                SL-No.
+                                S/N
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding-top="30pt">
-                            <fo:block font-size="15pt" font-family="sans-serif"
+                            <fo:block font-size="15pt" font-family="sans-serif" border-top-style="solid"
                                       background-color="black" color="white" text-align="center"
                                       padding-top="3pt">
                                 Barcode
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding-top="30pt">
-                            <fo:block font-size="15pt" font-family="sans-serif"
+                            <fo:block font-size="15pt" font-family="sans-serif" border-top-style="solid"
                                       background-color="black" color="white" text-align="center"
                                       padding-top="3pt">
                                 Brand
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding-top="30pt">
-                            <fo:block font-size="15pt" font-family="sans-serif"
+                            <fo:block font-size="15pt" font-family="sans-serif" border-top-style="solid"
                                       background-color="black" color="white" text-align="center"
                                       padding-top="3pt">
                                 Name
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding-top="30pt">
-                            <fo:block font-size="15pt" font-family="sans-serif"
+                            <fo:block font-size="15pt" font-family="sans-serif" border-top-style="solid"
                                       background-color="black" color="white" text-align="center"
                                       padding-top="3pt">
                                 Quantity
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding-top="30pt">
-                            <fo:block font-size="15pt" font-family="sans-serif"
+                            <fo:block font-size="15pt" font-family="sans-serif" border-top-style="solid"
                                       background-color="black" color="white" text-align="center"
                                       padding-top="3pt">
                                 Selling Price
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding-top="30pt">
-                            <fo:block font-size="15pt" font-family="sans-serif"
+                            <fo:block font-size="15pt" font-family="sans-serif" border-top-style="solid"
                                       background-color="black" color="white" text-align="center"
                                       padding-top="3pt">
-                                Total
+                                Amount
                             </fo:block>
                         </fo:table-cell>
                     </fo:table-row>
@@ -141,34 +155,34 @@
                     <fo:table-row>
                         <xsl:if test="position() mod 2">
                             <xsl:attribute name="background-color">
-                                <xsl:text>#EEF0F2</xsl:text>
+                                <xsl:text>#FFFFFF</xsl:text>
                             </xsl:attribute>
                         </xsl:if>
-                        <fo:table-cell border-style="solid"
+                        <fo:table-cell border-style="solid" border-top-style="solid"
                                        border-width="1.0pt">
                             <xsl:apply-templates select="item/id" />
                         </fo:table-cell>
-                        <fo:table-cell border-style="solid"
+                        <fo:table-cell border-style="solid" border-top-style="solid"
                                        border-width="1.0pt">
                             <xsl:apply-templates select="item/barcode" />
                         </fo:table-cell>
-                        <fo:table-cell border-style="solid"
+                        <fo:table-cell border-style="solid" border-top-style="solid"
                                        border-width="1.0pt">
                             <xsl:apply-templates select="item/brand" />
                         </fo:table-cell>
-                        <fo:table-cell border-style="solid"
+                        <fo:table-cell border-style="solid" border-top-style="solid"
                                        border-width="1.0pt">
                             <xsl:apply-templates select="item/name" />
                         </fo:table-cell>
-                        <fo:table-cell border-style="solid"
+                        <fo:table-cell border-style="solid" border-top-style="solid"
                                        border-width="1.0pt">
                             <xsl:apply-templates select="item/quantity" />
                         </fo:table-cell>
-                        <fo:table-cell border-style="solid"
+                        <fo:table-cell border-style="solid" border-top-style="solid"
                                        border-width="1.0pt">
                             <xsl:apply-templates select="item/sellingPrice" />
                         </fo:table-cell>
-                        <fo:table-cell border-style="solid"
+                        <fo:table-cell border-style="solid" border-top-style="solid"
                                        border-width="1.0pt">
                             <xsl:apply-templates select="item/cost" />
                         </fo:table-cell>
@@ -176,19 +190,33 @@
                 </fo:table-body>
             </fo:table>
             <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-width="50%" />
-                <fo:table-column column-width="50%" />
+                <fo:table-column column-width="20%" />
+                <fo:table-column column-width="80%" />
                 <fo:table-body>
                     <fo:table-row>
                         <fo:table-cell padding-top="50pt">
                             <fo:block font-size="20pt" font-family="sans-serif"
-                                      color="black" text-align="center" >
-                                Total
+                                      color="black" text-align="left" >
+                                Total Quantity:
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding-top="50pt">
                             <fo:block font-size="20pt" font-family="sans-serif"
-                                      color="blue" text-align="center">
+                                      color="blue" text-align="left">
+                                <xsl:value-of select="totalQuantity" />
+                            </fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                    <fo:table-row>
+                        <fo:table-cell padding-top="20pt">
+                            <fo:block font-size="20pt" font-family="sans-serif"
+                                      color="black" text-align="left" >
+                                Total Amount:
+                            </fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding-top="20pt">
+                            <fo:block font-size="20pt" font-family="sans-serif"
+                                      color="blue" text-align="left">
                                 <xsl:value-of select="total" />
                             </fo:block>
                         </fo:table-cell>
@@ -198,43 +226,43 @@
         </fo:block>
     </xsl:template>
     <xsl:template match="id">
-        <fo:block font-size="12pt" font-family="sans-serif"
+        <fo:block font-size="12pt" font-family="sans-serif" border-top-style="solid"
                   space-after.optimum="3pt" text-align="center" padding="3pt">
             <xsl:value-of select="." />
         </fo:block>
     </xsl:template>
     <xsl:template match="barcode">
-        <fo:block font-size="12pt" font-family="sans-serif"
+        <fo:block font-size="12pt" font-family="sans-serif" border-top-style="solid"
                   space-after.optimum="3pt" text-align="center" padding="3pt">
             <xsl:value-of select="." />
         </fo:block>
     </xsl:template>
     <xsl:template match="brand">
-        <fo:block font-size="12pt" font-family="sans-serif"
+        <fo:block font-size="12pt" font-family="sans-serif" border-top-style="solid"
                   space-after.optimum="3pt" text-align="center" padding="3pt">
             <xsl:value-of select="." />
         </fo:block>
     </xsl:template>
     <xsl:template match="name">
-        <fo:block font-size="12pt" font-family="sans-serif"
+        <fo:block font-size="12pt" font-family="sans-serif" border-top-style="solid"
                   space-after.optimum="3pt" text-align="center" padding="3pt">
             <xsl:value-of select="." />
         </fo:block>
     </xsl:template>
     <xsl:template match="quantity">
-        <fo:block font-size="12pt" font-family="sans-serif"
+        <fo:block font-size="12pt" font-family="sans-serif" border-top-style="solid"
                   space-after.optimum="3pt" text-align="center" padding="3pt">
             <xsl:value-of select="." />
         </fo:block>
     </xsl:template>
     <xsl:template match="sellingPrice">
-        <fo:block font-size="12pt" font-family="sans-serif"
+        <fo:block font-size="12pt" font-family="sans-serif" border-top-style="solid"
                   space-after.optimum="3pt" text-align="center" padding="3pt">
             <xsl:value-of select="." />
         </fo:block>
     </xsl:template>
     <xsl:template match="cost">
-        <fo:block font-size="12pt" font-family="sans-serif"
+        <fo:block font-size="12pt" font-family="sans-serif" border-top-style="solid"
                   space-after.optimum="3pt" text-align="center" padding="3pt">
             <xsl:value-of select="." />
         </fo:block>

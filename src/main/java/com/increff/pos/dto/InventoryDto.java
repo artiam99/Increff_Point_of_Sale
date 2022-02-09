@@ -1,23 +1,21 @@
 package com.increff.pos.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.increff.pos.model.ProductData;
-import com.increff.pos.model.ProductForm;
-import com.increff.pos.pojo.BrandPojo;
-import com.increff.pos.util.ConvertUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import com.increff.pos.model.InventoryData;
 import com.increff.pos.model.InventoryForm;
-import com.increff.pos.pojo.ProductPojo;
+import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.pojo.InventoryPojo;
+import com.increff.pos.pojo.ProductPojo;
 import com.increff.pos.service.ApiException;
 import com.increff.pos.service.BrandService;
 import com.increff.pos.service.InventoryService;
 import com.increff.pos.service.ProductService;
+import com.increff.pos.util.ConvertUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class InventoryDto {
@@ -69,7 +67,7 @@ public class InventoryDto {
         List<InventoryPojo> list = inventoryService.getAll();
 
         List<InventoryData> list2 = new ArrayList<>();
-        for(InventoryPojo p: list){
+        for (InventoryPojo p : list) {
 
             ProductPojo p1 = productService.get(p.getProductid());
 
@@ -80,10 +78,9 @@ public class InventoryDto {
         return list2;
     }
 
-    public List<InventoryData> searchInventoryData(InventoryForm f) throws ApiException  {
+    public List<InventoryData> searchInventoryData(InventoryForm f) throws ApiException {
 
-        if(f.getBarcode() != "")
-        {
+        if (f.getBarcode() != "") {
             ProductPojo p = productService.getByBarcode(f.getBarcode());
             InventoryPojo i = ConvertUtil.convertInventoryFormtoInventoryPojo(f, p);
             InventoryPojo ip = inventoryService.getByProductid(i);
@@ -92,13 +89,11 @@ public class InventoryDto {
 
             InventoryData id = ConvertUtil.convertProductPojotoInventoryData(p, ip, brandService.get(p.getBrandcategory()));
 
-            if(f.getBrand() != "" && !f.getBrand().equals(id.getBrand()))
-            {
+            if (f.getBrand() != "" && !f.getBrand().equals(id.getBrand())) {
                 return list;
             }
 
-            if(f.getCategory() != "" && !f.getCategory().equals(id.getCategory()))
-            {
+            if (f.getCategory() != "" && !f.getCategory().equals(id.getCategory())) {
                 return list;
             }
 
@@ -111,12 +106,10 @@ public class InventoryDto {
 
         List<InventoryData> list2 = new ArrayList<>();
 
-        for(BrandPojo p: brandPojo)
-        {
+        for (BrandPojo p : brandPojo) {
             List<ProductPojo> list1 = productService.getByBrandCategory(p.getId());
 
-            for(ProductPojo p1: list1)
-            {
+            for (ProductPojo p1 : list1) {
                 InventoryPojo i = ConvertUtil.convertInventoryFormtoInventoryPojo(f, p1);
                 InventoryPojo ip = inventoryService.getByProductid(i);
                 list2.add(ConvertUtil.convertProductPojotoInventoryData(p1, ip, brandService.get(p1.getBrandcategory())));

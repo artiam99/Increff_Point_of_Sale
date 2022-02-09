@@ -69,7 +69,7 @@ public class OrderApiController {
     public void generateInvoice(@PathVariable int id, @RequestBody OrderItemForm[] orderItemForms, HttpServletResponse response)
             throws ApiException, ParserConfigurationException, TransformerException, FOPException, IOException {
         List<BillData> list = dto.generateInvoice(id, orderItemForms);
-        GenerateXML.createXml(list);
+        GenerateXML.createXml(id, dto.get(id).getDatetime(), list);
         byte[] encodedBytes = GeneratePDF.createPDF();
         GeneratePDF.createResponse(response, encodedBytes);
     }

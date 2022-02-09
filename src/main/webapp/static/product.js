@@ -342,9 +342,9 @@ function displaySearchBrandCategory(data){
 	categorySet = Array.from(categorySet);
 	categorySet.sort();
 
-	var row='<option value="select">select brand</option>';
+	var row='<option value="select">all brands</option>';
     $brandBody.append(row);
-    row='<option value="select">select category</option>';
+    row='<option value="select">all categories</option>';
     $categoryBody.append(row);
 
 	for(var i in brandSet){
@@ -434,12 +434,12 @@ function searchBrandCategory(){
     var category = $("#enterInputCategory :selected").text();
 	var obj = {barcode, brand, category, mrp: 0, name: ""};
 
-	if(obj.brand === "select brand")
+	if(obj.brand === "all brands")
 	{
 	    obj.brand = "";
 	}
 
-	if(obj.category === "select category")
+	if(obj.category === "all categories")
     {
     	    obj.category = "";
    	}

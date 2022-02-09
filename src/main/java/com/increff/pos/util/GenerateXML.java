@@ -22,7 +22,7 @@ import com.increff.pos.model.BillData;
 
 public class GenerateXML {
 
-    public static void createXml(List<BillData> billDataItems)
+    public static void createXml(int orderid, String datetime, List<BillData> billDataItems)
             throws ParserConfigurationException, TransformerException {
         String xmlFilePath = "billDataXML.xml";
 
@@ -39,13 +39,16 @@ public class GenerateXML {
         double finalBill = 0;
 
         Element date = document.createElement("date");
-        date.appendChild(document.createTextNode(getDate()));
+        date.appendChild(document.createTextNode(getDate() + " "));
         root.appendChild(date);
 
         Element time = document.createElement("time");
-        time.appendChild(document.createTextNode(getTime()));
+        time.appendChild(document.createTextNode(getTime().substring(0, 5)));
         root.appendChild(time);
         // Create elements from BillData list
+
+        int totalQuantity = 0;
+
         for (i = 0; i < billDataItems.size(); i++) {
             Element item = document.createElement("item");
             root.appendChild(item);
@@ -65,6 +68,8 @@ public class GenerateXML {
             quantity.appendChild(document.createTextNode(String.valueOf(billDataItems.get(i).quantity)));
             item.appendChild(quantity);
 
+            totalQuantity += billDataItems.get(i).quantity;
+
             Element brand = document.createElement("brand");
             brand.appendChild(document.createTextNode(billDataItems.get(i).brand));
             item.appendChild(brand);
@@ -80,11 +85,32 @@ public class GenerateXML {
             Element cost = document.createElement("cost");
             cost.appendChild(document.createTextNode(String.format("%.2f",totalCost)));
             item.appendChild(cost);
-
         }
 
+        String s = String.valueOf(orderid);
+        String odId = "OD";
+
+        for(int j = 0 ; j < 8 - s.length() ; j++)
+        {
+            odId += "O";
+        }
+
+        odId += s;
+
+        Element orderId = document.createElement("orderId");
+        orderId.appendChild(document.createTextNode(String.format(odId)));
+        root.appendChild(orderId);
+
+        Element dateTime = document.createElement("dateTime");
+        dateTime.appendChild(document.createTextNode(String.format("  " + datetime)));
+        root.appendChild(dateTime);
+
+        Element totalquantity = document.createElement("totalQuantity");
+        totalquantity.appendChild(document.createTextNode(String.valueOf(totalQuantity)));
+        root.appendChild(totalquantity);
+
         Element total = document.createElement("total");
-        total.appendChild(document.createTextNode(String.format("%.2f",finalBill) + " Rs."));
+        total.appendChild(document.createTextNode("Rs. " + String.format("%.2f",finalBill)));
         root.appendChild(total);
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();

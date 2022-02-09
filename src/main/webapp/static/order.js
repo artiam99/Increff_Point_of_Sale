@@ -118,6 +118,7 @@ function addOrderItem(event){
 }
 
 var tableData = [];
+var updateData = [];
 
 function checkAddTable(obj)
 {
@@ -149,7 +150,7 @@ function checkAddTable(obj)
               if(table.rows[i].cells[0].innerText === obj.barcode)
                {
                     table.rows[i].cells[3].innerText = obj.quantity;
-                    table.rows[i].cells[4].innerText = obj.sellingPrice;
+                    table.rows[i].cells[4].innerText = commafy(parseFloat(obj.sellingPrice).toFixed(2));
                }
         }
 
@@ -221,7 +222,7 @@ function checkEditTable(obj)
               if(table.rows[i].cells[0].innerText === obj.barcode)
                {
                     table.rows[i].cells[3].innerText = obj.quantity;
-                    table.rows[i].cells[4].innerText = obj.sellingPrice;
+                    table.rows[i].cells[4].innerText = commafy(parseFloat(obj.sellingPrice).toFixed(2));;
                }
         }
 
@@ -233,7 +234,7 @@ function checkEditTable(obj)
     }
 }
 
-function editOrderItemTable(obj)
+function editOrderItemTable(obj, flag)
 {
     if(checkEditTable(obj))
     {
@@ -247,7 +248,12 @@ function editOrderItemTable(obj)
 
     var $tbody = $('#orderitem-table-edit').find('tbody');
 
-    var buttonHtml= ' <button type="button" class="btn btn-danger" onclick="deleteEditOrderItemTable(\'' + obj.barcode + '\')">Remove</button>'
+    var buttonHtml;
+
+
+    buttonHtml = ' <button type="button" class="btn btn-danger" onclick="deleteEditOrderItemTable(\'' + obj.barcode + '\')">Remove</button>'
+
+
     var row = '<tr>'
         + '<td>' + obj.barcode + '</td>'
         + '<td>'  + obj.brand + '</td>'
@@ -312,6 +318,36 @@ function deleteAddOrderItemTable(barcode)
 
 function deleteEditOrderItemTable(barcode)
 {
+
+    var flag = false;
+
+    updateData.forEach(e =>
+    {
+        if(e === barcode)
+        {
+            flag = true;
+        }
+    })
+
+    if(flag === true)
+    {
+        var obj;
+
+        tableData.forEach(e =>
+        {
+            if(e.barcode === barcode)
+            {
+                obj = e;
+            }
+        })
+
+        obj.quantity = 0;
+
+        checkEditTable(obj);
+
+        return;
+    }
+
       var table = document.getElementById('orderitem-table-edit');
 
       for(var i = 1; i < table.rows.length; i++)
@@ -431,6 +467,8 @@ function editOrderItem(event){
 
         return;
     }
+
+
     var obj = {barcode, brand: "", category:"", mrp: 0, name: ""};
 
     json = JSON.stringify(obj);
@@ -455,7 +493,7 @@ function editOrderItem(event){
 
                     var obj = {barcode, brand: data.brand, name: data.name, quantity, sellingPrice };
 
-        	   		editOrderItemTable(obj);
+        	   		editOrderItemTable(obj, false);
         	   },
          error: handleAjaxError
     });
@@ -486,6 +524,7 @@ function updateOrder(event){
                     $tbody.empty();
 
                     tableData = [];
+                    updateData = [];
 
                     $('#edit-order-modal').modal('toggle');
                     $('#order-edit-form').trigger("reset");
@@ -659,7 +698,9 @@ function displayOrder(id, data){
 
     data.forEach(d =>
     {
-        editOrderItemTable(d);
+        editOrderItemTable(d, true);
+
+        updateData.push(d.barcode);
     });
 
     $("#order-edit-form input[name=id]").val(id);
@@ -700,6 +741,7 @@ function cancelEditOrderModal()
     $('#order-edit-form').trigger("reset");
     $('#order-edit-form-second').trigger("reset");
     tableData = [];
+    updateData = [];
     var $tbody = $('#orderitem-table-edit').find('tbody');
     $tbody.empty();
 }
@@ -746,7 +788,6 @@ function getProductDetails(barcode){
         	   		$('#inputMrp').val(data.mrp);
         	   		$('#inputBrand').val(data.brand);
                     $('#inputName').val(data.name);
-                    $('#inputQuantity').val(1);
         	   },
         	   error: function(error)
         	   {
@@ -792,7 +833,6 @@ function getProductDetailsEdit(barcode){
         	   		$('#inputMrpEdit').val(data.mrp);
         	   		$('#inputBrandEdit').val(data.brand);
                     $('#inputNameEdit').val(data.name);
-                    $('#inputQuantityEdit').val(1);
         	   },
         	   error: function(error)
         	   {
@@ -804,16 +844,23 @@ function getProductDetailsEdit(barcode){
     });
 }
 
-function downloadBillPdf(blob){
+function downloadBillPdf(id, blob){
+
+    var st = id.toString();
+
+    var orderId = "OD";
+
+    for(var i = 0 ; i < 8 - st.length ; i++)
+    {
+        orderId += "0";
+    }
+
+    orderId += st;
+
 	let link = document.createElement('a');
 	link.href = window.URL.createObjectURL(blob);
 	var currentdate = new Date();
-	link.download = "bill_"+ currentdate.getDate() + "/"
-	+ (currentdate.getMonth()+1)  + "/"
-	+ currentdate.getFullYear() + "@"
-	+ currentdate.getHours() + "h_"
-	+ currentdate.getMinutes() + "m_"
-	+ currentdate.getSeconds()+"s.pdf";
+	link.download = "invoice-" + orderId +".pdf";
 	link.click();
 }
 
@@ -849,7 +896,7 @@ function generateInvoice(id)
             }
             let blob = new Blob([bytes], {type: "application/pdf"});
               //openBillPdf(blob);
-            downloadBillPdf(blob);
+            downloadBillPdf(id, blob);
 
             getOrderList();
        },
@@ -961,6 +1008,22 @@ function downloadReport(){
                 {
                     response[i].revenue = parseFloat(response[i].revenue).toFixed(2);
                 }
+
+                response=response.sort(function(a,b){
+                    		if(a.brand===b.brand){
+                    			if(a.category<b.category){
+                    				return -1;
+                    			}else{
+                    				return 1;
+                    			}
+                    		}else{
+                    		if(a.brand<b.brand){
+                    			return -1;
+                    		}else{
+                    			return 1;
+                    		}
+                    		}
+                    	});
 
     	   		var config = {
                             		quoteChar: '',
