@@ -1,19 +1,16 @@
 package com.increff.pos.controller;
 
-import java.util.List;
-
+import com.increff.pos.dto.OrderItemDto;
+import com.increff.pos.model.OrderItemData;
+import com.increff.pos.service.ApiException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.increff.pos.dto.OrderItemDto;
-import com.increff.pos.model.OrderItemData;
-import com.increff.pos.service.ApiException;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.List;
 
 @Api
 @RestController
@@ -21,12 +18,11 @@ import io.swagger.annotations.ApiOperation;
 public class OrderItemApiController {
 
     @Autowired
-    private OrderItemDto dto;
+    private OrderItemDto orderItemDto;
 
     @ApiOperation(value = "Gets Order Items for order")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public List<OrderItemData> get(@PathVariable int id) throws ApiException {
-        return dto.get(id);
+        return orderItemDto.get(id);
     }
-
 }

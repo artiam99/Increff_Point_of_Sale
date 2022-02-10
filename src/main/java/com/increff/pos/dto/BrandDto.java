@@ -8,7 +8,6 @@ import com.increff.pos.service.BrandService;
 import com.increff.pos.util.ConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,47 +15,47 @@ import java.util.List;
 public class BrandDto {
 
     @Autowired
-    private BrandService service;
+    private BrandService brandService;
 
-    public void addBrand(BrandForm f) throws ApiException {
-        BrandPojo p = ConvertUtil.convertBrandFormtoBrandPojo(f);
-        service.add(p);
+    public void addBrand(BrandForm brandForm) throws ApiException {
+        BrandPojo brandPojo = ConvertUtil.convertBrandFormtoBrandPojo(brandForm);
+        brandService.add(brandPojo);
     }
-    public List<BrandData> searchBrandData(BrandForm f)  {
-        BrandPojo p = ConvertUtil.convertBrandFormtoBrandPojo(f);
 
-        List<BrandPojo> list = service.search(p);
-        List<BrandData> list2 = new ArrayList<BrandData>();
-        for (BrandPojo p1 : list) {
-            list2.add(ConvertUtil.convertBrandPojotoBrandData(p1));
+    public List<BrandData> searchBrandData(BrandForm brandForm)  {
+        BrandPojo brandPojo = ConvertUtil.convertBrandFormtoBrandPojo(brandForm);
+        List<BrandPojo> brandPojoList = brandService.search(brandPojo);
+        List<BrandData> brandDataList = new ArrayList<BrandData>();
+        for (BrandPojo brandPojo1 : brandPojoList) {
+            brandDataList.add(ConvertUtil.convertBrandPojotoBrandData(brandPojo1));
         }
-        return list2;
+        return brandDataList;
     }
 
-    public BrandPojo getByBrandCategory(BrandForm f) throws ApiException {
-        BrandPojo p = ConvertUtil.convertBrandFormtoBrandPojo(f);
-        return service.searchBrandCategory(p);
+    public BrandPojo getByBrandCategory(BrandForm brandForm) throws ApiException {
+        BrandPojo brandPojo = ConvertUtil.convertBrandFormtoBrandPojo(brandForm);
+        return brandService.searchBrandCategory(brandPojo);
     }
 
     public BrandData getBrandData(int id) throws ApiException {
-        return ConvertUtil.convertBrandPojotoBrandData(service.get(id));
+        return ConvertUtil.convertBrandPojotoBrandData(brandService.get(id));
     }
 
     public List<BrandData> getAllBrand(){
-        List<BrandPojo> list = service.getAll();
-        List<BrandData> list2 = new ArrayList<BrandData>();
-        for (BrandPojo p : list) {
-            list2.add(ConvertUtil.convertBrandPojotoBrandData(p));
+        List<BrandPojo> brandPojoList = brandService.getAll();
+        List<BrandData> brandDataList = new ArrayList<BrandData>();
+        for(BrandPojo brandPojo : brandPojoList) {
+            brandDataList.add(ConvertUtil.convertBrandPojotoBrandData(brandPojo));
         }
-        return list2;
+        return brandDataList;
     }
 
-    public void updateBrand(int id,BrandForm f) throws ApiException {
-        BrandPojo p = ConvertUtil.convertBrandFormtoBrandPojo(f);
-        service.update(id, p);
+    public void updateBrand(int id, BrandForm brandForm) throws ApiException {
+        BrandPojo brandPojo = ConvertUtil.convertBrandFormtoBrandPojo(brandForm);
+        brandService.update(id, brandPojo);
     }
 
     public void deleteBrand(int id) {
-        service.delete(id);
+        brandService.delete(id);
     }
 }

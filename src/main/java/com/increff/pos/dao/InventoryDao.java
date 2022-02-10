@@ -21,16 +21,13 @@ public class InventoryDao extends AbstractDao {
     private static String select_productid = "select p from InventoryPojo p where productid=:productid";
     private static String select_all = "select p from InventoryPojo p";
 
-    @PersistenceContext
-    private EntityManager inv;
-
     @Transactional
-    public void insert(InventoryPojo p) {
-        inv.persist(p);
+    public void insert(InventoryPojo inventoryPojo) {
+        em().persist(inventoryPojo);
     }
 
     public int delete(int id) {
-        Query query = inv.createQuery(delete_id);
+        Query query = em().createQuery(delete_id);
         query.setParameter("id", id);
         return query.executeUpdate();
     }
@@ -52,6 +49,6 @@ public class InventoryDao extends AbstractDao {
         return query.getResultList();
     }
 
-    public void update(InventoryPojo p) {
+    public void update(InventoryPojo inventoryPojo) {
     }
 }

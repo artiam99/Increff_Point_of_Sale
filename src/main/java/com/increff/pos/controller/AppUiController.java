@@ -12,12 +12,11 @@ public class AppUiController {
 	private String baseUrl;
 
 	protected ModelAndView mav(String page) {
-
-		// Set info
 		ModelAndView mav = new ModelAndView(page);
 		mav.addObject("baseUrl", baseUrl);
 		return mav;
 	}
+
 	@RequestMapping(value = "")
 	public ModelAndView index() {
 		return mav("index.html");

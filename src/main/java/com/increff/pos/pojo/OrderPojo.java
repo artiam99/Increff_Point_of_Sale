@@ -30,6 +30,7 @@ public class OrderPojo {
     public boolean getInvoice() {
         return invoice;
     }
+
     public void setInvoice(boolean invoice) {
         this.invoice = invoice;
     }

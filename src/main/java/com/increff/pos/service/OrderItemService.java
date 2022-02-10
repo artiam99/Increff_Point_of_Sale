@@ -10,12 +10,12 @@ import java.util.List;
 @Service
 public class OrderItemService {
     @Autowired
-    private OrderItemDao dao;
+    private OrderItemDao orderItemDao;
 
     @Transactional
-    public void add(List<OrderItemPojo> l) {
-        for(OrderItemPojo p : l) {
-            dao.insert(p);
+    public void add(List<OrderItemPojo> orderItemPojoList) {
+        for(OrderItemPojo orderItemPojo : orderItemPojoList) {
+            orderItemDao.insert(orderItemPojo);
         }
     }
 
@@ -26,26 +26,25 @@ public class OrderItemService {
 
     @Transactional
     public List<OrderItemPojo> getList(List<Integer> ids) {
-        return dao.selectByOrderIdList(ids);
+        return orderItemDao.selectByOrderIdList(ids);
     }
 
     @Transactional
     public List<OrderItemPojo> getAll() {
-        return dao.selectAll();
+        return orderItemDao.selectAll();
     }
 
     @Transactional
     public void deleteByOrderId(int id) {
-        dao.deleteByOrderId(id);
+        orderItemDao.deleteByOrderId(id);
     }
 
     @Transactional
     public List<OrderItemPojo> check(int id) throws ApiException {
-
-        List<OrderItemPojo> newP = dao.selectByOrderId(id);
-        if (newP.isEmpty()) {
+        List<OrderItemPojo> orderItemPojoList = orderItemDao.selectByOrderId(id);
+        if (orderItemPojoList.isEmpty()) {
             throw new ApiException("Order item don't exist - orderId : " + id);
         }
-        return newP;
+        return orderItemPojoList;
     }
 }

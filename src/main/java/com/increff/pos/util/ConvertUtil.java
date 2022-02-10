@@ -2,7 +2,6 @@ package com.increff.pos.util;
 
 import com.increff.pos.model.*;
 import com.increff.pos.pojo.*;
-
 import java.util.List;
 
 public class ConvertUtil {
@@ -21,7 +20,7 @@ public class ConvertUtil {
         return b;
     }
 
-    public static BrandForm convertProductFormtoBrandForm(ProductForm f){
+    public static BrandForm convertProductFormtoBrandForm(ProductForm f) {
         BrandForm b = new BrandForm();
         b.setBrand(f.getBrand());
         b.setCategory(f.getCategory());
@@ -42,7 +41,7 @@ public class ConvertUtil {
         return b;
     }
 
-    public static ProductPojo convertProductFormtoProductPojo(ProductForm f,BrandPojo b){
+    public static ProductPojo convertProductFormtoProductPojo(ProductForm f, BrandPojo b) {
         ProductPojo p = new ProductPojo();
         p.setName(f.getName());
         p.setMrp(f.getMrp());
@@ -51,7 +50,7 @@ public class ConvertUtil {
         return p;
     }
 
-    public static ProductData convertProductPojotoProductData(ProductPojo p, BrandPojo b){
+    public static ProductData convertProductPojotoProductData(ProductPojo p, BrandPojo b) {
         ProductData d = new ProductData();
         d.setBrand(b.getBrand());
         d.setCategory(b.getCategory());
@@ -62,7 +61,7 @@ public class ConvertUtil {
         return d;
     }
 
-    public static InventoryData convertProductPojotoInventoryData(ProductPojo p, InventoryPojo i, BrandPojo b){
+    public static InventoryData convertProductPojotoInventoryData(ProductPojo p, InventoryPojo i, BrandPojo b) {
         InventoryData d = new InventoryData();
         d.setBrand(b.getBrand());
         d.setCategory(b.getCategory());

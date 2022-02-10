@@ -5,16 +5,16 @@ import java.io.IOException;
 
 public class IOUtil {
 
-	public static void closeQuietly(Closeable c) {
-		if (c == null) {
-			return;
-		}
+    public static void closeQuietly(Closeable c) {
+        if (c == null) {
+            return;
+        }
 
-		try {
-			c.close();
-		} catch (IOException e) {
-			// do nothing
-		}
-	}
+        try {
+            c.close();
+        } catch (IOException e) {
+            // do nothing
+        }
+    }
 
 }

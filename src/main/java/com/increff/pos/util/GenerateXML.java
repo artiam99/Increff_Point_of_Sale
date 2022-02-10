@@ -1,10 +1,8 @@
 package com.increff.pos.util;
 
-import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import com.increff.pos.model.BillData;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,11 +12,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import com.increff.pos.model.BillData;
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 public class GenerateXML {
 
@@ -79,19 +77,18 @@ public class GenerateXML {
             item.appendChild(barcode);
 
             Element sellingPrice = document.createElement("sellingPrice");
-            sellingPrice.appendChild(document.createTextNode(String.format("%.2f",billDataItems.get(i).sellingPrice)));
+            sellingPrice.appendChild(document.createTextNode(String.format("%.2f", billDataItems.get(i).sellingPrice)));
             item.appendChild(sellingPrice);
 
             Element cost = document.createElement("cost");
-            cost.appendChild(document.createTextNode(String.format("%.2f",totalCost)));
+            cost.appendChild(document.createTextNode(String.format("%.2f", totalCost)));
             item.appendChild(cost);
         }
 
         String s = String.valueOf(orderid);
         String odId = "OD";
 
-        for(int j = 0 ; j < 8 - s.length() ; j++)
-        {
+        for (int j = 0; j < 8 - s.length(); j++) {
             odId += "O";
         }
 
@@ -110,7 +107,7 @@ public class GenerateXML {
         root.appendChild(totalquantity);
 
         Element total = document.createElement("total");
-        total.appendChild(document.createTextNode("Rs. " + String.format("%.2f",finalBill)));
+        total.appendChild(document.createTextNode("Rs. " + String.format("%.2f", finalBill)));
         root.appendChild(total);
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();

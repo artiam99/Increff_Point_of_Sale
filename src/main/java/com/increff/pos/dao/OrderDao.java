@@ -19,16 +19,13 @@ public class OrderDao extends AbstractDao {
     private static String select_id = "select p from OrderPojo p where id=:id";
 
 
-    @PersistenceContext
-    private EntityManager ord;
-
     @Transactional
-    public void insert(OrderPojo p) {
-        ord.persist(p);
+    public void insert(OrderPojo orderPojo) {
+        em().persist(orderPojo);
     }
 
     public int delete(int id) {
-        Query query = ord.createQuery(delete_id);
+        Query query = em().createQuery(delete_id);
         query.setParameter("id", id);
         return query.executeUpdate();
     }
@@ -45,6 +42,6 @@ public class OrderDao extends AbstractDao {
         return query.getResultList();
     }
 
-    public void update(OrderPojo p) {
+    public void update(OrderPojo orderPojo) {
     }
 }

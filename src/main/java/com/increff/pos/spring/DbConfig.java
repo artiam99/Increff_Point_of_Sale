@@ -1,9 +1,7 @@
 package com.increff.pos.spring;
 
 import java.util.Properties;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +36,6 @@ public class DbConfig {
 
 	@Bean(name = "dataSource")
 	public DataSource getDataSource() {
-//		logger.info("jdbcDriver: " + jdbcDriver + ", jdbcUrl: " + jdbcUrl + ", jdbcUsername: " + jdbcUsername);
 		BasicDataSource bean = new BasicDataSource();
 		bean.setDriverClassName(jdbcDriver);
 		bean.setUrl(jdbcUrl);

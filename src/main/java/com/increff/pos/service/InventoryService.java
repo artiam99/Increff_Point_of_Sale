@@ -1,11 +1,9 @@
 package com.increff.pos.service;
 
 import java.util.List;
-
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.increff.pos.dao.InventoryDao;
 import com.increff.pos.pojo.InventoryPojo;
 
@@ -13,17 +11,16 @@ import com.increff.pos.pojo.InventoryPojo;
 public class InventoryService {
 
     @Autowired
-    private InventoryDao dao;
+    private InventoryDao inventoryDao;
 
     @Transactional(rollbackOn = ApiException.class)
-    public void add(InventoryPojo p) throws ApiException {
-
-        dao.insert(p);
+    public void add(InventoryPojo inventoryPojo) throws ApiException {
+        inventoryDao.insert(inventoryPojo);
     }
 
     @Transactional
     public void delete(int id) {
-        dao.delete(id);
+        inventoryDao.delete(id);
     }
 
     @Transactional
@@ -32,35 +29,28 @@ public class InventoryService {
     }
 
     @Transactional
-    public InventoryPojo getByProductid(InventoryPojo p) throws ApiException {
-
-        return dao.selectProductid(p.getProductid());
+    public InventoryPojo getByProductid(InventoryPojo inventoryPojo) throws ApiException {
+        return inventoryDao.selectProductid(inventoryPojo.getProductid());
     }
 
     @Transactional
     public List<InventoryPojo> getAll() {
-        return dao.selectAll();
+        return inventoryDao.selectAll();
     }
 
     @Transactional(rollbackOn  = ApiException.class)
-    public void update(int id, InventoryPojo p) throws ApiException {
-
-        InventoryPojo ex = getCheck(id);
-        ex.setQuantity(p.getQuantity());
-
-        if(ex.getQuantity() < 0) {
-
+    public void update(int id, InventoryPojo inventoryPojo) throws ApiException {
+        InventoryPojo inventoryPojo1 = getCheck(id);
+        inventoryPojo1.setQuantity(inventoryPojo.getQuantity());
+        if(inventoryPojo1.getQuantity() < 0) {
             throw new ApiException("Quantity can not be negative.");
         }
-
-        dao.update(ex);
+        inventoryDao.update(inventoryPojo1);
     }
 
     @Transactional
     public InventoryPojo getCheck(int id) {
-
-        InventoryPojo p = dao.select(id);
-
-        return p;
+        InventoryPojo inventoryPojo = inventoryDao.select(id);
+        return inventoryPojo;
     }
 }

@@ -19,12 +19,9 @@ public class OrderItemDao extends AbstractDao {
     private static String deleteByOrderId = "delete from OrderItemPojo p where orderId=:orderId";
     private static String selectByOrderIdList = "select p from OrderItemPojo p where orderId IN:orderIds";
 
-    @PersistenceContext
-    private EntityManager ordIt;
-
     @Transactional
-    public void insert(OrderItemPojo p) {
-        ordIt.persist(p);
+    public void insert(OrderItemPojo orderItemPojo) {
+        em().persist(orderItemPojo);
     }
 
     public List<OrderItemPojo> selectByOrderId(int orderId){
@@ -39,7 +36,7 @@ public class OrderItemDao extends AbstractDao {
     }
 
     public int deleteByOrderId(int orderId) {
-        Query query = ordIt.createQuery(deleteByOrderId);
+        Query query = em().createQuery(deleteByOrderId);
         query.setParameter("orderId", orderId);
         return query.executeUpdate();
     }
@@ -50,6 +47,6 @@ public class OrderItemDao extends AbstractDao {
         return query.getResultList();
     }
 
-    public void update(OrderItemPojo p) {
+    public void update(OrderItemPojo orderItemPojo) {
     }
 }

@@ -8,9 +8,8 @@ import org.springframework.context.annotation.PropertySources;
 @Configuration
 @ComponentScan("com.increff.pos")
 @PropertySources({ //
-		@PropertySource(value = "file:./pos.properties", ignoreResourceNotFound = true) //
+        @PropertySource(value = "file:./pos.properties", ignoreResourceNotFound = true) //
 })
 public class SpringConfig {
-
 
 }
