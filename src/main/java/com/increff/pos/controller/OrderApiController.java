@@ -34,7 +34,7 @@ public class OrderApiController {
     @RequestMapping(path = "", method = RequestMethod.POST)
     public void add(@RequestBody OrderItemForm[] orderItemForms) throws ApiException {
         List<OrderItemForm> orderItems = new LinkedList<OrderItemForm>(Arrays.asList(orderItemForms));
-        orderDto.addOrder(orderItems);
+        orderDto.add(orderItems);
     }
 
     @ApiOperation(value = "Gets a Order by ID")
@@ -54,7 +54,7 @@ public class OrderApiController {
     public void update(@PathVariable int id, @RequestBody OrderItemForm[] orderItemForms) throws ApiException {
 
         List<OrderItemForm> orderItems = new LinkedList<OrderItemForm>(Arrays.asList(orderItemForms));
-        orderDto.updateOrder(id, orderItems);
+        orderDto.update(id, orderItems);
     }
 
     @ApiOperation(value = "Generates invoice")

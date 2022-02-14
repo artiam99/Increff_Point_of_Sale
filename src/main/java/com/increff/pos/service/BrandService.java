@@ -20,16 +20,11 @@ public class BrandService {
         if (StringUtil.isEmpty(brandPojo.getBrand()) || StringUtil.isEmpty(brandPojo.getCategory())) {
             throw new ApiException("Brand or category cannot be empty.");
         }
-        List<BrandPojo> brandPojoList = brandDao.selectBrandCategory(brandPojo.getBrand(), brandPojo.getCategory());
+        List<BrandPojo> brandPojoList = brandDao.selectByBrandCategory(brandPojo.getBrand(), brandPojo.getCategory());
         if (brandPojoList.size() != 0) {
-            throw new ApiException("This brand and category already exist.");
+            throw new ApiException("This brand and category already exists.");
         }
         brandDao.insert(brandPojo);
-    }
-
-    @Transactional
-    public void delete(int id) {
-        brandDao.delete(id);
     }
 
     @Transactional(rollbackOn = ApiException.class)
@@ -48,9 +43,9 @@ public class BrandService {
         if(StringUtil.isEmpty(brandPojo.getBrand()) || StringUtil.isEmpty(brandPojo.getCategory())) {
             throw new ApiException("Brand or category cannot be empty.");
         }
-        List<BrandPojo> brandPojoList = brandDao.selectBrandCategory(brandPojo.getBrand(), brandPojo.getCategory());
+        List<BrandPojo> brandPojoList = brandDao.selectByBrandCategory(brandPojo.getBrand(), brandPojo.getCategory());
         if (brandPojoList.size() != 0) {
-            throw new ApiException("This brand and category already exist.");
+            throw new ApiException("This brand and category already exists.");
         }
         BrandPojo brandPojo1 = getCheck(id);
         brandPojo1.setCategory(brandPojo.getCategory());
@@ -65,16 +60,16 @@ public class BrandService {
             return brandDao.selectAll();
         }
         if(StringUtil.isEmpty(brandPojo.getBrand())) {
-            return brandDao.selectCategory(brandPojo.getCategory());
+            return brandDao.selectByCategory(brandPojo.getCategory());
         }
         if(StringUtil.isEmpty(brandPojo.getCategory())) {
-            return brandDao.selectBrand(brandPojo.getBrand());
+            return brandDao.selectByBrand(brandPojo.getBrand());
         }
-        return brandDao.selectBrandCategory(brandPojo.getBrand(), brandPojo.getCategory());
+        return brandDao.selectByBrandCategory(brandPojo.getBrand(), brandPojo.getCategory());
     }
 
     @Transactional
-    public BrandPojo searchBrandCategory(BrandPojo brandPojo) throws ApiException {
+    public BrandPojo searchByBrandCategory(BrandPojo brandPojo) throws ApiException {
         normalize(brandPojo);
         if(StringUtil.isEmpty(brandPojo.getBrand())) {
             throw new ApiException("Please enter brand.");
@@ -82,7 +77,7 @@ public class BrandService {
         if(StringUtil.isEmpty(brandPojo.getCategory())) {
             throw new ApiException("Please enter Category.");
         }
-        List<BrandPojo> brandPojoList = brandDao.selectBrandCategory(brandPojo.getBrand(), brandPojo.getCategory());
+        List<BrandPojo> brandPojoList = brandDao.selectByBrandCategory(brandPojo.getBrand(), brandPojo.getCategory());
         if(brandPojoList.size() == 0) {
             throw new ApiException("This Brand and category doesn't exist.");
         }

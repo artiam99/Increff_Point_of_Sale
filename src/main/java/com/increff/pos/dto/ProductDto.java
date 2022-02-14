@@ -41,9 +41,6 @@ public class ProductDto {
         inventoryService.add(inventoryPojo);
     }
 
-    public void delete(int id) {
-        productService.delete(id);
-    }
 
     @Transactional
     public ProductData get(int id) throws ApiException {
@@ -70,7 +67,7 @@ public class ProductDto {
         productService.update(id, productPojo);
     }
 
-    public List<ProductData> searchProductData(ProductForm productForm) throws ApiException {
+    public List<ProductData> search(ProductForm productForm) throws ApiException {
         if (productForm.getBarcode() != "") {
             ProductPojo productPojo = productService.getByBarcode(productForm.getBarcode());
             List<ProductData> productDataList = new ArrayList<>();

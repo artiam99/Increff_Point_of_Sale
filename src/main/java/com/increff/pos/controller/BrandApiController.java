@@ -25,36 +25,30 @@ public class BrandApiController {
     @ApiOperation(value = "Adds a Brand")
     @RequestMapping(path = "", method = RequestMethod.POST)
     public void add(@RequestBody BrandForm brandForm) throws ApiException {
-        brandDto.addBrand(brandForm);
-    }
-
-    @ApiOperation(value = "Deletes a Brand")
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable int id) {
-        brandDto.deleteBrand(id);
+        brandDto.add(brandForm);
     }
 
     @ApiOperation(value = "Gets a Brand by ID")
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public BrandData get(@PathVariable int id) throws ApiException {
-        return brandDto.getBrandData(id);
+        return brandDto.get(id);
     }
 
     @ApiOperation(value = "Gets list of all Brands")
     @RequestMapping(path = "", method = RequestMethod.GET)
     public List<BrandData> getAll() {
-        return brandDto.getAllBrand();
+        return brandDto.getAll();
     }
 
     @ApiOperation(value = "Updates a Brand")
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable int id, @RequestBody BrandForm brandForm) throws ApiException {
-        brandDto.updateBrand(id, brandForm);
+        brandDto.update(id, brandForm);
     }
 
     @ApiOperation(value = "Search by Brand & Category")
     @RequestMapping(path = "/search", method = RequestMethod.POST)
     public List<BrandData> search(@RequestBody BrandForm brandForm) throws ApiException {
-        return brandDto.searchBrandData(brandForm);
+        return brandDto.search(brandForm);
     }
 }

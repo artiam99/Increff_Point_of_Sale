@@ -64,31 +64,35 @@
                     </button>
                 </div>
                 <div class="modal-body" style="margin-left: 5%; margin-right: 5%;">
-                    <form class="form-inline col-6 brand" id="order-add-form" style="margin-right: 10%;">
+                    <form class="form-inline col-6 brand" id="order-add-form" style="margin-right: 4%; margin-left: -2%;">
                         <div class="form-group" style="width: 120%; padding-bottom: 1%;">
-                            <label for="inputBarcode" style="padding-left: 0; display: block; margin-right: 21.5%">Barcode</label>
-                                <input type="text" class="form-control" name="barcode" placeholder="enter barcode" id="inputBarcode">
+                            <label for="inputBarcode" style="padding-left: 0; display: block; margin-right: 18.5%">Barcode</label>
+                                <input type="text" class="form-control" name="barcode" placeholder="enter barcode" id="inputBarcode" style="width: 47.5%;">
                         </div>
                         <div class="form-group" style="width: 120%; padding-bottom: 1%;">
-                            <label for="inputQuantity" style="padding-left: 0; display: block; margin-right: 20.5%">Quantity</label>
-                                <input type="number" class="form-control" name="quantity" placeholder="enter quantity" id="inputQuantity">
+                            <label for="inputQuantity" style="padding-left: 0; display: block; margin-right: 17.5%">Quantity</label>
+                                <input type="number" class="form-control" name="quantity" placeholder="enter quantity" id="inputQuantity" style="width: 47.5%;">
                         </div>
                         <div class="form-group" style="width: 120%; padding-bottom: 1%;">
-                            <label for="inputSellingPrice" style="padding-left: 0; display: block; margin-right: 8%">Selling Price (&#8377;)</label>
-                                <input type="number" class="form-control" name="sellingPrice" placeholder="enter selling price" id="inputMrp">
+                            <label for="inputSellingPrice" style="padding-left: 0; display: block; margin-right: 5%">Selling Price (&#8377;)</label>
+                                <input type="number" class="form-control" name="sellingPrice" placeholder="enter selling price" id="inputMrp" style="width: 47.5%;">
                         </div>
                     </form>
-                    <form class="form-inline brand" id="order-add-form-second" style="width: 300px; position: absolute;">
+                    <form class="form-inline brand" id="order-add-form-second" style="width: 400px; position: absolute;">
                         <div class="form-group" style="width: 100%; padding-bottom: 1%;">
-                            <label for="inputBrand" style="padding-left: 0; display: block; margin-right: 10%">Brand</label>
-                            <input type="text" class="form-control" name="brand" readonly id="inputBrand">
+                            <label for="inputBrand" style="padding-left: 0; display: block; margin-right: 26%">Brand</label>
+                            <input type="text" class="form-control" name="brand" readonly id="inputBrand" style="width: 45%;">
                         </div>
                         <div class="form-group" style="width: 100%; padding-bottom: 1%;">
-                            <label for="inputName" style="padding-left: 0; display: block; margin-right: 9.5%">Name</label>
-                            <input type="text" class="form-control" name="name" readonly id="inputName">
+                            <label for="inputName" style="padding-left: 0; display: block; margin-right: 26%">Name</label>
+                            <input type="text" class="form-control" name="name" readonly id="inputName" style="width: 45%;">
+                        </div>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputAvailableQuantity" style="padding-left: 0; display: block; margin-right: 4.5%">Available Quantity</label>
+                            <input type="text" class="form-control" name="availableQuantity" readonly id="inputAvailableQuantity" style="width: 45%;">
                         </div>
                     </form>
-                    <button type="button" class="btn btn-primary" id="modal-add-orderItem" style="margin-left: 83%;">Add Product</button>
+                    <button type="button" class="btn btn-primary" id="modal-add-orderItem" style="margin-left: 83%; margin-top: 1%;">Add Product</button>
                     <br/><br/>
                     <table class="table table-striped" id="orderitem-table-add">
                         <thead class="thead-dark">
@@ -125,33 +129,37 @@
                     </button>
                 </div>
                 <div class="modal-body" style="margin-left: 5%; margin-right: 5%;">
-                    <form class="form-inline col-6 brand" id="order-edit-form" style="margin-right: 10%;">
+                    <form class="form-inline col-6 brand" id="order-edit-form" style="margin-right: 4%; margin-left: -2%;">
                         <div class="form-group" style="width: 120%; padding-bottom: 1%;">
-                            <label for="inputBarcode" style="padding-left: 0; display: block; margin-right: 21.5%">Barcode</label>
-                                <input type="text" class="form-control" name="barcode" placeholder="enter barcode" id="inputBarcodeEdit">
+                            <label for="inputBarcode" style="padding-left: 0; display: block; margin-right: 18.5%">Barcode</label>
+                                <input type="text" class="form-control" name="barcode" placeholder="enter barcode" id="inputBarcodeEdit" style="width: 47.5%;">
 
                         </div>
                         <div class="form-group" style="width: 120%; padding-bottom: 1%;">
-                            <label for="inputQuantity" style="padding-left: 0; display: block; margin-right: 20.5%">Quantity</label>
-                                <input type="number" class="form-control" name="quantity" placeholder="enter quantity" id="inputQuantityEdit">
+                            <label for="inputQuantity" style="padding-left: 0; display: block; margin-right: 17.5%">Quantity</label>
+                                <input type="number" class="form-control" name="quantity" placeholder="enter quantity" id="inputQuantityEdit" style="width: 47.5%;">
                         </div>
                         <div class="form-group" style="width: 120%; padding-bottom: 1%;">
-                            <label for="inputSellingPrice" style="padding-left: 0; display: block; margin-right: 8%">Selling Price (&#8377;)</label>
-                                <input type="number" class="form-control" name="sellingPrice" placeholder="enter selling price" id="inputMrpEdit">
+                            <label for="inputSellingPrice" style="padding-left: 0; display: block; margin-right: 5%">Selling Price (&#8377;)</label>
+                                <input type="number" class="form-control" name="sellingPrice" placeholder="enter selling price" id="inputMrpEdit" style="width: 47.5%;">
                         </div>
                         <input type="hidden" name="id" >
                     </form>
-                    <form class="form-inline brand" id="order-edit-form-second" style="width: 300px; position: absolute;">
+                    <form class="form-inline brand" id="order-edit-form-second" style="width: 400px; position: absolute;">
                         <div class="form-group" style="width: 100%; padding-bottom: 1%;">
-                            <label for="inputBrand" style="padding-left: 0; display: block; margin-right: 10%">Brand</label>
-                            <input type="text" class="form-control" name="brand" readonly id="inputBrandEdit">
+                            <label for="inputBrand" style="padding-left: 0; display: block; margin-right: 26%">Brand</label>
+                            <input type="text" class="form-control" name="brand" readonly id="inputBrandEdit" style="width: 45%;">
                         </div>
                         <div class="form-group" style="width: 100%; padding-bottom: 1%;">
-                            <label for="inputName" style="padding-left: 0; display: block; margin-right: 9.5%">Name</label>
-                            <input type="text" class="form-control" name="name" readonly id="inputNameEdit">
+                            <label for="inputName" style="padding-left: 0; display: block; margin-right: 26%">Name</label>
+                            <input type="text" class="form-control" name="name" readonly id="inputNameEdit" style="width: 45%;">
+                        </div>
+                        <div class="form-group" style="width: 100%; padding-bottom: 1%;">
+                            <label for="inputAvailableQuantity" style="padding-left: 0; display: block; margin-right: 4.5%">Available Quantity</label>
+                            <input type="text" class="form-control" name="availableQuantity" readonly id="inputAvailableQuantityEdit" style="width: 45%;">
                         </div>
                     </form>
-                    <button type="button" class="btn btn-primary" id="modal-edit-orderItem" style="margin-left: 72%;">Add or Update Product</button>
+                    <button type="button" class="btn btn-primary" id="modal-edit-orderItem" style="margin-left: 72%; margin-top: 1%;">Add or Update Product</button>
                     <br/><br/>
                     <table class="table table-striped" id="orderitem-table-edit">
                         <thead class="thead-dark">
@@ -240,7 +248,6 @@
                         <div class="form-group" style="width: 100%; padding-bottom: 1%;">
                             <label for="inputCategory" class="col-sm-2 col-form-label" style="padding-left: 0; display: block;">Category</label>
                             <div class="col-sm-10">
-                                <!--<input type="text" class="form-control" name="category" placeholder="enter category">-->
                                 <select name="category" id="enterInputCategoryReport" style="color: #495057; width: 61.3%; height: calc(1.5em + .75rem + 2px); border: 1px solid #ced4da;border-radius: 0.25rem; padding-left: 2%;">
                                 </select>
                             </div>

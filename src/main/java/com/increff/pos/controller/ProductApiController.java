@@ -28,12 +28,6 @@ public class ProductApiController {
         productDto.add(productForm);
     }
 
-    @ApiOperation(value = "Deletes a Product")
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable int id) {
-        productDto.delete(id);
-    }
-
     @ApiOperation(value = "Gets a Product by ID")
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ProductData get(@PathVariable int id) throws ApiException {
@@ -55,6 +49,6 @@ public class ProductApiController {
     @ApiOperation(value = "Search by Brand & Category")
     @RequestMapping(path = "/search", method = RequestMethod.POST)
     public List<ProductData> search(@RequestBody ProductForm productForm) throws ApiException {
-        return productDto.searchProductData(productForm);
+        return productDto.search(productForm);
     }
 }

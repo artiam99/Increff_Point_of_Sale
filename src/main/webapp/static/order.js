@@ -1,34 +1,35 @@
 
-function getBrandUrl(){
+function getBrandUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/brand";
 }
 
+function getInventoryUrl() {
+	var baseUrl = $("meta[name=baseUrl]").attr("content")
+	return baseUrl + "/api/inventory";
+}
 
-function getOrderUrl(){
+function getOrderUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/order";
 }
 
-function getOrderItemUrl(){
+function getOrderItemUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/orderitem";
 }
 
-function getProductUrl(){
+function getProductUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/product";
 }
 
-function isInt(n)
-{
+function isInt(n) {
     return n % 1 === 0;
 }
 
-//BUTTON ACTIONS
-function addOrderItem(event){
+function addOrderItem(event) {
 
-	//Set the values to update
 	var $form = $("#order-add-form");
 	var json = toJson($form);
 	var barcode = JSON.parse(json).barcode;
@@ -37,57 +38,40 @@ function addOrderItem(event){
     quantity = quantity.trim();
     var sellingPrice = JSON.parse(json).sellingPrice;
     sellingPrice = sellingPrice.trim();
-
-    if(barcode === "")
-    {
+    $form = $("#order-add-form-second");
+    json = toJson($form);
+    if(barcode === "") {
         $.notify("Barcode cannot be empty.")
-
         return;
     }
-
-    if(quantity === "")
-    {
+    if(quantity === "") {
         $.notify("Quantity cannot be empty.")
-
         return;
     }
-
-    if(sellingPrice === "")
-    {
+    if(sellingPrice === "") {
         $.notify("Selling price cannot be empty.")
-
         return;
     }
-
-    if(!isInt(quantity))
-    {
+    if(!isInt(quantity)) {
         $.notify("Quantity must be Integer.")
-
         return;
     }
-
     var num = Number(quantity);
-
-    if(num <= 0)
-    {
+    if(num <= 0) {
         $.notify("Quantity must be positive.")
-
         return;
     }
-
+    if(num > Number(JSON.parse(json).availableQuantity)) {
+        $.notify("Quantity cannot exceed available quantity limit.")
+        return;
+    }
     num = Number(sellingPrice);
-
-    if(num <= 0)
-    {
+    if(num <= 0) {
         $.notify("Selling Price must be positive.")
-
         return;
     }
-
     var obj = {barcode, brand: "", category:"", mrp: 0, name: ""};
-
     json = JSON.stringify(obj);
-
     var url = getProductUrl() + "/search";
 
     $.ajax({
@@ -99,16 +83,11 @@ function addOrderItem(event){
                    },
          success: function(data) {
 
-                    if(data.length != 1)
-                    {
+                    if(data.length != 1) {
                         return;
                     }
-
                     data = data[0];
-
-
                     var obj = {barcode, brand: data.brand, name: data.name, quantity, sellingPrice };
-
         	   		addOrderItemTable(obj);
         	   },
          error: handleAjaxError
@@ -120,58 +99,45 @@ function addOrderItem(event){
 var tableData = [];
 var updateData = [];
 
-function checkAddTable(obj)
-{
+function checkAddTable(obj) {
     let flag = false;
 
-    tableData.forEach(e =>
-    {
-        if(e.barcode === obj.barcode)
-        {
+    tableData.forEach(e => {
+        if(e.barcode === obj.barcode) {
             flag = true;
         }
     });
 
-    if(flag)
-    {
-        tableData = tableData.map(e =>
-        {
-            if(e.barcode === obj.barcode)
-            {
+    if(flag) {
+        tableData = tableData.map(e => {
+
+            if(e.barcode === obj.barcode) {
                 return obj;
             }
-
             return e;
         });
 
         var table = document.getElementById('orderitem-table-add');
-        for(var i = 1; i < table.rows.length; i++)
-        {
-              if(table.rows[i].cells[0].innerText === obj.barcode)
-               {
+
+        for(var i = 1; i < table.rows.length; i++) {
+              if(table.rows[i].cells[0].innerText === obj.barcode) {
                     table.rows[i].cells[3].innerText = obj.quantity;
                     table.rows[i].cells[4].innerText = commafy(parseFloat(obj.sellingPrice).toFixed(2));
                }
         }
-
         return true;
     }
-    else
-    {
+    else {
         return false;
     }
 }
 
-function addOrderItemTable(obj)
-{
-    if(checkAddTable(obj))
-    {
+function addOrderItemTable(obj) {
+    if(checkAddTable(obj)) {
         $('#order-add-form').trigger("reset");
         $('#order-add-form-second').trigger("reset");
-
         return;
     }
-
     tableData.push(obj);
 
     var $tbody = $('#orderitem-table-add').find('tbody');
@@ -192,52 +158,40 @@ function addOrderItemTable(obj)
         $('#order-add-form-second').trigger("reset");
 }
 
-function checkEditTable(obj)
-{
-    let flag = false;
+function checkEditTable(obj) {
 
-    tableData.forEach(e =>
-    {
-        if(e.barcode === obj.barcode)
-        {
+    let flag = false;
+    tableData.forEach(e => {
+        if(e.barcode === obj.barcode) {
             flag = true;
         }
     });
 
-    if(flag)
-    {
-        tableData = tableData.map(e =>
-        {
-            if(e.barcode === obj.barcode)
-            {
+    if(flag) {
+        tableData = tableData.map(e => {
+
+            if(e.barcode === obj.barcode) {
                 return obj;
             }
-
             return e;
         });
 
         var table = document.getElementById('orderitem-table-edit');
-        for(var i = 1; i < table.rows.length; i++)
-        {
-              if(table.rows[i].cells[0].innerText === obj.barcode)
-               {
+        for(var i = 1; i < table.rows.length; i++) {
+              if(table.rows[i].cells[0].innerText === obj.barcode) {
                     table.rows[i].cells[3].innerText = obj.quantity;
                     table.rows[i].cells[4].innerText = commafy(parseFloat(obj.sellingPrice).toFixed(2));;
                }
         }
-
         return true;
     }
-    else
-    {
+    else {
         return false;
     }
 }
 
-function editOrderItemTable(obj, flag)
-{
-    if(checkEditTable(obj))
-    {
+function editOrderItemTable(obj, flag) {
+    if(checkEditTable(obj)) {
         $('#order-edit-form').trigger("reset");
         $('#order-edit-form-second').trigger("reset");
 
@@ -245,14 +199,10 @@ function editOrderItemTable(obj, flag)
     }
 
     tableData.push(obj);
-
     var $tbody = $('#orderitem-table-edit').find('tbody');
 
     var buttonHtml;
-
-
     buttonHtml = ' <button type="button" class="btn btn-danger" onclick="deleteEditOrderItemTable(\'' + obj.barcode + '\')">Remove</button>'
-
 
     var row = '<tr>'
         + '<td>' + obj.barcode + '</td>'
@@ -269,8 +219,7 @@ function editOrderItemTable(obj, flag)
         $('#order-edit-form-second').trigger("reset");
 }
 
-function viewOrderItemTable(obj)
-{
+function viewOrderItemTable(obj) {
     tableData.push(obj);
 
     var $tbody = $('#orderitem-table-view').find('tbody');
@@ -289,98 +238,76 @@ function viewOrderItemTable(obj)
 
 
 
-function deleteAddOrderItemTable(barcode)
-{
+function deleteAddOrderItemTable(barcode) {
+
       var table = document.getElementById('orderitem-table-add');
 
-      for(var i = 1; i < table.rows.length; i++)
-      {
-          if(table.rows[i].cells[0].innerText === barcode)
-          {
+      for(var i = 1; i < table.rows.length; i++) {
+          if(table.rows[i].cells[0].innerText === barcode) {
               table.deleteRow(i);
 
-              tableData = tableData.filter(e =>
-              {
-                if(e.barcode === barcode)
-                {
+              tableData = tableData.filter(e => {
+
+                if(e.barcode === barcode) {
                     return false;
                 }
-                else
-                {
+                else {
                     return true;
                 }
               });
-
               return;
           }
       }
 }
 
-function deleteEditOrderItemTable(barcode)
-{
+function deleteEditOrderItemTable(barcode) {
 
     var flag = false;
+    updateData.forEach(e => {
 
-    updateData.forEach(e =>
-    {
-        if(e === barcode)
-        {
+        if(e === barcode) {
             flag = true;
         }
     })
 
-    if(flag === true)
-    {
+    if(flag === true) {
         var obj;
+        tableData.forEach(e => {
 
-        tableData.forEach(e =>
-        {
-            if(e.barcode === barcode)
-            {
+            if(e.barcode === barcode) {
                 obj = e;
             }
         })
-
         obj.quantity = 0;
-
         checkEditTable(obj);
-
         return;
     }
 
       var table = document.getElementById('orderitem-table-edit');
 
-      for(var i = 1; i < table.rows.length; i++)
-      {
-          if(table.rows[i].cells[0].innerText == barcode)
-          {
+      for(var i = 1; i < table.rows.length; i++) {
+
+          if(table.rows[i].cells[0].innerText == barcode) {
               table.deleteRow(i);
 
-              tableData = tableData.filter(e =>
-              {
-                if(e.barcode === barcode)
-                {
+              tableData = tableData.filter(e => {
+
+                if(e.barcode === barcode) {
                     return false;
                 }
-                else
-                {
+                else {
                     return true;
                 }
               });
-
               return;
           }
       }
 }
 
-function submitOrder(){
+function submitOrder() {
 
     var url = getOrderUrl();
-
     var json = JSON.stringify(tableData);
-
-    console.log(json);
-
 
     $.ajax({
          url: url,
@@ -393,13 +320,10 @@ function submitOrder(){
 
                     var $tbody = $('#orderitem-table-add').find('tbody');
                     $tbody.empty();
-
                     tableData = [];
-
                     $('#add-order-modal').modal('toggle');
                     $('#order-add-form').trigger("reset");
                     $('#order-add-form-second').trigger("reset");
-
                     getOrderList();
                     $.notify("Order submitted successfully.", "success");
         	   },
@@ -410,9 +334,8 @@ function submitOrder(){
 }
 
 
-function editOrderItem(event){
+function editOrderItem(event) {
 
-	//Set the values to update
 	var $form = $("#order-edit-form");
 	var json = toJson($form);
 	var barcode = JSON.parse(json).barcode;
@@ -421,58 +344,40 @@ function editOrderItem(event){
     quantity = quantity.trim();
     var sellingPrice = JSON.parse(json).sellingPrice;
     sellingPrice = sellingPrice.trim();
-
-    if(barcode === "")
-    {
+    $form = $("#order-edit-form-second");
+    json = toJson($form);
+    if(barcode === "") {
         $.notify("Barcode cannot be empty.")
-
         return;
     }
-
-    if(quantity === "")
-    {
+    if(quantity === "") {
         $.notify("Quantity cannot be empty.")
-
         return;
     }
-
-    if(sellingPrice === "")
-    {
+    if(sellingPrice === "") {
         $.notify("Selling price cannot be empty.")
-
         return;
     }
-
-    if(!isInt(quantity))
-    {
+    if(!isInt(quantity)) {
         $.notify("Quantity must be Integer.")
-
         return;
     }
-
     var num = Number(quantity);
-
-    if(num <= 0)
-    {
+    if(num <= 0) {
         $.notify("Quantity must be positive.")
-
         return;
     }
-
+    if(num > Number(JSON.parse(json).availableQuantity)) {
+        $.notify("Quantity cannot exceed available quantity limit.")
+        return;
+    }
     num = Number(sellingPrice);
-
-    if(num <= 0)
-    {
+    if(num <= 0) {
         $.notify("Selling Price must be positive.")
-
         return;
     }
-
-
     var obj = {barcode, brand: "", category:"", mrp: 0, name: ""};
-
     json = JSON.stringify(obj);
-
     var url = getProductUrl() + "/search";
 
     $.ajax({
@@ -484,32 +389,23 @@ function editOrderItem(event){
                    },
          success: function(data) {
 
-                    if(data.length != 1)
-                    {
+                    if(data.length != 1) {
                         return;
                     }
-
                     data = data[0];
-
                     var obj = {barcode, brand: data.brand, name: data.name, quantity, sellingPrice };
-
         	   		editOrderItemTable(obj, false);
         	   },
          error: handleAjaxError
     });
-
 	return false;
 }
 
-function updateOrder(event){
+function updateOrder(event) {
 
     var id = $("#order-edit-form input[name=id]").val();
     var url = getOrderUrl() + "/" + id;
-
     var json = JSON.stringify(tableData);
-
-    console.log(json);
-
 
     $.ajax({
          url: url,
@@ -522,14 +418,11 @@ function updateOrder(event){
 
                     var $tbody = $('#orderitem-table-edit').find('tbody');
                     $tbody.empty();
-
                     tableData = [];
                     updateData = [];
-
                     $('#edit-order-modal').modal('toggle');
                     $('#order-edit-form').trigger("reset");
                     $('#order-edit-form-second').trigger("reset");
-
                     getOrderList();
                     $.notify("Order updated successfully.", "success");
         	   },
@@ -539,8 +432,7 @@ function updateOrder(event){
 	return false;
 }
 
-
-function getOrderList(){
+function getOrderList() {
 	var url = getOrderUrl();
 	$.ajax({
 	   url: url,
@@ -553,20 +445,20 @@ function getOrderList(){
 }
 
 function commafy( numb ) {
-var str = numb.toString().split(".");
+    var str = numb.toString().split(".");
     str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return str.join(".");
 }
 
-function displayOrderList(data){
-    data=data.sort(function(a,b){
-        		if(a.id>b.id){
-        			return -1;
-        		}
-        		else{
-        			return 1;
-        		}
-        	});
+function displayOrderList(data) {
+    data = data.sort(function(a,b) {
+        if(a.id > b.id) {
+            return -1;
+        }
+        else {
+        	return 1;
+        }
+    });
 
 	var $tbody = $('#order-table').find('tbody');
 	$tbody.empty();
@@ -574,27 +466,20 @@ function displayOrderList(data){
 		var e = data[i];
         var id = e.id;
         var st = id.toString();
-
         var orderId = "OD";
-
-        for(var i = 0 ; i < 8 - st.length ; i++)
-        {
+        for(var i = 0 ; i < 8 - st.length ; i++) {
             orderId += "0";
         }
-
         orderId += st;
 		var buttonHtml;
-		if(e.invoice === true)
-        {
+		if(e.invoice === true) {
             buttonHtml = ' <button type="button" class="btn btn-info" disabled>Edit</button>'
         }
-        else
-        {
+        else {
             buttonHtml = ' <button type="button" class="btn btn-info" onclick="displayEditOrder(' + e.id + ')">Edit</button>'
         }
 		buttonHtml+= ' <button type="button" class="btn btn-info" onclick="displayViewOrder(' + e.id + ')">View</button>'
         buttonHtml+= ' <button type="button" class="btn btn-warning" onclick="generateInvoice(' + e.id + ')">Invoice</button>'
-
 
 		var row = '<tr>'
 		+ '<td>' + orderId + '</td>'
@@ -606,7 +491,7 @@ function displayOrderList(data){
 	}
 }
 
-function displayEditOrder(id){
+function displayEditOrder(id) {
 	var url = getOrderItemUrl() + "/" + id;
 	$.ajax({
 	   url: url,
@@ -618,7 +503,7 @@ function displayEditOrder(id){
 	});
 }
 
-function displayViewOrder(id){
+function displayViewOrder(id) {
 	var url = getOrderItemUrl() + "/" + id;
 	$.ajax({
 	   url: url,
@@ -630,45 +515,31 @@ function displayViewOrder(id){
 	});
 }
 
-function searchByOrderId(event){
+function searchByOrderId(event) {
 
 	var od = $('#order-form').find('input[name="orderId"]').val();
     od = od.trim();
-
-    if(od === "")
-    {
+    if(od === "") {
         getOrderList();
-
         return;
     }
-
-	if(!(od[0] === 'O' && od[1] === 'D'))
-    {
+	if(!(od[0] === 'O' && od[1] === 'D')) {
         $.notify("Order Id doesn't exit.","error");
-
         return;
     }
-    od= od.substring(2);
-    if(!(od.length === 8))
-    {
+    od = od.substring(2);
+    if(!(od.length === 8)) {
         $.notify("Order Id doesn't exit.","error");
-
         return;
     }
-
-    while(od.charAt(0) === '0')
-    {
+    while(od.charAt(0) === '0') {
         od = od.substring(1);
     }
-
     const num = Number(od);
-
     if(!(Number.isInteger(num))) {
-
         $.notify("Order Id doesn't exit.","error");
         return;
     }
-
 	var url = getOrderUrl() + "/" + od ;
 
 	$.ajax({
@@ -691,42 +562,34 @@ function searchByOrderId(event){
 	return false;
 }
 
-function displayOrder(id, data){
+function displayOrder(id, data) {
 
      var $tbody = $('#orderitem-table-edit').find('tbody');
      $tbody.empty();
-
-    data.forEach(d =>
-    {
+    data.forEach(d => {
         editOrderItemTable(d, true);
-
         updateData.push(d.barcode);
     });
-
     $("#order-edit-form input[name=id]").val(id);
 	$('#edit-order-modal').modal('toggle');
 }
 
-function displayViewOrderModal(data){
+function displayViewOrderModal(data) {
 
      var $tbody = $('#orderitem-table-view').find('tbody');
      $tbody.empty();
-
-    data.forEach(d =>
-    {
+    data.forEach(d => {
         viewOrderItemTable(d);
     });
-
 	$('#view-order-modal').modal('toggle');
 }
 
 
-function displayOrderModal(){
+function displayOrderModal() {
 	$('#add-order-modal').modal('toggle');
 }
 
-function cancelOrderModal()
-{
+function cancelOrderModal() {
     $('#add-order-modal').modal('toggle');
     $('#order-add-form').trigger("reset");
     $('#order-add-form-second').trigger("reset");
@@ -735,8 +598,7 @@ function cancelOrderModal()
     $tbody.empty();
 }
 
-function cancelEditOrderModal()
-{
+function cancelEditOrderModal() {
     $('#edit-order-modal').modal('toggle');
     $('#order-edit-form').trigger("reset");
     $('#order-edit-form-second').trigger("reset");
@@ -746,23 +608,18 @@ function cancelEditOrderModal()
     $tbody.empty();
 }
 
-function cancelViewOrderModal()
-{
+function cancelViewOrderModal() {
     $('#view-order-modal').modal('toggle');
     tableData = [];
     var $tbody = $('#orderitem-table-view').find('tbody');
     $tbody.empty();
 }
 
-function getProductDetails(barcode){
+function getProductDetails(barcode) {
     barcode = barcode.trim();
-
 	var obj = {barcode, brand: "", category: "", mrp: 0, name: ""};
-
     var json = JSON.stringify(obj);
-
     var url = getProductUrl() + "/search";
-
 
     $.ajax({
         	   url: url,
@@ -773,41 +630,51 @@ function getProductDetails(barcode){
                       },
         	   success: function(data) {
 
-                    if(data.length != 1)
-                    {
+                    if(data.length != 1) {
                         $('#inputMrp').val("");
                         $('#inputBrand').val("");
                         $('#inputName').val("");
                         $('#inputQuantity').val("");
-
+                        $('#inputAvailableQuantity').val("");
                         return;
                     }
-
                     data = data[0];
+                    var obj1 = {barcode: data.barcode, brand: "", category: "", name: "", quantity: 0};
+                    var json1 = JSON.stringify(obj1);
+                    var url1 = getInventoryUrl() + "/filter";
+                    $.ajax({
+                       url: url1,
+                       type: 'POST',
+                       data: json1,
+                       headers: {
+                                'Content-Type': 'application/json'
+                              },
+                       success: function(data1) {
 
-        	   		$('#inputMrp').val(data.mrp);
-        	   		$('#inputBrand').val(data.brand);
-                    $('#inputName').val(data.name);
+                            data1 = data1[0];
+                            $('#inputMrp').val(data.mrp);
+                            $('#inputBrand').val(data.brand);
+                            $('#inputName').val(data.name);
+                            $('#inputAvailableQuantity').val(data1.quantity);
+                       },
+                       error: handleAjaxError
+                    });
         	   },
-        	   error: function(error)
-        	   {
+        	   error: function(error) {
                     $('#inputMrp').val("");
                     $('#inputBrand').val("");
                     $('#inputName').val("");
                     $('#inputQuantity').val("");
+                    $('#inputAvailableQuantity').val("");
         	   }
     });
 }
 
-function getProductDetailsEdit(barcode){
+function getProductDetailsEdit(barcode) {
     barcode = barcode.trim();
-
 	var obj = {barcode, brand: "", category: "", mrp: 0, name: ""};
-
     var json = JSON.stringify(obj);
-
     var url = getProductUrl() + "/search";
-
 
     $.ajax({
         	   url: url,
@@ -818,45 +685,54 @@ function getProductDetailsEdit(barcode){
                       },
         	   success: function(data) {
 
-                    if(data.length != 1)
-                    {
+                    if(data.length != 1) {
                         $('#inputMrpEdit').val("");
                         $('#inputBrandEdit').val("");
                         $('#inputNameEdit').val("");
                         $('#inputQuantityEdit').val("");
-
+                        $('#inputAvailableQuantityEdit').val("");
                         return;
                     }
-
                     data = data[0];
+                    var obj1 = {barcode: data.barcode, brand: "", category: "", name: "", quantity: 0};
+                    var json1 = JSON.stringify(obj1);
+                    var url1 = getInventoryUrl() + "/filter";
+                    $.ajax({
+                       url: url1,
+                       type: 'POST',
+                       data: json1,
+                       headers: {
+                                'Content-Type': 'application/json'
+                              },
+                       success: function(data1) {
 
-        	   		$('#inputMrpEdit').val(data.mrp);
-        	   		$('#inputBrandEdit').val(data.brand);
-                    $('#inputNameEdit').val(data.name);
+                            data1 = data1[0];
+                            $('#inputMrpEdit').val(data.mrp);
+                            $('#inputBrandEdit').val(data.brand);
+                            $('#inputNameEdit').val(data.name);
+                            $('#inputAvailableQuantityEdit').val(data1.quantity);
+                       },
+                       error: handleAjaxError
+                    });
         	   },
-        	   error: function(error)
-        	   {
+        	   error: function(error) {
                     $('#inputMrpEdit').val("");
                     $('#inputBrandEdit').val("");
                     $('#inputNameEdit').val("");
                     $('#inputQuantityEdit').val("");
+                    $('#inputAvailableQuantityEdit').val("");
         	   }
     });
 }
 
-function downloadBillPdf(id, blob){
+function downloadBillPdf(id, blob) {
 
     var st = id.toString();
-
     var orderId = "OD";
-
-    for(var i = 0 ; i < 8 - st.length ; i++)
-    {
+    for(var i = 0 ; i < 8 - st.length ; i++) {
         orderId += "0";
     }
-
     orderId += st;
-
 	let link = document.createElement('a');
 	link.href = window.URL.createObjectURL(blob);
 	var currentdate = new Date();
@@ -865,8 +741,8 @@ function downloadBillPdf(id, blob){
 }
 
 
-function generateInvoice(id)
-{
+function generateInvoice(id) {
+
     var url = getOrderItemUrl() + "/" + id;
     $.ajax({
        url: url,
@@ -882,12 +758,8 @@ function generateInvoice(id)
             },
             success: function(data) {
 
-
-            // process recieved pdf
             let binaryString = window.atob(data);
-
             let binaryLen = binaryString.length;
-
             let bytes = new Uint8Array(binaryLen);
 
             for (let i = 0; i < binaryLen; i++) {
@@ -895,9 +767,7 @@ function generateInvoice(id)
                 bytes[i] = ascii;
             }
             let blob = new Blob([bytes], {type: "application/pdf"});
-              //openBillPdf(blob);
             downloadBillPdf(id, blob);
-
             getOrderList();
        },
        error: handleAjaxError
@@ -907,7 +777,7 @@ function generateInvoice(id)
 });
 }
 
-function getAllBrand(){
+function getAllBrand() {
 	var url = getBrandUrl();
 	$.ajax({
 	   url: url,
@@ -919,17 +789,16 @@ function getAllBrand(){
 	});
 }
 
-function displaySearchBrandCategory(data){
+function displaySearchBrandCategory(data) {
 
 	var $brandReportBody=$('#sales-report-form').find('#enterInputBrandReport');
     var $categoryReportBody=$('#sales-report-form').find('#enterInputCategoryReport');
     $brandReportBody.empty();
     $categoryReportBody.empty();
-
 	var brandSet =new Set();
 	var categorySet=new Set();
 
-	for(var i in data){
+	for(var i in data) {
 		var e=data[i];
 		brandSet.add(e.brand);
 		categorySet.add(e.category);
@@ -944,47 +813,33 @@ function displaySearchBrandCategory(data){
     row='<option value="select">select category</option>';
     $categoryReportBody.append(row);
 
-	for(var i in brandSet){
+	for(var i in brandSet) {
 		row='<option value='+brandSet[i]+'>'+brandSet[i]+'</option>';
 			$brandReportBody.append(row);
 	}
-	for(var i in categorySet){
-
+	for(var i in categorySet) {
 		row='<option value='+categorySet[i]+'>'+categorySet[i]+'</option>';
 			$categoryReportBody.append(row);
 	}
 }
 
-function downloadReport(){
+function downloadReport() {
     var $form = $("#sales-report-form");
     var json = toJson($form);
-
     var obj = JSON.parse(json);
-
-    if(obj.startDate == "")
-    {
+    if(obj.startDate == "") {
         obj.startDate = "1950-01-01";
     }
-
-    if(obj.endDate == "")
-    {
+    if(obj.endDate == "") {
         obj.endDate = "2150-01-01";
     }
-
-
-	if(obj.brand === "select")
-	{
+	if(obj.brand === "select") {
 	    obj.brand = "";
 	}
-
-	if(obj.category === "select")
-    {
+	if(obj.category === "select") {
     	    obj.category = "";
    	}
-
 	var json = JSON.stringify(obj);
-
-	console.log(json);
 
 
 	var url = getOrderUrl() + "/sales";
@@ -997,33 +852,31 @@ function downloadReport(){
                   },
     	   success: function(response) {
 
-    	        if(response.length === 0)
-    	        {
+    	        if(response.length === 0) {
     	            $.notify("No Order exists for this filter.");
-
     	            return;
     	        }
 
-    	        for(var i = 0 ; i < response.length ; i++)
-                {
+    	        for(var i = 0 ; i < response.length ; i++) {
                     response[i].revenue = parseFloat(response[i].revenue).toFixed(2);
                 }
 
-                response=response.sort(function(a,b){
-                    		if(a.brand===b.brand){
-                    			if(a.category<b.category){
-                    				return -1;
-                    			}else{
-                    				return 1;
-                    			}
-                    		}else{
-                    		if(a.brand<b.brand){
-                    			return -1;
-                    		}else{
-                    			return 1;
-                    		}
-                    		}
-                    	});
+                response=response.sort(function(a,b) {
+                    if(a.brand === b.brand) {
+
+                        if(a.category<b.category) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    } else {
+                    if(a.brand < b.brand) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                    }
+                });
 
     	   		var config = {
                             		quoteChar: '',
@@ -1053,7 +906,6 @@ function downloadReport(){
     	});
 }
 
-
 function displaySalesReportModal(){
 	$('#report-sales-modal').modal('toggle');
 }
@@ -1064,7 +916,6 @@ function cancelSalesReportModal()
     $('#sales-report-form').trigger("reset");
 }
 
-//INITIALIZATION CODE
 function init(){
     $('#search-order').click(searchByOrderId);
 	$('#add-order').click(displayOrderModal);

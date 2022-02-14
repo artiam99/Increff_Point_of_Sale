@@ -17,12 +17,12 @@ public class BrandDto {
     @Autowired
     private BrandService brandService;
 
-    public void addBrand(BrandForm brandForm) throws ApiException {
+    public void add(BrandForm brandForm) throws ApiException {
         BrandPojo brandPojo = ConvertUtil.convertBrandFormtoBrandPojo(brandForm);
         brandService.add(brandPojo);
     }
 
-    public List<BrandData> searchBrandData(BrandForm brandForm)  {
+    public List<BrandData> search(BrandForm brandForm)  {
         BrandPojo brandPojo = ConvertUtil.convertBrandFormtoBrandPojo(brandForm);
         List<BrandPojo> brandPojoList = brandService.search(brandPojo);
         List<BrandData> brandDataList = new ArrayList<BrandData>();
@@ -34,14 +34,14 @@ public class BrandDto {
 
     public BrandPojo getByBrandCategory(BrandForm brandForm) throws ApiException {
         BrandPojo brandPojo = ConvertUtil.convertBrandFormtoBrandPojo(brandForm);
-        return brandService.searchBrandCategory(brandPojo);
+        return brandService.searchByBrandCategory(brandPojo);
     }
 
-    public BrandData getBrandData(int id) throws ApiException {
+    public BrandData get(int id) throws ApiException {
         return ConvertUtil.convertBrandPojotoBrandData(brandService.get(id));
     }
 
-    public List<BrandData> getAllBrand(){
+    public List<BrandData> getAll(){
         List<BrandPojo> brandPojoList = brandService.getAll();
         List<BrandData> brandDataList = new ArrayList<BrandData>();
         for(BrandPojo brandPojo : brandPojoList) {
@@ -50,12 +50,8 @@ public class BrandDto {
         return brandDataList;
     }
 
-    public void updateBrand(int id, BrandForm brandForm) throws ApiException {
+    public void update(int id, BrandForm brandForm) throws ApiException {
         BrandPojo brandPojo = ConvertUtil.convertBrandFormtoBrandPojo(brandForm);
         brandService.update(id, brandPojo);
-    }
-
-    public void deleteBrand(int id) {
-        brandService.delete(id);
     }
 }

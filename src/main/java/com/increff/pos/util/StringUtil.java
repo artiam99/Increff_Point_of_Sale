@@ -31,6 +31,9 @@ public class StringUtil {
 	}
 
 	public static boolean isAfter(String date1, String date2) {
+		if(date1.equals(date2)) {
+			return true;
+		}
 		int year1 = Integer.parseInt(date1.substring(0, 4));
 		int year2 = Integer.parseInt(date2.substring(0, 4));
 		int month1 = Integer.parseInt(date1.substring(5, 7));

@@ -9,7 +9,9 @@ public class InventoryPojo {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = false)
     private int productid;
+    @Column(nullable = false)
     private int quantity;
 
     public int getId() {

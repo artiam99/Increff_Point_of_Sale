@@ -9,6 +9,7 @@ import java.util.List;
 
 @Service
 public class OrderItemService {
+
     @Autowired
     private OrderItemDao orderItemDao;
 
@@ -21,12 +22,7 @@ public class OrderItemService {
 
     @Transactional
     public List<OrderItemPojo> getByOrderId(int id) throws ApiException {
-        return check(id);
-    }
-
-    @Transactional
-    public List<OrderItemPojo> getList(List<Integer> ids) {
-        return orderItemDao.selectByOrderIdList(ids);
+        return getCheck(id);
     }
 
     @Transactional
@@ -40,10 +36,10 @@ public class OrderItemService {
     }
 
     @Transactional
-    public List<OrderItemPojo> check(int id) throws ApiException {
+    public List<OrderItemPojo> getCheck(int id) throws ApiException {
         List<OrderItemPojo> orderItemPojoList = orderItemDao.selectByOrderId(id);
         if (orderItemPojoList.isEmpty()) {
-            throw new ApiException("Order item don't exist - orderId : " + id);
+            throw new ApiException("Order item doesn't exist - orderId : " + id);
         }
         return orderItemPojoList;
     }

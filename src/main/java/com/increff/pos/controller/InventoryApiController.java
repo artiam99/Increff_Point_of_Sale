@@ -49,6 +49,6 @@ public class InventoryApiController {
     @ApiOperation(value = "Search by Brand & Category")
     @RequestMapping(path = "/filter", method = RequestMethod.POST)
     public List<InventoryData> search(@RequestBody InventoryForm inventoryForm) throws ApiException {
-        return inventoryDto.searchInventoryData(inventoryForm);
+        return inventoryDto.search(inventoryForm);
     }
 }

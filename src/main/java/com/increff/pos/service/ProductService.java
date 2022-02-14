@@ -18,24 +18,20 @@ public class ProductService {
     public void add(ProductPojo productPojo) throws ApiException {
         normalize(productPojo);
         if(StringUtil.isEmpty(productPojo.getBarcode())) {
-            throw new ApiException("barcode cannot be empty.");
+            throw new ApiException("Barcode cannot be empty.");
         }
         if(StringUtil.isEmpty(productPojo.getName())) {
             throw new ApiException("Product name cannot be empty.");
         }
         if(productPojo.getMrp() <= 0) {
-            throw new ApiException("MRP must by greater than zero.");
+            throw new ApiException("MRP must be positive.");
         }
         ProductPojo productPojo1 = productDao.selectBarcode(productPojo.getBarcode());
         if(productPojo1 != null) {
             throw new ApiException("This barcode already exists.");
         }
-        productDao.insert(productPojo);
-    }
 
-    @Transactional
-    public void delete(int id) {
-        productDao.delete(id);
+        productDao.insert(productPojo);
     }
 
     @Transactional
@@ -55,7 +51,7 @@ public class ProductService {
 
     @Transactional
     public List<ProductPojo> getByBrandCategory(int brandcategory) {
-        return productDao.selectBrandCategory(brandcategory);
+        return productDao.selectByBrandCategory(brandcategory);
     }
 
     @Transactional
@@ -66,13 +62,13 @@ public class ProductService {
     @Transactional(rollbackOn  = ApiException.class)
     public void update(int id, ProductPojo productPojo) throws ApiException {
         normalize(productPojo);
-        ProductPojo exProductPojo = getCheck(id);
-        if(!exProductPojo.getBarcode().equals(productPojo.getBarcode())) {
-            ProductPojo productPojo1 = productDao.selectBarcode(productPojo.getBarcode());
-            if(productPojo1 != null) {
-                throw new ApiException("This barcode already exists.");
-            }
+        if(StringUtil.isEmpty(productPojo.getName())) {
+            throw new ApiException("Product name cannot be empty.");
         }
+        if(productPojo.getMrp() <= 0) {
+            throw new ApiException("MRP must be positive.");
+        }
+        ProductPojo exProductPojo = getCheck(id);
         exProductPojo.setBarcode(productPojo.getBarcode());
         exProductPojo.setBrandcategory(productPojo.getBrandcategory());
         exProductPojo.setName(productPojo.getName());

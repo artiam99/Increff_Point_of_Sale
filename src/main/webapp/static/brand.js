@@ -1,17 +1,13 @@
 
-function getBrandUrl(){
+function getBrandUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/brand";
 }
 
-//BUTTON ACTIONS
-function addBrand(event){
-
-	//Set the values to update
+function addBrand(event) {
 	var $form = $("#brand-add-form");
 	var json = toJson($form);
 	var url = getBrandUrl();
-
 
 	$.ajax({
 	   url: url,
@@ -30,17 +26,12 @@ function addBrand(event){
 	   },
 	   error: handleAjaxError
 	});
-
 	return false;
 }
 
-function updateBrand(event){
-
-	//Get the ID
+function updateBrand(event) {
 	var id = $("#brand-edit-form input[name=id]").val();
 	var url = getBrandUrl() + "/" + id;
-
-	//Set the values to update
 	var $form = $("#brand-edit-form");
 	var json = toJson($form);
 
@@ -59,12 +50,10 @@ function updateBrand(event){
 	   },
 	   error: handleAjaxError
 	});
-
 	return false;
 }
 
-
-function getBrandList(){
+function getBrandList() {
 	var url = getBrandUrl();
 	$.ajax({
 	   url: url,
@@ -76,7 +65,7 @@ function getBrandList(){
 	});
 }
 
-function deleteBrand(id){
+function deleteBrand(id) {
 	var url = getBrandUrl() + "/" + id;
 
 	$.ajax({
@@ -89,41 +78,35 @@ function deleteBrand(id){
 	});
 }
 
-// FILE UPLOAD METHODS
 var fileData = [];
 var errorData = [];
 var processCount = 0;
 
-
-function processData(){
+function processData() {
 	var file = $('#brandFile')[0].files[0];
 	readFileData(file, readFileDataCallback);
 
 }
 
-function readFileDataCallback(results){
+function readFileDataCallback(results) {
 	fileData = results.data;
 	uploadRows();
 }
 
-function uploadRows(){
-	//Update progress
+function uploadRows() {
 	updateUploadDialog();
-	//If everything processed then return
-	if(processCount==fileData.length){
+	if(processCount == fileData.length){
 	    getBrandList();
 	    getAllBrand();
 		return;
 	}
 
-	//Process next row
 	var row = fileData[processCount];
 	processCount++;
 
 	var json = JSON.stringify(row);
 	var url = getBrandUrl();
 
-	//Make ajax call
 	$.ajax({
 	   url: url,
 	   type: 'POST',
@@ -133,7 +116,6 @@ function uploadRows(){
        },
 	   success: function(response) {
 	   		uploadRows();
-
 	   },
 	   error: function(response){
 	   		row.error=JSON.parse(response.responseText).message;
@@ -142,22 +124,18 @@ function uploadRows(){
 	   		uploadRows();
 	   }
 	});
-
 }
 
 function downloadErrors(){
 	writeFileData(errorData);
 }
 
-//UI DISPLAY METHODS
-
 function displayBrandList(data){
 	var $tbody = $('#brand-table').find('tbody');
 	$tbody.empty();
 	for(var i in data){
 		var e = data[i];
-		var buttonHtml= /*'<button type="button" class="btn btn-info" onclick="deleteBrand(' + e.id + ')">delete</button>'
-            buttonHtml +=*/ ' <button type="button" class="btn btn-info" onclick="displayEditBrand(' + e.id + ')">Edit</button>'
+		var buttonHtml= '<button type="button" class="btn btn-info" onclick="displayEditBrand(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
 		+ '<td>' + e.brand + '</td>'
 		+ '<td>'  + e.category + '</td>'
@@ -192,7 +170,7 @@ function displaySearchBrandCategory(data){
 	var brandSet = new Set();
 	var categorySet = new Set();
 
-	for(var i in data){
+	for(var i in data) {
 		var e=data[i];
 		brandSet.add(e.brand);
 		categorySet.add(e.category);
@@ -214,8 +192,7 @@ function displaySearchBrandCategory(data){
 		$brandBody.append(row);
 		$brandReportBody.append(row);
 	}
-	for(var i in categorySet){
-
+	for(var i in categorySet) {
 		row='<option value='+categorySet[i]+'>'+categorySet[i]+'</option>';
 		$categoryBody.append(row);
 		$categoryReportBody.append(row);
@@ -228,13 +205,11 @@ function searchBrandCategory(){
     var category = $("#enterInputCategory :selected").text();
 	var obj = {brand, category};
 
-	if(obj.brand === "all brands")
-	{
+	if(obj.brand === "all brands") {
 	    obj.brand = "";
 	}
 
-	if(obj.category === "all categories")
-    {
+	if(obj.category === "all categories") {
     	    obj.category = "";
    	}
 
@@ -260,13 +235,11 @@ function downloadReport(){
     var category = $("#enterInputCategoryReport :selected").text();
 	var obj = {brand, category};
 
-	if(obj.brand === "all brands")
-	{
+	if(obj.brand === "all brands") {
 	    obj.brand = "";
 	}
 
-	if(obj.category === "all categories")
-    {
+	if(obj.category === "all categories") {
     	    obj.category = "";
    	}
 
@@ -282,22 +255,18 @@ function downloadReport(){
                   },
     	   success: function(response) {
 
-    	        if(response.length === 0)
-    	        {
+    	        if(response.length === 0) {
     	            $.notify("Brand and Category does not exist.");
-
     	            return;
     	        }
 
     	        var arr = [];
 
-    	        for(var i = 0 ; i < response.length ; i++)
-    	        {
+    	        for(var i = 0 ; i < response.length ; i++) {
     	            arr.push({brand: response[i].brand, category: response[i].category});
     	        }
 
     	        response = arr;
-
 
     	   		var config = {
                             		quoteChar: '',
@@ -340,26 +309,23 @@ function displayEditBrand(id){
 	});
 }
 
-function resetUploadDialog(){
-	//Reset file name
+function resetUploadDialog() {
 	var $file = $('#brandFile');
 	$file.val('');
 	$('#brandFileName').html("Choose File");
-	//Reset various counts
 	processCount = 0;
 	fileData = [];
 	errorData = [];
-	//Update counts
 	updateUploadDialog();
 }
 
-function updateUploadDialog(){
+function updateUploadDialog() {
 	$('#rowCount').html("" + fileData.length);
 	$('#processCount').html("" + processCount);
 	$('#errorCount').html("" + errorData.length);
 }
 
-function updateFileName(){
+function updateFileName() {
 	var $file = $('#brandFile');
 	var path = $file.val();
     var fileName = path.replace(/^C:\\fakepath\\/, "");
@@ -367,7 +333,7 @@ function updateFileName(){
 	document.getElementById("process-data").disabled = false;
 }
 
-function displayUploadData(){
+function displayUploadData() {
  	resetUploadDialog();
 	$('#upload-brand-modal').modal('toggle');
 	getBrandList();
@@ -375,36 +341,32 @@ function displayUploadData(){
 	document.getElementById("process-data").disabled = true;
 }
 
-function displayBrand(data){
+function displayBrand(data) {
 	$("#brand-edit-form input[name=brand]").val(data.brand);
 	$("#brand-edit-form input[name=category]").val(data.category);
 	$("#brand-edit-form input[name=id]").val(data.id);
 	$('#edit-brand-modal').modal('toggle');
 }
 
-
 function displayBrandModal(){
 	$('#add-brand-modal').modal('toggle');
 }
 
-function displayBrandReportModal(){
+function displayBrandReportModal() {
 	$('#report-brand-modal').modal('toggle');
 }
 
-function cancelBrandModal()
-{
+function cancelBrandModal() {
     $('#add-brand-modal').modal('toggle');
     $('#brand-add-form').trigger("reset");
 }
 
-function cancelBrandReportModal()
-{
+function cancelBrandReportModal() {
     $('#report-brand-modal').modal('toggle');
     $('#brand-report-form').trigger("reset");
 }
 
-//INITIALIZATION CODE
-function init(){
+function init() {
 	$('#add-brand').click(displayBrandModal);
 	$('#report-brand').click(displayBrandReportModal);
 	$('#modal-add-brand').click(addBrand);

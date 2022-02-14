@@ -12,7 +12,6 @@ function toJson($form){
     return json;
 }
 
-
 function handleAjaxError(response){
 	var response = JSON.parse(response.responseText);
 	$.notify(response.message);

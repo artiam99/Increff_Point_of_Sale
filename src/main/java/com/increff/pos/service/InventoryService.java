@@ -19,18 +19,13 @@ public class InventoryService {
     }
 
     @Transactional
-    public void delete(int id) {
-        inventoryDao.delete(id);
-    }
-
-    @Transactional
     public InventoryPojo get(int id) throws ApiException {
         return getCheck(id);
     }
 
     @Transactional
-    public InventoryPojo getByProductid(InventoryPojo inventoryPojo) throws ApiException {
-        return inventoryDao.selectProductid(inventoryPojo.getProductid());
+    public InventoryPojo getByProductId(InventoryPojo inventoryPojo) throws ApiException {
+        return inventoryDao.selectByProductId(inventoryPojo.getProductid());
     }
 
     @Transactional

@@ -43,7 +43,7 @@ public class InventoryDto {
     public List<InventoryData> getId(InventoryForm form) throws ApiException {
         ProductPojo productPojo = productService.getByBarcode(form.getBarcode());
         InventoryPojo inventoryPojo1 = ConvertUtil.convertInventoryFormtoInventoryPojo(form, productPojo);
-        InventoryPojo inventoryPojo2 = inventoryService.getByProductid(inventoryPojo1);
+        InventoryPojo inventoryPojo2 = inventoryService.getByProductId(inventoryPojo1);
         ProductPojo productPojo1 = productService.get(inventoryPojo2.getProductid());
         InventoryData inventoryData = ConvertUtil.convertInventoryPojotoInventoryData(inventoryPojo2, productPojo1, brandService.get(productPojo1.getBrandcategory()));
         List<InventoryData> inventoryDataList = new ArrayList<>();
@@ -62,11 +62,11 @@ public class InventoryDto {
         return inventoryDataList;
     }
 
-    public List<InventoryData> searchInventoryData(InventoryForm inventoryForm) throws ApiException {
+    public List<InventoryData> search(InventoryForm inventoryForm) throws ApiException {
         if(inventoryForm.getBarcode() != "") {
             ProductPojo productPojo = productService.getByBarcode(inventoryForm.getBarcode());
             InventoryPojo inventoryPojo = ConvertUtil.convertInventoryFormtoInventoryPojo(inventoryForm, productPojo);
-            InventoryPojo inventoryPojo1 = inventoryService.getByProductid(inventoryPojo);
+            InventoryPojo inventoryPojo1 = inventoryService.getByProductId(inventoryPojo);
             List<InventoryData> inventoryDataList = new ArrayList<>();
             InventoryData inventoryData = ConvertUtil.convertProductPojotoInventoryData(productPojo, inventoryPojo1, brandService.get(productPojo.getBrandcategory()));
             if (inventoryForm.getBrand() != "" && !inventoryForm.getBrand().equals(inventoryData.getBrand())) {
@@ -84,7 +84,7 @@ public class InventoryDto {
             List<ProductPojo> productPojoList = productService.getByBrandCategory(brandPojo.getId());
             for (ProductPojo productPojo : productPojoList) {
                 InventoryPojo inventoryPojo = ConvertUtil.convertInventoryFormtoInventoryPojo(inventoryForm, productPojo);
-                InventoryPojo inventoryPojo1 = inventoryService.getByProductid(inventoryPojo);
+                InventoryPojo inventoryPojo1 = inventoryService.getByProductId(inventoryPojo);
                 inventoryDataList.add(ConvertUtil.convertProductPojotoInventoryData(productPojo, inventoryPojo1, brandService.get(productPojo.getBrandcategory())));
             }
         }

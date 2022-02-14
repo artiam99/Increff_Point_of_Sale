@@ -30,11 +30,11 @@ public class OrderDto {
     @Autowired
     private OrderItemDto orderItemDto;
 
-    public OrderPojo addOrder(List<OrderItemForm> orderItems) throws ApiException {
+    public OrderPojo add(List<OrderItemForm> orderItems) throws ApiException {
         if (orderItems.size() == 0) {
             throw new ApiException("No Order item is added.");
         }
-        orderService.checkInventoryAvailability(orderItems);
+        checkInventoryAvailability(orderItems);
         OrderPojo orderPojo = new OrderPojo();
         orderPojo.setDatetime(StringUtil.getDateTime());
         orderPojo.setInvoice(false);
@@ -47,7 +47,7 @@ public class OrderDto {
             orderItemPojo.setProductId(productId);
             InventoryPojo inventoryPojo = new InventoryPojo();
             inventoryPojo.setProductid(productId);
-            inventoryPojo = inventoryService.getByProductid(inventoryPojo);
+            inventoryPojo = inventoryService.getByProductId(inventoryPojo);
             inventoryPojo.setQuantity(inventoryPojo.getQuantity() - orderItemPojo.getQuantity());
             inventoryService.update(inventoryPojo.getId(), inventoryPojo);
             orderItemPojoList.add(orderItemPojo);
@@ -56,7 +56,7 @@ public class OrderDto {
         return orderPojo;
     }
 
-    public void updateOrder(int id, List<OrderItemForm> orderItems) throws ApiException {
+    public void update(int id, List<OrderItemForm> orderItems) throws ApiException {
         if (orderItems.size() == 0) {
             throw new ApiException("No Order item is added.");
         }
@@ -65,7 +65,7 @@ public class OrderDto {
             if (p.getOrderId() == id) {
                 InventoryPojo ip = new InventoryPojo();
                 ip.setProductid(p.getProductId());
-                ip = inventoryService.getByProductid(ip);
+                ip = inventoryService.getByProductId(ip);
                 ip.setQuantity(ip.getQuantity() + p.getQuantity());
                 inventoryService.update(ip.getId(), ip);
             }
@@ -73,13 +73,13 @@ public class OrderDto {
         for (OrderItemForm i : orderItems) {
             int orderQuantity = i.getQuantity();
             ProductPojo p = productService.getByBarcode(i.getBarcode());
-            InventoryPojo iP = inventoryService.getByProductid(ConvertUtil.convertProductPojotoInventoryPojo(p));
+            InventoryPojo iP = inventoryService.getByProductId(ConvertUtil.convertProductPojotoInventoryPojo(p));
             if (orderQuantity > iP.getQuantity()) {
                 for (OrderItemPojo p1 : orderItemPojos) {
                     if (p1.getOrderId() == id) {
                         InventoryPojo ip1 = new InventoryPojo();
                         ip1.setProductid(p1.getProductId());
-                        ip1 = inventoryService.getByProductid(ip1);
+                        ip1 = inventoryService.getByProductId(ip1);
                         ip1.setQuantity(ip1.getQuantity() - p1.getQuantity());
                         inventoryService.update(ip1.getId(), ip1);
                     }
@@ -96,7 +96,7 @@ public class OrderDto {
             p.setProductId(productId);
             InventoryPojo ip = new InventoryPojo();
             ip.setProductid(productId);
-            ip = inventoryService.getByProductid(ip);
+            ip = inventoryService.getByProductId(ip);
             ip.setQuantity(ip.getQuantity() - p.getQuantity());
             inventoryService.update(ip.getId(), ip);
             list.add(p);
@@ -192,5 +192,16 @@ public class OrderDto {
             }
         }
         return list3;
+    }
+
+    public void checkInventoryAvailability(List<OrderItemForm> orderItemFormList) throws ApiException {
+        for(OrderItemForm orderItemForm:orderItemFormList) {
+            int orderQuantity = orderItemForm.getQuantity();
+            ProductPojo productPojo = productService.getByBarcode(orderItemForm.getBarcode());
+            InventoryPojo inventoryPojo = inventoryService.getByProductId(ConvertUtil.convertProductPojotoInventoryPojo(productPojo));
+            if(orderQuantity > inventoryPojo.getQuantity()) {
+                throw new ApiException("Required quantity: " + orderQuantity + " of " + orderItemForm.getBarcode() + " doesn't exist.");
+            }
+        }
     }
 }

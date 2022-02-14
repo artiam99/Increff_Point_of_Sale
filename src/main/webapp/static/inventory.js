@@ -1,15 +1,15 @@
 
-function getBrandUrl(){
+function getBrandUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/brand";
 }
 
-function getInventoryUrl(){
+function getInventoryUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/inventory";
 }
 
-function getAllBrand(){
+function getAllBrand() {
 	var url = getBrandUrl();
 	$.ajax({
 	   url: url,
@@ -21,7 +21,7 @@ function getAllBrand(){
 	});
 }
 
-function displaySearchBrandCategory(data){
+function displaySearchBrandCategory(data) {
 	var $brandBody=$('#searchForm').find('#enterInputBrand');
 	var $categoryBody=$('#searchForm').find('#enterInputCategory');
 	$brandBody.empty();
@@ -35,7 +35,7 @@ function displaySearchBrandCategory(data){
 	var brandSet =new Set();
 	var categorySet=new Set();
 
-	for(var i in data){
+	for(var i in data) {
 		var e=data[i];
 		brandSet.add(e.brand);
 		categorySet.add(e.category);
@@ -52,71 +52,63 @@ function displaySearchBrandCategory(data){
     $categoryBody.append(row);
     $categoryReportBody.append(row);
 
-	for(var i in brandSet){
+	for(var i in brandSet) {
 		row='<option value='+brandSet[i]+'>'+brandSet[i]+'</option>';
 			$brandBody.append(row);
 			$brandReportBody.append(row);
 	}
-	for(var i in categorySet){
-
+	for(var i in categorySet) {
 		row='<option value='+categorySet[i]+'>'+categorySet[i]+'</option>';
 			$categoryBody.append(row);
 			$categoryReportBody.append(row);
 	}
 }
 
-function searchBrandCategory(event){
-
+function searchBrandCategory(event) {
     var barcode = $("#barcode-search").val();
-        barcode = barcode.trim();
+    barcode = barcode.trim();
 
-        var brand = $("#enterInputBrand :selected").text();
-        var category = $("#enterInputCategory :selected").text();
-    	var obj = {barcode, brand, category, mrp: 0, name: ""};
+    var brand = $("#enterInputBrand :selected").text();
+    var category = $("#enterInputCategory :selected").text();
+    var obj = {barcode, brand, category, mrp: 0, name: ""};
 
-    	if(obj.brand === "all brands")
-    	{
-    	    obj.brand = "";
-    	}
+    if(obj.brand === "all brands") {
+        obj.brand = "";
+    }
 
-    	if(obj.category === "all categories")
-        {
-        	    obj.category = "";
-       	}
+    if(obj.category === "all categories") {
+            obj.category = "";
+    }
 
-    	var json = JSON.stringify(obj);
+    var json = JSON.stringify(obj);
 
-    	var url = getInventoryUrl() + "/filter";
+    var url = getInventoryUrl() + "/filter";
 
 
-        	$.ajax({
-        	   url: url,
-        	   type: 'POST',
-        	   data: json,
-        	   headers: {
-                      	'Content-Type': 'application/json'
-                      },
-        	   success: function(data) {
-        	   		displayInventoryList(data);
-        	   },
-        	   error: handleAjaxError
-        	});
+        $.ajax({
+           url: url,
+           type: 'POST',
+           data: json,
+           headers: {
+                    'Content-Type': 'application/json'
+                  },
+           success: function(data) {
+                displayInventoryList(data);
+           },
+           error: handleAjaxError
+        });
 
 	return false;
 }
 
 function updateInventory(event) {
-
-	//Get the ID
 	var id = $("#inventory-edit-form input[name=id]").val();
 	var url = getInventoryUrl() + "/" + id;
 
-	//Set the values to update
 	var $form = $("#inventory-edit-form");
 	var json = toJson($form);
 
-	if(!isInt(JSON.parse(json).quantity))
-    {
+	if(!isInt(JSON.parse(json).quantity)) {
         $.notify("Quantity must be Integer.")
 
         return;
@@ -142,7 +134,6 @@ function updateInventory(event) {
 
 
 function getInventoryList() {
-
 	var url = getInventoryUrl();
 	$.ajax({
 	   url: url,
@@ -155,7 +146,6 @@ function getInventoryList() {
 }
 
 function deleteInventory(id) {
-
 	var url = getInventoryUrl() + "/" + id;
 
 	$.ajax({
@@ -168,117 +158,99 @@ function deleteInventory(id) {
 	});
 }
 
-function downloadReport(){
+function downloadReport() {
     var $form = $("#inventory-report-form");
     var json = toJson($form);
-
     var obj = JSON.parse(json);
-
     obj = {barcode: obj.barcode, brand: obj.brand, category: obj.category, name: "", quantity: 0};
 
-	if(obj.brand === "select")
-	{
+	if(obj.brand === "select") {
 	    obj.brand = "";
 	}
 
-	if(obj.category === "select")
-    {
+	if(obj.category === "select") {
     	    obj.category = "";
    	}
 
 	var json = JSON.stringify(obj);
 
-
 	var url = getInventoryUrl() + "/filter";
-    	$.ajax({
-    	   url: url,
-    	   type: 'POST',
-    	   data: json,
-    	   headers: {
-                  	'Content-Type': 'application/json'
-                  },
-    	   success: function(response) {
+    $.ajax({
+       url: url,
+       type: 'POST',
+       data: json,
+       headers: {
+                'Content-Type': 'application/json'
+              },
+       success: function(response) {
 
-    	        if(response.length === 0)
-    	        {
-    	            $.notify("Brand and Category does not exist.");
+            if(response.length === 0) {
+                $.notify("Brand and Category does not exist.");
+                return;
+            }
 
-    	            return;
-    	        }
+            var arr = [];
 
-    	        var arr = [];
+            for(var i = 0 ; i < response.length ; i++) {
+                arr.push({barcode: response[i].barcode, brand: response[i].brand, category: response[i].category, name: response[i].name, quantity: response[i].quantity});
+            }
 
-    	        for(var i = 0 ; i < response.length ; i++)
-    	        {
-    	            arr.push({barcode: response[i].barcode, brand: response[i].brand, category: response[i].category, name: response[i].name, quantity: response[i].quantity});
-    	        }
+            response = arr;
 
-    	        response = arr;
+            var config = {
+                                quoteChar: '',
+                                escapeChar: '',
+                                delimiter: "\t"
+                            };
 
-    	   		var config = {
-                            		quoteChar: '',
-                            		escapeChar: '',
-                            		delimiter: "\t"
-                            	};
+                            var data = Papa.unparse(response, config);
+                            var blob = new Blob([data], {type: 'text/tsv;charset=utf-8;'});
+                            var fileUrl =  null;
+                            var currentdate = new Date();
+                            var inventoryreportname = "inventory-report.tsv";
+                            if (navigator.msSaveBlob) {
+                                fileUrl = navigator.msSaveBlob(blob, brandreportname);
+                            } else {
+                                fileUrl = window.URL.createObjectURL(blob);
+                            }
+                            var tempLink = document.createElement('a');
+                            tempLink.href = fileUrl;
+                            tempLink.setAttribute('download', inventoryreportname);
+                            tempLink.click();
 
-                            	var data = Papa.unparse(response, config);
-                                var blob = new Blob([data], {type: 'text/tsv;charset=utf-8;'});
-                                var fileUrl =  null;
-                                var currentdate = new Date();
-                                var inventoryreportname = "inventory-report.tsv";
-                                if (navigator.msSaveBlob) {
-                                    fileUrl = navigator.msSaveBlob(blob, brandreportname);
-                                } else {
-                                    fileUrl = window.URL.createObjectURL(blob);
-                                }
-                                var tempLink = document.createElement('a');
-                                tempLink.href = fileUrl;
-                                tempLink.setAttribute('download', inventoryreportname);
-                                tempLink.click();
-
-                                $('#report-inventory-modal').modal('toggle');
-                                $('#inventory-report-form').trigger("reset");
-    	   },
-    	   error: handleAjaxError
-    	});
+                            $('#report-inventory-modal').modal('toggle');
+                            $('#inventory-report-form').trigger("reset");
+       },
+       error: handleAjaxError
+    });
 }
 
-
-// FILE UPLOAD METHODS
 var fileData = [];
 var errorData = [];
 var processCount = 0;
 
-
 function processData() {
-
 	var file = $('#inventoryFile')[0].files[0];
 	readFileData(file, readFileDataCallback);
 }
 
 function readFileDataCallback(results) {
-
 	fileData = results.data;
 	uploadRows();
 }
 
 function uploadRows() {
-
-	//Update progress
 	updateUploadDialog();
-	//If everything processed then return
-	if(processCount==fileData.length){
+	if(processCount == fileData.length){
 		return;
 	}
 
-	//Process next row
 	var row = fileData[processCount];
 	processCount++;
 
 	var json = JSON.stringify(row);
 
-	if(!isInt(JSON.parse(json).quantity))
-    {
+	if(!isInt(JSON.parse(json).quantity)) {
         row.error="Quantity must be Integer.";
         document.getElementById("download-errors").disabled = false;
         errorData.push(row);
@@ -286,11 +258,8 @@ function uploadRows() {
 
         return;
     }
-
 	var url = getInventoryUrl() + '/search';
 
-
-	//Make ajax call
 	$.ajax({
 	   url: url,
 	   type: 'POST',
@@ -318,13 +287,11 @@ function uploadRows() {
 	});
 }
 
-function isInt(n)
-{
+function isInt(n) {
     return n % 1 === 0;
 }
 
 function updateInventoryUpload(id, json, row) {
-
 	var url = getInventoryUrl() + "/" + id;
 
 	$.ajax({
@@ -345,19 +312,16 @@ function updateInventoryUpload(id, json, row) {
               	   		updateUploadDialog();
               	   }
 	});
-
 	return false;
 }
 
-function downloadErrors(){
+function downloadErrors() {
 	writeFileData(errorData);
 }
 
-//UI DISPLAY METHODS
-
 function displayInventoryList(data) {
 
-data=data.sort(function(a,b){
+     data=data.sort(function(a,b){
 		if(a.brand===b.brand){
 			if(a.name<b.name){
 				return -1;
@@ -406,28 +370,22 @@ function displayEditInventory(id) {
 }
 
 function resetUploadDialog() {
-
-	//Reset file name
 	var $file = $('#inventoryFile');
 	$file.val('');
 	$('#inventoryFileName').html("Choose File");
-	//Reset various counts
 	processCount = 0;
 	fileData = [];
 	errorData = [];
-	//Update counts
 	updateUploadDialog();
 }
 
 function updateUploadDialog() {
-
 	$('#rowCount').html("" + fileData.length);
 	$('#processCount').html("" + processCount);
 	$('#errorCount').html("" + errorData.length);
 }
 
 function updateFileName() {
-
 	var $file = $('#inventoryFile');
 	var path = $file.val();
     var fileName = path.replace(/^C:\\fakepath\\/, "");
@@ -436,7 +394,6 @@ function updateFileName() {
 }
 
 function displayUploadData() {
-
  	resetUploadDialog();
 	$('#upload-inventory-modal').modal('toggle');
 	getInventoryList();
@@ -448,14 +405,12 @@ function displayInventoryReportModal(){
 	$('#report-inventory-modal').modal('toggle');
 }
 
-function cancelInventoryReportModal()
-{
+function cancelInventoryReportModal() {
     $('#report-inventory-modal').modal('toggle');
     $('#inventory-report-form').trigger("reset");
 }
 
 function displayInventory(data) {
-
 	$("#inventory-edit-form input[name=barcode]").val(data.barcode);
     $("#inventory-edit-form input[name=brand").val(data.brand);
     $("#inventory-edit-form input[name=category").val(data.category);
@@ -465,10 +420,7 @@ function displayInventory(data) {
 	$('#edit-inventory-modal').modal('toggle');
 }
 
-
-//INITIALIZATION CODE
 function init() {
-
 	$('#search-inventory').click(searchBrandCategory);
 	$('#report-inventory').click(displayInventoryReportModal);
 	$('#modal-cancel-inventory-report').click(cancelInventoryReportModal);

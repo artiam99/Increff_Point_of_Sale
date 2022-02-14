@@ -1,33 +1,25 @@
 
-function getBrandUrl(){
+function getBrandUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/brand";
 }
 
-function getProductUrl(){
+function getProductUrl() {
 	var baseUrl = $("meta[name=baseUrl]").attr("content")
 	return baseUrl + "/api/product";
 }
 
-//BUTTON ACTIONS
-function addProduct(event){
-	//Set the values to update
+function addProduct(event) {
 	var $form = $("#product-add-form");
 	var json = toJson($form);
     var obj = JSON.parse(json);
-
-    if(obj.brand === "select")
-    {
+    if(obj.brand === "select") {
    	    obj.brand = "";
    	}
-
-   	if(obj.category === "select")
-    {
+   	if(obj.category === "select") {
        	obj.category = "";
     }
-
     json = JSON.stringify(obj);
-
 	var url = getProductUrl();
 
 	$.ajax({
@@ -38,7 +30,6 @@ function addProduct(event){
        	'Content-Type': 'application/json'
        },
 	   success: function(response) {
-
             $('#add-product-modal').modal('toggle');
 	        $('#product-add-form').trigger("reset");
 	   		getProductList();
@@ -46,49 +37,32 @@ function addProduct(event){
 	   },
 	   error: handleAjaxError
 	});
-
 	return false;
 }
 
-function updateProduct(event){
-
-	//Get the ID
+function updateProduct(event) {
 	var id = $("#product-edit-form input[name=id]").val();
 	var url = getProductUrl() + "/" + id;
-
-	//Set the values to update
 	var $form = $("#product-edit-form");
 	var json = toJson($form);
     var obj = JSON.parse(json);
-
     obj.barcode = obj.barcode.trim();
     obj.name = obj.name.trim();
 
-    if(obj.barcode === "")
-    {
+    if(obj.barcode === "") {
         $.notify("Barcode cannot be empty.", "error");
-
         return;
     }
-
-    if(obj.name === "")
-    {
+    if(obj.name === "") {
         $.notify("Name cannot be empty.", "error");
-
         return;
     }
-
-
-    if(obj.brand === "select")
-    {
+    if(obj.brand === "select") {
         obj.brand = "";
     }
-
-    if(obj.category === "select")
-    {
+    if(obj.category === "select") {
         obj.category = "";
     }
-
     json = JSON.stringify(obj);
 
 	$.ajax({
@@ -109,8 +83,7 @@ function updateProduct(event){
 	return false;
 }
 
-
-function getProductList(){
+function getProductList() {
 	var url = getProductUrl();
 	$.ajax({
 	   url: url,
@@ -122,7 +95,7 @@ function getProductList(){
 	});
 }
 
-function deleteProduct(id){
+function deleteProduct(id) {
 	var url = getProductUrl() + "/" + id;
 
 	$.ajax({
@@ -135,20 +108,15 @@ function deleteProduct(id){
 	});
 }
 
-function searchProductList(){
+function searchProductList() {
 
     var barcode = $('#product-form').find('input[name="barcode"]').val();
     barcode = barcode.trim();
-
-    if(barcode === '')
-    {
+    if(barcode === '') {
         getProductList();
-
         return;
     }
-
 	var url = getProductUrl() + '/search';
-
 	var json = JSON.stringify({ message: barcode});
 
 	$.ajax({
@@ -165,38 +133,30 @@ function searchProductList(){
 	});
 }
 
-// FILE UPLOAD METHODS
 var fileData = [];
 var errorData = [];
 var processCount = 0;
 
-
-function processData(){
+function processData() {
 	var file = $('#productFile')[0].files[0];
 	readFileData(file, readFileDataCallback);
 }
 
-function readFileDataCallback(results){
+function readFileDataCallback(results) {
 	fileData = results.data;
 	uploadRows();
 }
 
-function uploadRows(){
-	//Update progress
+function uploadRows() {
 	updateUploadDialog();
-	//If everything processed then return
-	if(processCount==fileData.length){
+	if(processCount == fileData.length){
 		return;
 	}
-
-	//Process next row
 	var row = fileData[processCount];
 	processCount++;
-
 	var json = JSON.stringify(row);
 	var url = getProductUrl();
 
-	//Make ajax call
 	$.ajax({
 	   url: url,
 	   type: 'POST',
@@ -215,40 +175,39 @@ function uploadRows(){
 	   		uploadRows();
 	   }
 	});
-
 }
 
-
-function downloadErrors(){
+function downloadErrors() {
 	writeFileData(errorData);
 }
 
-function commafy( numb ) {
+function commafy(numb) {
 var str = numb.toString().split(".");
     str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return str.join(".");
 }
 
-//UI DISPLAY METHODS
-function displayProductList(data){
-    data=data.sort(function(a,b){
-    		if(a.brand===b.brand){
+function displayProductList(data) {
+
+    data=data.sort(function(a,b) {
+    		if(a.brand===b.brand) {
     			if(a.category<b.category){
     				return -1;
-    			}else{
+    			} else {
     				return 1;
     			}
-    		}else{
-    		if(a.brand<b.brand){
-    			return -1;
-    		}else{
-    			return 1;
-    		}
-    		}
+    		} else {
+                if(a.brand < b.brand) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+    	    }
     	});
+
 	var $tbody = $('#product-table').find('tbody');
 	$tbody.empty();
-	for(var i in data){
+	for(var i in data) {
 		var e = data[i];
 		var buttonHtml = ' <button type="button" class="btn btn-info" onclick="displayEditProduct(' + e.id + ')">Edit</button>'
 		var row = '<tr>'
@@ -256,14 +215,14 @@ function displayProductList(data){
 		+ '<td>'  + e.brand + '</td>'
 		+ '<td>'  + e.category + '</td>'
 		+ '<td>' + e.name + '</td>'
-        		+ '<td>'  + commafy(parseFloat(e.mrp).toFixed(2)) + '</td>'
+        + '<td>'  + commafy(parseFloat(e.mrp).toFixed(2)) + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);
 	}
 }
 
-function displayEditProduct(id){
+function displayEditProduct(id) {
 	var url = getProductUrl() + "/" + id;
 	$.ajax({
 	   url: url,
@@ -275,26 +234,23 @@ function displayEditProduct(id){
 	});
 }
 
-function resetUploadDialog(){
-	//Reset file name
+function resetUploadDialog() {
 	var $file = $('#productFile');
 	$file.val('');
 	$('#productFileName').html("Choose File");
-	//Reset various counts
 	processCount = 0;
 	fileData = [];
 	errorData = [];
-	//Update counts
 	updateUploadDialog();
 }
 
-function updateUploadDialog(){
+function updateUploadDialog() {
 	$('#rowCount').html("" + fileData.length);
 	$('#processCount').html("" + processCount);
 	$('#errorCount').html("" + errorData.length);
 }
 
-function updateFileName(){
+function updateFileName() {
 	var $file = $('#productFile');
 	var path = $file.val();
     var fileName = path.replace(/^C:\\fakepath\\/, "");
@@ -302,7 +258,7 @@ function updateFileName(){
 	document.getElementById("process-data").disabled = false;
 }
 
-function displayUploadData(){
+function displayUploadData() {
  	resetUploadDialog();
 	$('#upload-product-modal').modal('toggle');
 	getProductList();
@@ -310,7 +266,7 @@ function displayUploadData(){
     document.getElementById("process-data").disabled = true;
 }
 
-function getAllBrand(){
+function getAllBrand() {
 	var url = getBrandUrl();
 	$.ajax({
 	   url: url,
@@ -324,42 +280,36 @@ function getAllBrand(){
 	});
 }
 
-function displaySearchBrandCategory(data){
+function displaySearchBrandCategory(data) {
 	var $brandBody=$('#searchForm').find('#enterInputBrand');
 	var $categoryBody=$('#searchForm').find('#enterInputCategory');
 	$brandBody.empty();
 	$categoryBody.empty();
 	var brandSet =new Set();
 	var categorySet=new Set();
-
-	for(var i in data){
+	for(var i in data) {
 		var e=data[i];
 		brandSet.add(e.brand);
 		categorySet.add(e.category);
 	}
-
 	brandSet = Array.from(brandSet);
 	categorySet = Array.from(categorySet);
 	categorySet.sort();
-
 	var row='<option value="select">all brands</option>';
     $brandBody.append(row);
     row='<option value="select">all categories</option>';
     $categoryBody.append(row);
-
-	for(var i in brandSet){
+	for(var i in brandSet) {
 		row='<option value='+brandSet[i]+'>'+brandSet[i]+'</option>';
-			$brandBody.append(row);
+		$brandBody.append(row);
 	}
-	for(var i in categorySet){
-
+	for(var i in categorySet) {
 		row='<option value='+categorySet[i]+'>'+categorySet[i]+'</option>';
-			$categoryBody.append(row);
+		$categoryBody.append(row);
 	}
 }
 
-
-function displaySearchBrandCategoryAdd(data){
+function displaySearchBrandCategoryAdd(data) {
 	var $brandBody=$('#product-add-form').find('#enterInputBrandAdd');
 	var $categoryBody=$('#product-add-form').find('#enterInputCategoryAdd');
 	$brandBody.empty();
@@ -367,7 +317,7 @@ function displaySearchBrandCategoryAdd(data){
 	var brandSet =new Set();
 	var categorySet=new Set();
 
-	for(var i in data){
+	for(var i in data) {
 		var e=data[i];
 		brandSet.add(e.brand);
 		categorySet.add(e.category);
@@ -377,24 +327,22 @@ function displaySearchBrandCategoryAdd(data){
 	categorySet = Array.from(categorySet);
     categorySet.sort();
 
-
 	var row='<option value="select">select brand</option>';
     $brandBody.append(row);
     row='<option value="select">select category</option>';
     $categoryBody.append(row);
 
-	for(var i in brandSet){
+	for(var i in brandSet) {
 		row='<option value='+brandSet[i]+'>'+brandSet[i]+'</option>';
 			$brandBody.append(row);
 	}
-	for(var i in categorySet){
-
+	for(var i in categorySet) {
 		row='<option value='+categorySet[i]+'>'+categorySet[i]+'</option>';
 			$categoryBody.append(row);
 	}
 }
 
-function displaySearchBrandCategoryEdit(data){
+function displaySearchBrandCategoryEdit(data) {
 	var $brandBody=$('#product-edit-form').find('#enterInputBrandEdit');
 	var $categoryBody=$('#product-edit-form').find('#enterInputCategoryEdit');
 	$brandBody.empty();
@@ -402,7 +350,7 @@ function displaySearchBrandCategoryEdit(data){
 	var brandSet =new Set();
 	var categorySet=new Set();
 
-	for(var i in data){
+	for(var i in data) {
 		var e=data[i];
 		brandSet.add(e.brand);
 		categorySet.add(e.category);
@@ -411,59 +359,48 @@ function displaySearchBrandCategoryEdit(data){
 	brandSet = Array.from(brandSet);
 	categorySet = Array.from(categorySet);
 	categorySet.sort();
-
 	var row='';
-
 	for(var i in brandSet){
 		row='<option value='+brandSet[i]+'>'+brandSet[i]+'</option>';
 			$brandBody.append(row);
 	}
 	for(var i in categorySet){
-
 		row='<option value='+categorySet[i]+'>'+categorySet[i]+'</option>';
 			$categoryBody.append(row);
 	}
 }
 
-function searchBrandCategory(){
-
+function searchBrandCategory() {
     var barcode = $("#barcode-search").val();
     barcode = barcode.trim();
-
     var brand = $("#enterInputBrand :selected").text();
     var category = $("#enterInputCategory :selected").text();
 	var obj = {barcode, brand, category, mrp: 0, name: ""};
 
-	if(obj.brand === "all brands")
-	{
+	if(obj.brand === "all brands") {
 	    obj.brand = "";
 	}
-
-	if(obj.category === "all categories")
-    {
+	if(obj.category === "all categories") {
     	    obj.category = "";
    	}
-
 	var json = JSON.stringify(obj);
-
 	var url = getProductUrl() + "/search";
 
-
-    	$.ajax({
-    	   url: url,
-    	   type: 'POST',
-    	   data: json,
-    	   headers: {
-                  	'Content-Type': 'application/json'
-                  },
-    	   success: function(data) {
-    	   		displayProductList(data);
-    	   },
-    	   error: handleAjaxError
-    	});
+    $.ajax({
+       url: url,
+       type: 'POST',
+       data: json,
+       headers: {
+                'Content-Type': 'application/json'
+              },
+       success: function(data) {
+            displayProductList(data);
+       },
+       error: handleAjaxError
+    });
 }
 
-function displayProduct(data){
+function displayProduct(data) {
 	$("#product-edit-form input[name=barcode]").val(data.barcode);
     $('#enterInputBrandEdit').val(data.brand)
     $('#enterInputCategoryEdit').val(data.category);
@@ -473,20 +410,16 @@ function displayProduct(data){
 	$('#edit-product-modal').modal('toggle');
 }
 
-function displayProductModal(){
+function displayProductModal() {
 	$('#add-product-modal').modal('toggle');
 }
 
-function cancelProductModal()
-{
+function cancelProductModal() {
     $('#add-product-modal').modal('toggle');
     $('#product-add-form').trigger("reset");
 }
 
-
-
-//INITIALIZATION CODE
-function init(){
+function init() {
 	$('#add-product').click(displayProductModal);
 	$('#search-product').click(searchBrandCategory);
 	$('#modal-add-product').click(addProduct);

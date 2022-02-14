@@ -12,7 +12,9 @@ public class OrderItemPojo {
     private int id;
     private int productId;
     private int orderId;
+    @Column(nullable = false)
     private int quantity;
+    @Column(nullable = false)
     private double sellingPrice;
 
     public int getId() {
