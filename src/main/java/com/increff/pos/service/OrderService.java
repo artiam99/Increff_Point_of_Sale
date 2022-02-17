@@ -19,7 +19,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderPojo get(int id){
+    public OrderPojo get(Integer id){
         return orderDao.select(id);
     }
 
@@ -29,7 +29,7 @@ public class OrderService {
     }
 
     @Transactional(rollbackFor = ApiException.class)
-    public void update(int id, OrderPojo orderPojo) throws ApiException {
+    public void update(Integer id, OrderPojo orderPojo) throws ApiException {
         OrderPojo newOrderPojo = getCheck(id);
         newOrderPojo.setDatetime(orderPojo.getDatetime());
         newOrderPojo.setInvoice(orderPojo.getInvoice());
@@ -37,7 +37,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderPojo getCheck(int id) throws ApiException {
+    public OrderPojo getCheck(Integer id) throws ApiException {
         OrderPojo orderPojo = orderDao.select(id);
         if (orderPojo == null) {
             throw new ApiException("Order ID does not exit.");

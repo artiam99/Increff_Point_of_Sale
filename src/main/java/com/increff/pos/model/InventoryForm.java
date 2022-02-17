@@ -6,7 +6,7 @@ public class InventoryForm {
     private String brand;
     private String category;
     private String name;
-    private int quantity;
+    private Integer quantity;
 
     public String getBarcode() {
         return barcode;
@@ -40,11 +40,11 @@ public class InventoryForm {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }

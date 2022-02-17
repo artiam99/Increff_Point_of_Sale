@@ -7,7 +7,6 @@ import com.increff.pos.pojo.OrderPojo;
 import org.junit.Before;
 import org.junit.Test;
 import com.increff.pos.spring.AbstractUnitTest;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class OrderServiceTest extends AbstractUnitTest {
 
@@ -16,7 +15,6 @@ public class OrderServiceTest extends AbstractUnitTest {
         insertOrderPojos();
     }
 
-    // Test Add
     @Test()
     public void testAdd() throws ApiException {
         OrderPojo orderPojo = getOrderPojo();
@@ -29,7 +27,6 @@ public class OrderServiceTest extends AbstractUnitTest {
         assertEquals(orderPojo.getInvoice(), orderService.get(orderPojo.getId()).getInvoice());
     }
 
-    // Test Get
     @Test()
     public void testGet() throws ApiException {
         OrderPojo orderPojo = orderService.get(orders.get(0).getId());
@@ -46,7 +43,7 @@ public class OrderServiceTest extends AbstractUnitTest {
 
     @Test()
     public void testGetNotExisting() throws ApiException {
-        int id = 500;
+        Integer id = new Integer(500);
         try {
             orderService.update(id, new OrderPojo());
             fail("Api Exception did not occur");
@@ -55,11 +52,10 @@ public class OrderServiceTest extends AbstractUnitTest {
         }
     }
 
-    // Test Update
     @Test()
     public void testUpdate() throws ApiException {
         OrderPojo orderPojo = getOrderPojo();
-        int id = orders.get(0).getId();
+        Integer id = orders.get(0).getId();
         orderService.update(id, orderPojo);
 
         assertEquals(orderPojo.getDatetime(), orderService.get(id).getDatetime());

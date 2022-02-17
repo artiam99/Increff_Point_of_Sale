@@ -5,8 +5,8 @@ public class BillForm {
     public String barcode;
     public String brand;
     public String name;
-    public int quantity;
-    public double sellingPrice;
+    public Integer quantity;
+    public Double sellingPrice;
 
     public String getBarcode() {
         return barcode;
@@ -32,19 +32,19 @@ public class BillForm {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public double getSellingPrice() {
+    public Double getSellingPrice() {
         return sellingPrice;
     }
 
-    public void setSellingPrice(double sellingPrice) {
+    public void setSellingPrice(Double sellingPrice) {
         this.sellingPrice = sellingPrice;
     }
 }

@@ -28,7 +28,7 @@ public class BrandService {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public BrandPojo get(int id) throws ApiException {
+    public BrandPojo get(Integer id) throws ApiException {
         return getCheck(id);
     }
 
@@ -38,7 +38,7 @@ public class BrandService {
     }
 
     @Transactional(rollbackOn = ApiException.class)
-    public void update(int id, BrandPojo brandPojo) throws ApiException {
+    public void update(Integer id, BrandPojo brandPojo) throws ApiException {
         normalize(brandPojo);
         if(StringUtil.isEmpty(brandPojo.getBrand()) || StringUtil.isEmpty(brandPojo.getCategory())) {
             throw new ApiException("Brand or category cannot be empty.");
@@ -85,7 +85,7 @@ public class BrandService {
     }
 
     @Transactional
-    public BrandPojo getCheck(int id) throws ApiException {
+    public BrandPojo getCheck(Integer id) throws ApiException {
         BrandPojo brandPojo = brandDao.select(id);
         if (brandPojo == null) {
             throw new ApiException("Brand with given ID does not exit, id: " + id);
@@ -93,7 +93,7 @@ public class BrandService {
         return brandPojo;
     }
 
-    protected static void normalize(BrandPojo brandPojo) {
+    public static void normalize(BrandPojo brandPojo) {
         brandPojo.setBrand(StringUtil.toLowerCase(brandPojo.getBrand()));
         brandPojo.setCategory(StringUtil.toLowerCase(brandPojo.getCategory()));
     }

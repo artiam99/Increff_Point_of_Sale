@@ -37,13 +37,12 @@ public class ProductDto {
         productService.add(productPojo);
         InventoryPojo inventoryPojo = new InventoryPojo();
         inventoryPojo.setQuantity(0);
-        inventoryPojo.setProductid(productPojo.getId());
+        inventoryPojo.setProductId(productPojo.getId());
         inventoryService.add(inventoryPojo);
     }
 
-
     @Transactional
-    public ProductData get(int id) throws ApiException {
+    public ProductData get(Integer id) throws ApiException {
         ProductPojo productPojo = productService.get(id);
         BrandPojo brandPojo = brandService.get(productPojo.getBrandcategory());
         return ConvertUtil.convertProductPojotoProductData(productPojo, brandPojo);
@@ -60,7 +59,7 @@ public class ProductDto {
         return productDataList;
     }
 
-    public void update(int id, ProductForm productForm) throws ApiException {
+    public void update(Integer id, ProductForm productForm) throws ApiException {
         BrandForm brandForm = ConvertUtil.convertProductFormtoBrandForm(productForm);
         BrandPojo brandPojo = brandDto.getByBrandCategory(brandForm);
         ProductPojo productPojo = ConvertUtil.convertProductFormtoProductPojo(productForm, brandPojo);

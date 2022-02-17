@@ -6,7 +6,7 @@ public class ProductForm {
     private String brand;
     private String category;
     private String name;
-    private double mrp;
+    private Double mrp;
 
     public String getBarcode() {
         return barcode;
@@ -40,11 +40,11 @@ public class ProductForm {
         this.name = name;
     }
 
-    public double getMrp() {
+    public Double getMrp() {
         return mrp;
     }
 
-    public void setMrp(double mrp) {
+    public void setMrp(Double mrp) {
         this.mrp = mrp;
     }
 }

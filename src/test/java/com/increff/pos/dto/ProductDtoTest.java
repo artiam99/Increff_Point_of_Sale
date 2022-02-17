@@ -2,7 +2,6 @@ package com.increff.pos.dto;
 
 import static org.junit.Assert.assertEquals;
 import java.util.List;
-
 import com.increff.pos.model.ProductData;
 import com.increff.pos.model.ProductForm;
 import com.increff.pos.service.ApiException;
@@ -72,7 +71,7 @@ public class ProductDtoTest extends AbstractUnitTest {
         BrandPojo brandPojo = brands.get(0);
         ProductForm productForm = getProductForm(brandPojo);
         productForm.setBarcode(products.get(0).getBarcode());
-        int id = products.get(0).getId();
+        Integer id = products.get(0).getId();
         productDto.update(id, productForm);
 
         assertEquals(productForm.getBarcode(), productDto.get(id).getBarcode());
@@ -88,7 +87,7 @@ public class ProductDtoTest extends AbstractUnitTest {
         productForm.setBrand(b.getBrand());
         productForm.setCategory(b.getCategory());
         productForm.setName("maggie");
-        productForm.setMrp(100);
+        productForm.setMrp(new Double(100));
         return productForm;
     }
 }

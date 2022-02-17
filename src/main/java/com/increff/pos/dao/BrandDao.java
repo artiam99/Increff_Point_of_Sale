@@ -14,7 +14,7 @@ public class BrandDao extends AbstractDao {
     private static String SELECT_CATEGORY = "select p from BrandPojo p where category=:category";
     private static String SELECT_ALL = "select p from BrandPojo p";
 
-    public BrandPojo select(int id) {
+    public BrandPojo select(Integer id) {
         TypedQuery<BrandPojo> query = getQuery(SELECT_ID, BrandPojo.class);
         query.setParameter("id", id);
         return getSingle(query);

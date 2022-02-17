@@ -17,7 +17,6 @@ public class ProductServiceTest extends AbstractUnitTest {
         insertProductPojos();
     }
 
-    // Test Add
     @Test()
     public void testAdd() throws ApiException {
         BrandPojo brandPojo = brands.get(0);
@@ -69,7 +68,7 @@ public class ProductServiceTest extends AbstractUnitTest {
         }
 
         productPojo = getProductPojo(brandPojo);
-        productPojo.setMrp(-1);
+        productPojo.setMrp(new Double(-1.0));
         try {
             productService.add(productPojo);
             fail("Api Exception did not occur.");
@@ -78,7 +77,6 @@ public class ProductServiceTest extends AbstractUnitTest {
         }
     }
 
-    // Test Get
     @Test()
     public void testGetById() throws ApiException {
         ProductPojo productPojo = productService.get(products.get(0).getId());
@@ -114,7 +112,6 @@ public class ProductServiceTest extends AbstractUnitTest {
         assertEquals(2, product_list.size());
     }
 
-    // Test Update
     @Test
     public void testUpdate() throws ApiException {
         ProductPojo productPojo = getProductPojo(brands.get(1));
@@ -147,7 +144,7 @@ public class ProductServiceTest extends AbstractUnitTest {
 
     @Test()
     public void testGetNotExisting() throws ApiException {
-        int id = 500;
+        Integer id = new Integer(500);
         try {
             productService.get(id);
             fail("Api Exception did not occur");
@@ -169,7 +166,7 @@ public class ProductServiceTest extends AbstractUnitTest {
         productPojo.setBarcode("1%#123");
         productPojo.setBrandcategory(b.getId());
         productPojo.setName("Maggie");
-        productPojo.setMrp(100);
+        productPojo.setMrp(new Double(100));
         return productPojo;
     }
     private ProductPojo getWrongProductPojo(BrandPojo b) throws ApiException {
@@ -177,7 +174,7 @@ public class ProductServiceTest extends AbstractUnitTest {
         productPojo.setBarcode("1%#123");
         productPojo.setBrandcategory(b.getId());
         productPojo.setName("");
-        productPojo.setMrp(-5);
+        productPojo.setMrp(new Double(-5.0));
         return productPojo;
     }
 }

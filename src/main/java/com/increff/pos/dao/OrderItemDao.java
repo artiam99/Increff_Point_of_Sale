@@ -13,7 +13,7 @@ public class OrderItemDao extends AbstractDao {
     private static String SELECT_BY_ORDER_ID = "select p from OrderItemPojo p where orderId=:orderId";
     private static String DELETE_BY_ORDER_ID = "delete from OrderItemPojo p where orderId=:orderId";
 
-    public List<OrderItemPojo> selectByOrderId(int orderId){
+    public List<OrderItemPojo> selectByOrderId(Integer orderId){
         TypedQuery<OrderItemPojo> query = getQuery(SELECT_BY_ORDER_ID,OrderItemPojo.class);
         query.setParameter("orderId",orderId);
         return query.getResultList();
@@ -24,7 +24,7 @@ public class OrderItemDao extends AbstractDao {
         return query.getResultList();
     }
 
-    public int deleteByOrderId(int orderId) {
+    public int deleteByOrderId(Integer orderId) {
         Query query = em().createQuery(DELETE_BY_ORDER_ID);
         query.setParameter("orderId", orderId);
         return query.executeUpdate();

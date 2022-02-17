@@ -43,10 +43,10 @@ public class OrderDto {
         for (OrderItemForm orderItemForm : orderItems) {
             OrderItemPojo orderItemPojo = ConvertUtil.convertOrderItemFormtoOrderItemPojo(orderItemForm);
             orderItemPojo.setOrderId(orderPojo.getId());
-            int productId = productService.getByBarcode(orderItemForm.getBarcode()).getId();
+            Integer productId = productService.getByBarcode(orderItemForm.getBarcode()).getId();
             orderItemPojo.setProductId(productId);
             InventoryPojo inventoryPojo = new InventoryPojo();
-            inventoryPojo.setProductid(productId);
+            inventoryPojo.setProductId(productId);
             inventoryPojo = inventoryService.getByProductId(inventoryPojo);
             inventoryPojo.setQuantity(inventoryPojo.getQuantity() - orderItemPojo.getQuantity());
             inventoryService.update(inventoryPojo.getId(), inventoryPojo);
@@ -56,77 +56,76 @@ public class OrderDto {
         return orderPojo;
     }
 
-    public void update(int id, List<OrderItemForm> orderItems) throws ApiException {
+    public void update(Integer id, List<OrderItemForm> orderItems) throws ApiException {
         if (orderItems.size() == 0) {
             throw new ApiException("No Order item is added.");
         }
         List<OrderItemPojo> orderItemPojos = orderItemService.getAll();
-        for (OrderItemPojo p : orderItemPojos) {
-            if (p.getOrderId() == id) {
-                InventoryPojo ip = new InventoryPojo();
-                ip.setProductid(p.getProductId());
-                ip = inventoryService.getByProductId(ip);
-                ip.setQuantity(ip.getQuantity() + p.getQuantity());
-                inventoryService.update(ip.getId(), ip);
+        for (OrderItemPojo orderItemPojo : orderItemPojos) {
+            if (orderItemPojo.getOrderId() == id) {
+                InventoryPojo inventoryPojo = new InventoryPojo();
+                inventoryPojo.setProductId(orderItemPojo.getProductId());
+                inventoryPojo = inventoryService.getByProductId(inventoryPojo);
+                inventoryPojo.setQuantity(inventoryPojo.getQuantity() + orderItemPojo.getQuantity());
+                inventoryService.update(inventoryPojo.getId(), inventoryPojo);
             }
         }
-        for (OrderItemForm i : orderItems) {
-            int orderQuantity = i.getQuantity();
-            ProductPojo p = productService.getByBarcode(i.getBarcode());
-            InventoryPojo iP = inventoryService.getByProductId(ConvertUtil.convertProductPojotoInventoryPojo(p));
-            if (orderQuantity > iP.getQuantity()) {
-                for (OrderItemPojo p1 : orderItemPojos) {
-                    if (p1.getOrderId() == id) {
-                        InventoryPojo ip1 = new InventoryPojo();
-                        ip1.setProductid(p1.getProductId());
-                        ip1 = inventoryService.getByProductId(ip1);
-                        ip1.setQuantity(ip1.getQuantity() - p1.getQuantity());
-                        inventoryService.update(ip1.getId(), ip1);
+        for (OrderItemForm orderItemForm : orderItems) {
+            Integer orderQuantity = orderItemForm.getQuantity();
+            ProductPojo productPojo = productService.getByBarcode(orderItemForm.getBarcode());
+            InventoryPojo inventoryPojo = inventoryService.getByProductId(ConvertUtil.convertProductPojotoInventoryPojo(productPojo));
+            if (orderQuantity > inventoryPojo.getQuantity()) {
+                for (OrderItemPojo orderItemPojo : orderItemPojos) {
+                    if (orderItemPojo.getOrderId() == id) {
+                        InventoryPojo inventoryPojo1 = new InventoryPojo();
+                        inventoryPojo1.setProductId(orderItemPojo.getProductId());
+                        inventoryPojo1 = inventoryService.getByProductId(inventoryPojo1);
+                        inventoryPojo1.setQuantity(inventoryPojo1.getQuantity() - orderItemPojo.getQuantity());
+                        inventoryService.update(inventoryPojo1.getId(), inventoryPojo1);
                     }
                 }
-                throw new ApiException("Required quantity: " + orderQuantity + " of " + i.getBarcode() + " doesn't exist.");
+                throw new ApiException("Required quantity: " + orderQuantity + " of " + orderItemForm.getBarcode() + " doesn't exist.");
             }
         }
         orderItemService.deleteByOrderId(id);
-        List<OrderItemPojo> list = new ArrayList<>();
-        for (OrderItemForm f : orderItems) {
-            OrderItemPojo p = ConvertUtil.convertOrderItemFormtoOrderItemPojo(f);
-            p.setOrderId(id);
-            int productId = productService.getByBarcode(f.getBarcode()).getId();
-            p.setProductId(productId);
-            InventoryPojo ip = new InventoryPojo();
-            ip.setProductid(productId);
-            ip = inventoryService.getByProductId(ip);
-            ip.setQuantity(ip.getQuantity() - p.getQuantity());
-            inventoryService.update(ip.getId(), ip);
-            list.add(p);
+        List<OrderItemPojo> orderItemPojoList = new ArrayList<>();
+        for (OrderItemForm orderItemForm : orderItems) {
+            OrderItemPojo orderItemPojo = ConvertUtil.convertOrderItemFormtoOrderItemPojo(orderItemForm);
+            orderItemPojo.setOrderId(id);
+            Integer productId = productService.getByBarcode(orderItemForm.getBarcode()).getId();
+            orderItemPojo.setProductId(productId);
+            InventoryPojo inventoryPojo = new InventoryPojo();
+            inventoryPojo.setProductId(productId);
+            inventoryPojo = inventoryService.getByProductId(inventoryPojo);
+            inventoryPojo.setQuantity(inventoryPojo.getQuantity() - orderItemPojo.getQuantity());
+            inventoryService.update(inventoryPojo.getId(), inventoryPojo);
+            orderItemPojoList.add(orderItemPojo);
         }
-        orderItemService.add(list);
+        orderItemService.add(orderItemPojoList);
     }
 
     @Transactional(rollbackFor = ApiException.class)
-    public List<BillData> generateInvoice(int id, OrderItemForm[] orderItemForms) throws ApiException {
-        List<BillData> reqBill = new ArrayList<BillData>();
-        int newId = 1;
-        for (OrderItemForm p : orderItemForms) {
+    public List<BillData> generateInvoice(Integer id, OrderItemForm[] orderItemForms) throws ApiException {
+        List<BillData> billDataList = new ArrayList<BillData>();
+        Integer newId = 1;
+        for (OrderItemForm orderItemForm : orderItemForms) {
             BillData item = new BillData();
-            item.setBarcode(p.getBarcode());
-            item.setBrand(p.getBrand());
-            item.setName(p.getName());
-            item.setQuantity(p.getQuantity());
-            item.setSellingPrice(p.getSellingPrice());
+            item.setBarcode(orderItemForm.getBarcode());
+            item.setBrand(orderItemForm.getBrand());
+            item.setName(orderItemForm.getName());
+            item.setQuantity(orderItemForm.getQuantity());
+            item.setSellingPrice(orderItemForm.getSellingPrice());
             item.setId(newId);
-            reqBill.add(item);
+            billDataList.add(item);
             newId++;
         }
         OrderPojo orderPojo = orderService.get(id);
         orderPojo.setInvoice(true);
         orderService.update(id, orderPojo);
-
-        return reqBill;
+        return billDataList;
     }
 
-    public OrderData get(int id) throws ApiException {
+    public OrderData get(Integer id) throws ApiException {
         OrderPojo orderPojo = orderService.get(id);
         return ConvertUtil.convertOrderPojotoOrderData(orderPojo, orderItemService.getByOrderId(orderPojo.getId()));
     }
@@ -134,69 +133,67 @@ public class OrderDto {
     public List<OrderData> getAll() {
         List<OrderPojo> list = orderService.getAll();
         return list.stream()
-                .map(o -> {
+                .map(orderPojo -> {
                     try {
-                        return ConvertUtil.convertOrderPojotoOrderData(o, orderItemService.getByOrderId(o.getId()));
+                        return ConvertUtil.convertOrderPojotoOrderData(orderPojo, orderItemService.getByOrderId(orderPojo.getId()));
                     } catch (ApiException e) {
                         e.printStackTrace();
-                        OrderData p = new OrderData();
-                        return p;
+                        OrderData orderData = new OrderData();
+                        return orderData;
                     }
                 })
                 .collect(Collectors.toList());
     }
 
-    public List<SalesData> sales(SalesForm f) throws ApiException {
-        List<OrderPojo> list = orderService.getAll();
-        HashMap<String, Pair<Integer, Double>> hmap = new HashMap<>();
-        for (OrderPojo p : list) {
-            String orderDate = StringUtil.trimDate(p.getDatetime());
-            if (StringUtil.isAfter(f.getStartDate(), orderDate) && StringUtil.isAfter(orderDate, f.getEndDate())) {
-                List<OrderItemData> list2 = orderItemDto.get(p.getId());
-                for (OrderItemData d : list2) {
-                    String barcode = d.getBarcode();
-                    int quantity = d.getQuantity();
-                    double revenue = d.getSellingPrice() * d.getQuantity();
-                    Integer ob1 = new Integer(quantity);
-                    Double ob2 = new Double(revenue);
-                    if (hmap.get(barcode) == null) {
-                        Pair<Integer, Double> pair = new Pair<Integer, Double>(ob1, ob2);
-                        hmap.put(barcode, pair);
+    public List<SalesData> sales(SalesForm salesForm) throws ApiException {
+        List<OrderPojo> orderPojoList = orderService.getAll();
+        HashMap<String, Pair<Integer, Double>> map = new HashMap<>();
+        for (OrderPojo orderPojo : orderPojoList) {
+            String orderDate = StringUtil.trimDate(orderPojo.getDatetime());
+            if (StringUtil.isAfter(salesForm.getStartDate(), orderDate) && StringUtil.isAfter(orderDate, salesForm.getEndDate())) {
+                List<OrderItemData> orderItemDataList = orderItemDto.get(orderPojo.getId());
+                for (OrderItemData orderItemData : orderItemDataList) {
+                    String barcode = orderItemData.getBarcode();
+                    Integer quantity = orderItemData.getQuantity();
+                    Double revenue = orderItemData.getSellingPrice() * orderItemData.getQuantity();
+                    if (map.get(barcode) == null) {
+                        Pair<Integer, Double> pair = new Pair<Integer, Double>(quantity, revenue);
+                        map.put(barcode, pair);
                     } else {
-                        Pair<Integer, Double> pair = new Pair<Integer, Double>(hmap.get(barcode).getKey() + ob1, hmap.get(barcode).getValue() + ob2);
-                        hmap.put(barcode, pair);
+                        Pair<Integer, Double> pair = new Pair<Integer, Double>(map.get(barcode).getKey() + quantity, map.get(barcode).getValue() + revenue);
+                        map.put(barcode, pair);
                     }
                 }
             }
         }
-        List<SalesData> list3 = new ArrayList<>();
-        if (hmap.size() == 0) {
-            return list3;
+        List<SalesData> salesDataList = new ArrayList<>();
+        if (map.size() == 0) {
+            return salesDataList;
         }
-        for (Map.Entry mapElement : hmap.entrySet()) {
+        for (Map.Entry mapElement : map.entrySet()) {
             String barcode = (String) mapElement.getKey();
             Pair<Integer, Double> pair = (Pair<Integer, Double>) mapElement.getValue();
-            int quantity = pair.getKey().intValue();
-            double revenue = pair.getValue().doubleValue();
-            SalesData sd = new SalesData();
-            ProductPojo pp = productService.getByBarcode(barcode);
-            BrandPojo bp = brandService.get(pp.getBrandcategory());
-            sd.setBarcode(barcode);
-            sd.setBrand(bp.getBrand());
-            sd.setCategory(bp.getCategory());
-            sd.setName(pp.getName());
-            sd.setQuantity(quantity);
-            sd.setRevenue(revenue);
-            if ((f.getBrand() == "" || f.getBrand().equals(sd.getBrand())) && (f.getCategory() == "" || f.getCategory().equals(sd.getCategory()))) {
-                list3.add(sd);
+            Integer quantity = pair.getKey().intValue();
+            Double revenue = pair.getValue().doubleValue();
+            SalesData salesData = new SalesData();
+            ProductPojo productPojo = productService.getByBarcode(barcode);
+            BrandPojo brandPojo = brandService.get(productPojo.getBrandcategory());
+            salesData.setBarcode(barcode);
+            salesData.setBrand(brandPojo.getBrand());
+            salesData.setCategory(brandPojo.getCategory());
+            salesData.setName(productPojo.getName());
+            salesData.setQuantity(quantity);
+            salesData.setRevenue(revenue);
+            if ((salesForm.getBrand() == "" || salesForm.getBrand().equals(salesData.getBrand())) && (salesForm.getCategory() == "" || salesForm.getCategory().equals(salesData.getCategory()))) {
+                salesDataList.add(salesData);
             }
         }
-        return list3;
+        return salesDataList;
     }
 
     public void checkInventoryAvailability(List<OrderItemForm> orderItemFormList) throws ApiException {
         for(OrderItemForm orderItemForm:orderItemFormList) {
-            int orderQuantity = orderItemForm.getQuantity();
+            Integer orderQuantity = orderItemForm.getQuantity();
             ProductPojo productPojo = productService.getByBarcode(orderItemForm.getBarcode());
             InventoryPojo inventoryPojo = inventoryService.getByProductId(ConvertUtil.convertProductPojotoInventoryPojo(productPojo));
             if(orderQuantity > inventoryPojo.getQuantity()) {

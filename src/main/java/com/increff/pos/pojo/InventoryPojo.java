@@ -8,33 +8,33 @@ public class InventoryPojo {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column(nullable = false)
-    private int productid;
+    private Integer productId;
     @Column(nullable = false)
-    private int quantity;
+    private Integer quantity;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getProductid() {
-        return productid;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setProductid(int productid) {
-        this.productid = productid;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }

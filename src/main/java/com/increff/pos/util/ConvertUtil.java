@@ -74,7 +74,7 @@ public class ConvertUtil {
 
     public static InventoryPojo convertInventoryFormtoInventoryPojo(InventoryForm f, ProductPojo p) {
         InventoryPojo i = new InventoryPojo();
-        i.setProductid(p.getId());
+        i.setProductId(p.getId());
         i.setQuantity(f.getQuantity());
         return i;
     }
@@ -93,7 +93,7 @@ public class ConvertUtil {
 
     public static InventoryPojo convertProductPojotoInventoryPojo(ProductPojo p) {
         InventoryPojo i = new InventoryPojo();
-        i.setProductid(p.getId());
+        i.setProductId(p.getId());
         return i;
     }
 
@@ -102,7 +102,7 @@ public class ConvertUtil {
         d.setId(p.getId());
         d.setDatetime(p.getDatetime());
         d.setInvoice(p.getInvoice());
-        double billAmount = 0;
+        Double billAmount = new Double(0.0);
         for (OrderItemPojo orderItemPojo : orderItemPojos) {
             billAmount += orderItemPojo.getQuantity() * orderItemPojo.getSellingPrice();
         }

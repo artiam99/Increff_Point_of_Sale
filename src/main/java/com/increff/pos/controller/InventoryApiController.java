@@ -24,14 +24,14 @@ public class InventoryApiController {
 
     @ApiOperation(value = "Gets a Inventory by ID")
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public InventoryData get(@PathVariable int id) throws ApiException {
+    public InventoryData get(@PathVariable Integer id) throws ApiException {
         return inventoryDto.get(id);
     }
 
     @ApiOperation(value = "Gets a Inventory by Barcode")
     @RequestMapping(path = "/search", method = RequestMethod.POST)
     public List<InventoryData> getId(@RequestBody InventoryForm inventoryForm) throws ApiException {
-        return inventoryDto.getId(inventoryForm);
+        return inventoryDto.getByBarcode(inventoryForm);
     }
 
     @ApiOperation(value = "Gets list of all Inventories")
@@ -42,7 +42,7 @@ public class InventoryApiController {
 
     @ApiOperation(value = "Updates a Inventory")
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable int id, @RequestBody InventoryForm inventoryForm) throws ApiException {
+    public void update(@PathVariable Integer id, @RequestBody InventoryForm inventoryForm) throws ApiException {
         inventoryDto.update(id, inventoryForm);
     }
 

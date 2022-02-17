@@ -19,13 +19,13 @@ public class InventoryService {
     }
 
     @Transactional
-    public InventoryPojo get(int id) throws ApiException {
+    public InventoryPojo get(Integer id) throws ApiException {
         return getCheck(id);
     }
 
     @Transactional
     public InventoryPojo getByProductId(InventoryPojo inventoryPojo) throws ApiException {
-        return inventoryDao.selectByProductId(inventoryPojo.getProductid());
+        return inventoryDao.selectByProductId(inventoryPojo.getProductId());
     }
 
     @Transactional
@@ -34,7 +34,7 @@ public class InventoryService {
     }
 
     @Transactional(rollbackOn  = ApiException.class)
-    public void update(int id, InventoryPojo inventoryPojo) throws ApiException {
+    public void update(Integer id, InventoryPojo inventoryPojo) throws ApiException {
         InventoryPojo inventoryPojo1 = getCheck(id);
         inventoryPojo1.setQuantity(inventoryPojo.getQuantity());
         if(inventoryPojo1.getQuantity() < 0) {
@@ -44,7 +44,7 @@ public class InventoryService {
     }
 
     @Transactional
-    public InventoryPojo getCheck(int id) {
+    public InventoryPojo getCheck(Integer id) {
         InventoryPojo inventoryPojo = inventoryDao.select(id);
         return inventoryPojo;
     }

@@ -35,7 +35,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductPojo get(int id) throws ApiException {
+    public ProductPojo get(Integer id) throws ApiException {
         return getCheck(id);
     }
 
@@ -50,7 +50,7 @@ public class ProductService {
     }
 
     @Transactional
-    public List<ProductPojo> getByBrandCategory(int brandcategory) {
+    public List<ProductPojo> getByBrandCategory(Integer brandcategory) {
         return productDao.selectByBrandCategory(brandcategory);
     }
 
@@ -60,7 +60,7 @@ public class ProductService {
     }
 
     @Transactional(rollbackOn  = ApiException.class)
-    public void update(int id, ProductPojo productPojo) throws ApiException {
+    public void update(Integer id, ProductPojo productPojo) throws ApiException {
         normalize(productPojo);
         if(StringUtil.isEmpty(productPojo.getName())) {
             throw new ApiException("Product name cannot be empty.");
@@ -77,7 +77,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductPojo getCheck(int id) throws ApiException {
+    public ProductPojo getCheck(Integer id) throws ApiException {
         ProductPojo productPojo = productDao.select(id);
         if (productPojo == null) {
             throw new ApiException("Product with given ID does not exit, id: " + id);

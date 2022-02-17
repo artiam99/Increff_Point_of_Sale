@@ -1,9 +1,9 @@
 package com.increff.pos.util;
 
 import com.increff.pos.model.BillData;
+import com.increff.pos.service.ApiException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,7 +21,7 @@ import java.util.List;
 public class GenerateXML {
 
     public static void createXml(int orderid, String datetime, List<BillData> billDataItems)
-            throws ParserConfigurationException, TransformerException {
+            throws ApiException, ParserConfigurationException, TransformerException {
         String xmlFilePath = "billDataXML.xml";
 
         DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
@@ -34,7 +34,7 @@ public class GenerateXML {
         // root element
         Element root = document.createElement("bill");
         document.appendChild(root);
-        double finalBill = 0;
+        Double finalBill = new Double(0.0);
 
         Element date = document.createElement("date");
         date.appendChild(document.createTextNode(getDate() + " "));
@@ -45,44 +45,53 @@ public class GenerateXML {
         root.appendChild(time);
         // Create elements from BillData list
 
-        int totalQuantity = 0;
+        Integer totalQuantity = new Integer(0);
+
+        boolean flag = true;
 
         for (i = 0; i < billDataItems.size(); i++) {
-            Element item = document.createElement("item");
-            root.appendChild(item);
-            Element id = document.createElement("id");
-            id.appendChild(document.createTextNode(String.valueOf(billDataItems.get(i).id)));
-            item.appendChild(id);
+            if(billDataItems.get(i).quantity.intValue() != 0) {
+                flag = false;
+                Element item = document.createElement("item");
+                root.appendChild(item);
+                Element id = document.createElement("id");
+                id.appendChild(document.createTextNode(String.valueOf(billDataItems.get(i).id)));
+                item.appendChild(id);
 
-            Element name = document.createElement("name");
-            name.appendChild(document.createTextNode(billDataItems.get(i).name));
-            item.appendChild(name);
-            // Calculate total bill amount
-            finalBill = finalBill + billDataItems.get(i).quantity * billDataItems.get(i).sellingPrice;
-            double totalCost = 0;
-            totalCost = totalCost + billDataItems.get(i).quantity * billDataItems.get(i).sellingPrice;
+                Element name = document.createElement("name");
+                name.appendChild(document.createTextNode(billDataItems.get(i).name));
+                item.appendChild(name);
+                // Calculate total bill amount
+                finalBill = finalBill + billDataItems.get(i).quantity * billDataItems.get(i).sellingPrice;
+                Double totalCost = new Double(0.0);
+                totalCost = totalCost + billDataItems.get(i).quantity * billDataItems.get(i).sellingPrice;
 
-            Element quantity = document.createElement("quantity");
-            quantity.appendChild(document.createTextNode(String.valueOf(billDataItems.get(i).quantity)));
-            item.appendChild(quantity);
+                Element quantity = document.createElement("quantity");
+                quantity.appendChild(document.createTextNode(String.valueOf(billDataItems.get(i).quantity)));
+                item.appendChild(quantity);
 
-            totalQuantity += billDataItems.get(i).quantity;
+                totalQuantity += billDataItems.get(i).quantity;
 
-            Element brand = document.createElement("brand");
-            brand.appendChild(document.createTextNode(billDataItems.get(i).brand));
-            item.appendChild(brand);
+                Element brand = document.createElement("brand");
+                brand.appendChild(document.createTextNode(billDataItems.get(i).brand));
+                item.appendChild(brand);
 
-            Element barcode = document.createElement("barcode");
-            barcode.appendChild(document.createTextNode(billDataItems.get(i).barcode));
-            item.appendChild(barcode);
+                Element barcode = document.createElement("barcode");
+                barcode.appendChild(document.createTextNode(billDataItems.get(i).barcode));
+                item.appendChild(barcode);
 
-            Element sellingPrice = document.createElement("sellingPrice");
-            sellingPrice.appendChild(document.createTextNode(String.format("%.2f", billDataItems.get(i).sellingPrice)));
-            item.appendChild(sellingPrice);
+                Element sellingPrice = document.createElement("sellingPrice");
+                sellingPrice.appendChild(document.createTextNode(String.format("%.2f", billDataItems.get(i).sellingPrice)));
+                item.appendChild(sellingPrice);
 
-            Element cost = document.createElement("cost");
-            cost.appendChild(document.createTextNode(String.format("%.2f", totalCost)));
-            item.appendChild(cost);
+                Element cost = document.createElement("cost");
+                cost.appendChild(document.createTextNode(String.format("%.2f", totalCost)));
+                item.appendChild(cost);
+            }
+        }
+
+        if(flag) {
+            throw new ApiException("Invoice cannot be generated for zero order Item.");
         }
 
         String s = String.valueOf(orderid);

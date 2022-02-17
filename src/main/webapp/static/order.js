@@ -138,9 +138,15 @@ function addOrderItemTable(obj) {
         $('#order-add-form-second').trigger("reset");
         return;
     }
-    tableData.push(obj);
 
     var $tbody = $('#orderitem-table-add').find('tbody');
+
+    if(tableData.length === 0)
+    {
+        $tbody.empty();
+    }
+
+    tableData.push(obj);
 
     var buttonHtml= ' <button type="button" class="btn btn-danger" onclick="deleteAddOrderItemTable(\'' + obj.barcode + '\')">Remove</button>'
     var row = '<tr>'
@@ -255,6 +261,25 @@ function deleteAddOrderItemTable(barcode) {
                     return true;
                 }
               });
+
+              if(tableData.length === 0)
+                {
+                      console.log("hi");
+
+                      var $tbody = $('#orderitem-table-add').find('tbody');
+
+                      var row = '<tr style="background-color: white;">'
+                      + '<td>' + 'No Data' + '</td>'
+                      + '<td>' + '</td>'
+                      + '<td>' + '</td>'
+                      + '<td>' + '</td>'
+                      + '<td>' + '</td>'
+                      + '<td>' + '</td>'
+                      + '</tr>';
+
+                      $tbody.append(row);
+                }
+
               return;
           }
       }
@@ -462,6 +487,18 @@ function displayOrderList(data) {
 
 	var $tbody = $('#order-table').find('tbody');
 	$tbody.empty();
+
+	if(data.length === 0)
+    {
+        var row = '<tr style="background-color: white;">'
+        + '<td>' + 'No Data' + '</td>'
+        + '<td>'  + '</td>'
+        + '<td>' + '</td>'
+        + '<td>' + '</td>'
+        + '</tr>';
+        $tbody.append(row);
+    }
+
 	for(var i in data){
 		var e = data[i];
         var id = e.id;
@@ -587,6 +624,18 @@ function displayViewOrderModal(data) {
 
 function displayOrderModal() {
 	$('#add-order-modal').modal('toggle');
+	var $tbody = $('#orderitem-table-add').find('tbody');
+
+    var row = '<tr style="background-color: white;">'
+        + '<td>' + 'No Data' + '</td>'
+        + '<td>' + '</td>'
+        + '<td>' + '</td>'
+        + '<td>' + '</td>'
+        + '<td>' + '</td>'
+        + '<td>' + '</td>'
+        + '</tr>';
+
+        $tbody.append(row);
 }
 
 function cancelOrderModal() {

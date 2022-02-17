@@ -22,7 +22,7 @@ public class OrderItemApiController {
 
     @ApiOperation(value = "Gets Order Items for order")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public List<OrderItemData> get(@PathVariable int id) throws ApiException {
+    public List<OrderItemData> get(@PathVariable Integer id) throws ApiException {
         return orderItemDto.get(id);
     }
 }

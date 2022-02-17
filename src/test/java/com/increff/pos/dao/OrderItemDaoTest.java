@@ -2,7 +2,6 @@ package com.increff.pos.dao;
 
 import static org.junit.Assert.assertEquals;
 import java.util.List;
-import com.increff.pos.dao.OrderItemDao;
 import com.increff.pos.pojo.OrderItemPojo;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,8 +56,8 @@ public class OrderItemDaoTest extends AbstractUnitTest {
         OrderItemPojo orderItemPojo = new OrderItemPojo();
         orderItemPojo.setOrderId(orders.get(1).getId());
         orderItemPojo.setProductId(products.get(0).getId());
-        orderItemPojo.setQuantity(20);
-        orderItemPojo.setSellingPrice(1200.51);
+        orderItemPojo.setQuantity(new Integer(20));
+        orderItemPojo.setSellingPrice(new Double(1200.51));
         return orderItemPojo;
     }
 }

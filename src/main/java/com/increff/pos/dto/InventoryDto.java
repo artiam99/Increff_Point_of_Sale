@@ -26,25 +26,25 @@ public class InventoryDto {
     @Autowired
     private BrandService brandService;
 
-    public void update(int id, InventoryForm form) throws ApiException {
+    public void update(Integer id, InventoryForm form) throws ApiException {
         ProductPojo productPojo = productService.getByBarcode(form.getBarcode());
         InventoryPojo inventoryPojo = ConvertUtil.convertInventoryFormtoInventoryPojo(form, productPojo);
         inventoryService.update(id, inventoryPojo);
     }
 
     @Transactional
-    public InventoryData get(int id) throws ApiException {
+    public InventoryData get(Integer id) throws ApiException {
         InventoryPojo inventoryPojo = inventoryService.get(id);
-        ProductPojo productPojo = productService.get(inventoryPojo.getProductid());
+        ProductPojo productPojo = productService.get(inventoryPojo.getProductId());
         return ConvertUtil.convertInventoryPojotoInventoryData(inventoryPojo, productPojo, brandService.get(productPojo.getBrandcategory()));
     }
 
     @Transactional
-    public List<InventoryData> getId(InventoryForm form) throws ApiException {
+    public List<InventoryData> getByBarcode(InventoryForm form) throws ApiException {
         ProductPojo productPojo = productService.getByBarcode(form.getBarcode());
         InventoryPojo inventoryPojo1 = ConvertUtil.convertInventoryFormtoInventoryPojo(form, productPojo);
         InventoryPojo inventoryPojo2 = inventoryService.getByProductId(inventoryPojo1);
-        ProductPojo productPojo1 = productService.get(inventoryPojo2.getProductid());
+        ProductPojo productPojo1 = productService.get(inventoryPojo2.getProductId());
         InventoryData inventoryData = ConvertUtil.convertInventoryPojotoInventoryData(inventoryPojo2, productPojo1, brandService.get(productPojo1.getBrandcategory()));
         List<InventoryData> inventoryDataList = new ArrayList<>();
         inventoryDataList.add(inventoryData);
@@ -55,7 +55,7 @@ public class InventoryDto {
         List<InventoryPojo> inventoryPojoList = inventoryService.getAll();
         List<InventoryData> inventoryDataList = new ArrayList<>();
         for (InventoryPojo inventoryPojo : inventoryPojoList) {
-            ProductPojo productPojo = productService.get(inventoryPojo.getProductid());
+            ProductPojo productPojo = productService.get(inventoryPojo.getProductId());
             InventoryData inventoryData = ConvertUtil.convertInventoryPojotoInventoryData(inventoryPojo, productPojo, brandService.get(productPojo.getBrandcategory()));
             inventoryDataList.add(inventoryData);
         }

@@ -2,7 +2,6 @@ package com.increff.pos.dao;
 
 import static org.junit.Assert.assertEquals;
 import java.util.List;
-
 import com.increff.pos.pojo.ProductPojo;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,7 +80,7 @@ public class ProductDaoTest extends AbstractUnitTest {
         productPojo.setBarcode("1%#123");
         productPojo.setBrandcategory(b.getId());
         productPojo.setName("Maggie");
-        productPojo.setMrp(100);
+        productPojo.setMrp(new Double(100));
         return productPojo;
     }
 }

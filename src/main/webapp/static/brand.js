@@ -133,6 +133,17 @@ function downloadErrors(){
 function displayBrandList(data){
 	var $tbody = $('#brand-table').find('tbody');
 	$tbody.empty();
+
+	if(data.length === 0)
+	{
+	    var row = '<tr style="background-color: white;">'
+        + '<td>' + 'No Data' + '</td>'
+        + '<td>'  + '</td>'
+        + '<td>' + '</td>'
+        + '</tr>';
+        $tbody.append(row);
+	}
+
 	for(var i in data){
 		var e = data[i];
 		var buttonHtml= '<button type="button" class="btn btn-info" onclick="displayEditBrand(' + e.id + ')">Edit</button>'

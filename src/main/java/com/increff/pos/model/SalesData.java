@@ -5,8 +5,8 @@ public class SalesData {
     private String brand;
     private String category;
     private String name;
-    private int quantity;
-    private double revenue;
+    private Integer quantity;
+    private Double revenue;
 
     public String getBarcode() {
         return barcode;
@@ -40,19 +40,19 @@ public class SalesData {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public double getRevenue() {
+    public Double getRevenue() {
         return revenue;
     }
 
-    public void setRevenue(double revenue) {
+    public void setRevenue(Double revenue) {
         this.revenue = revenue;
     }
 }

@@ -2,7 +2,6 @@ package com.increff.pos.dao;
 
 import static org.junit.Assert.assertEquals;
 import java.util.List;
-import com.increff.pos.dao.OrderDao;
 import com.increff.pos.pojo.OrderPojo;
 import org.junit.Before;
 import org.junit.Test;

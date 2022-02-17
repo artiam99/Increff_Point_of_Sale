@@ -30,7 +30,7 @@ public class BrandApiController {
 
     @ApiOperation(value = "Gets a Brand by ID")
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public BrandData get(@PathVariable int id) throws ApiException {
+    public BrandData get(@PathVariable Integer id) throws ApiException {
         return brandDto.get(id);
     }
 
@@ -42,7 +42,7 @@ public class BrandApiController {
 
     @ApiOperation(value = "Updates a Brand")
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable int id, @RequestBody BrandForm brandForm) throws ApiException {
+    public void update(@PathVariable Integer id, @RequestBody BrandForm brandForm) throws ApiException {
         brandDto.update(id, brandForm);
     }
 

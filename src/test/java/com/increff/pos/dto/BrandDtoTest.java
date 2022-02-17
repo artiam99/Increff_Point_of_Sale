@@ -33,7 +33,7 @@ public class BrandDtoTest extends AbstractUnitTest {
 
     @Test()
     public void testGetBrandData() throws ApiException {
-        int id = brands.get(0).getId();
+        Integer id = brands.get(0).getId();
         BrandData brandData = brandDto.get(id);
 
         assertEquals(brands.get(0).getBrand(), brandData.getBrand());
@@ -71,7 +71,7 @@ public class BrandDtoTest extends AbstractUnitTest {
     @Test()
     public void testUpdate() throws ApiException {
         BrandForm brandForm = getBrandForm();
-        int id = brands.get(0).getId();
+        Integer id = brands.get(0).getId();
         brandDto.update(id, brandForm);
 
         assertEquals(brandForm.getBrand(), brandDto.get(id).getBrand());

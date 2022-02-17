@@ -21,7 +21,7 @@ public class OrderItemService {
     }
 
     @Transactional
-    public List<OrderItemPojo> getByOrderId(int id) throws ApiException {
+    public List<OrderItemPojo> getByOrderId(Integer id) throws ApiException {
         return getCheck(id);
     }
 
@@ -31,12 +31,12 @@ public class OrderItemService {
     }
 
     @Transactional
-    public void deleteByOrderId(int id) {
+    public void deleteByOrderId(Integer id) {
         orderItemDao.deleteByOrderId(id);
     }
 
     @Transactional
-    public List<OrderItemPojo> getCheck(int id) throws ApiException {
+    public List<OrderItemPojo> getCheck(Integer id) throws ApiException {
         List<OrderItemPojo> orderItemPojoList = orderItemDao.selectByOrderId(id);
         if (orderItemPojoList.isEmpty()) {
             throw new ApiException("Order item doesn't exist - orderId : " + id);

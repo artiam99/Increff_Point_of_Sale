@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import com.increff.pos.pojo.BrandPojo;
 import com.increff.pos.spring.AbstractUnitTest;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class OrderItemServiceTest extends AbstractUnitTest {
 
@@ -19,7 +18,6 @@ public class OrderItemServiceTest extends AbstractUnitTest {
         insertOrderItemPojos();
     }
 
-    // Test Add
     @Test()
     public void testAdd() throws ApiException {
         OrderItemPojo orderItemPojo = getOrderItemPojo();
@@ -32,10 +30,9 @@ public class OrderItemServiceTest extends AbstractUnitTest {
         assertEquals(orderItemListBefore.size() + 1, orderItemListAfter.size());
     }
 
-    // Test Get
     @Test()
     public void testGet() throws ApiException {
-        int id = orderItems.get(0).getOrderId();
+        Integer id = orderItems.get(0).getOrderId();
 
         assertEquals(orderItems.get(0).getOrderId(), orderItemService.getByOrderId(id).get(0).getOrderId());
         assertEquals(orderItems.get(0).getProductId(), orderItemService.getByOrderId(id).get(0).getProductId());
@@ -45,7 +42,7 @@ public class OrderItemServiceTest extends AbstractUnitTest {
 
     @Test()
     public void testGetNotExisting() throws ApiException {
-        int id = 500;
+        Integer id = new Integer(500);
         try {
             orderItemService.getByOrderId(id);
             fail("Api Exception did not occur");
@@ -60,7 +57,6 @@ public class OrderItemServiceTest extends AbstractUnitTest {
         assertEquals(2, brandList.size());
     }
 
-    // Test Delete
     @Test()
     public void testDelete() throws ApiException {
         OrderItemPojo orderItemPojo = getOrderItemPojo();

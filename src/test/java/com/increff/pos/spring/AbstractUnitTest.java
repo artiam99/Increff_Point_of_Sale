@@ -57,7 +57,7 @@ public abstract class AbstractUnitTest {
             productPojo.setBarcode("1%#12" + i);
             productPojo.setBrandcategory(brands.get(i).getId());
             productPojo.setName("productPojo"+i);
-            productPojo.setMrp(50);
+            productPojo.setMrp(new Double(50));
             productService.add(productPojo);
             products.add(productPojo);
         }
@@ -70,8 +70,8 @@ public abstract class AbstractUnitTest {
 
         for(int i=0; i<2; i++) {
             InventoryPojo inventory = new InventoryPojo();
-            inventory.setProductid(products.get(i).getId());
-            inventory.setQuantity(20);
+            inventory.setProductId(products.get(i).getId());
+            inventory.setQuantity(new Integer(20));
             inventoryService.add(inventory);
             inventories.add(inventory);
         }
@@ -90,7 +90,7 @@ public abstract class AbstractUnitTest {
     }
 
     protected void insertOrderItemPojos() throws ApiException {
-        insertProductPojos();
+        insertInventoryPojos();
         insertOrderPojos();
         orderItems = new ArrayList<OrderItemPojo>();
 
@@ -98,8 +98,8 @@ public abstract class AbstractUnitTest {
             OrderItemPojo orderItemPojo = new OrderItemPojo();
             orderItemPojo.setOrderId(orders.get(i).getId());
             orderItemPojo.setProductId(products.get(i).getId());
-            orderItemPojo.setQuantity(10);
-            orderItemPojo.setSellingPrice(1200.51);
+            orderItemPojo.setQuantity(new Integer(10));
+            orderItemPojo.setSellingPrice(new Double(1200.51));
             orderItems.add(orderItemPojo);
         }
 

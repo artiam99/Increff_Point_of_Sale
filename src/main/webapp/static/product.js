@@ -207,6 +207,20 @@ function displayProductList(data) {
 
 	var $tbody = $('#product-table').find('tbody');
 	$tbody.empty();
+
+	if(data.length === 0)
+    {
+        var row = '<tr style="background-color: white;">'
+        + '<td>' + 'No Data' + '</td>'
+        + '<td>'  + '</td>'
+        + '<td>' + '</td>'
+        + '<td>' + '</td>'
+        + '<td>' + '</td>'
+        + '<td>' + '</td>'
+        + '</tr>';
+        $tbody.append(row);
+    }
+
 	for(var i in data) {
 		var e = data[i];
 		var buttonHtml = ' <button type="button" class="btn btn-info" onclick="displayEditProduct(' + e.id + ')">Edit</button>'

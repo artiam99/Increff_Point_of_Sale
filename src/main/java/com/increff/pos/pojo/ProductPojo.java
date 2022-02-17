@@ -8,19 +8,19 @@ public class ProductPojo {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String barcode;
     @Column(nullable = false)
-    private int brandcategory;
+    private Integer brandcategory;
     private String name;
     @Column(nullable = false)
-    private double mrp;
+    private Double mrp;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -32,11 +32,11 @@ public class ProductPojo {
         this.barcode = barcode;
     }
 
-    public int getBrandcategory() {
+    public Integer getBrandcategory() {
         return brandcategory;
     }
 
-    public void setBrandcategory(int brandcategory) {
+    public void setBrandcategory(Integer brandcategory) {
         this.brandcategory = brandcategory;
     }
 
@@ -48,11 +48,11 @@ public class ProductPojo {
         this.name = name;
     }
 
-    public double getMrp() {
+    public Double getMrp() {
         return mrp;
     }
 
-    public void setMrp(double mrp) {
+    public void setMrp(Double mrp) {
         this.mrp = mrp;
     }
 }

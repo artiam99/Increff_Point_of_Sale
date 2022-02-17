@@ -2,17 +2,16 @@ package com.increff.pos.model;
 
 public class OrderData {
 
-    private int id;
+    private Integer id;
     private String datetime;
-    private double billAmount;
-
+    private Double billAmount;
     private boolean invoice;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -24,11 +23,11 @@ public class OrderData {
         this.datetime = datetime;
     }
 
-    public double getBillAmount() {
+    public Double getBillAmount() {
         return billAmount;
     }
 
-    public void setBillAmount(double billAmount) {
+    public void setBillAmount(Double billAmount) {
         this.billAmount = billAmount;
     }
 

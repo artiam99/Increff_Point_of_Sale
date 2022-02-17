@@ -340,6 +340,19 @@ function displayInventoryList(data) {
 	var $tbody = $('#inventory-table').find('tbody');
 	$tbody.empty();
 
+	if(data.length === 0)
+    {
+        var row = '<tr style="background-color: white;">'
+        + '<td>' + 'No Data' + '</td>'
+        + '<td>'  + '</td>'
+        + '<td>' + '</td>'
+        + '<td>' + '</td>'
+        + '<td>' + '</td>'
+        + '<td>' + '</td>'
+        + '</tr>';
+        $tbody.append(row);
+    }
+
 	for(var i in data) {
 
 		var e = data[i];
@@ -349,7 +362,7 @@ function displayInventoryList(data) {
 		+ '<td>'  + e.brand + '</td>'
 		+ '<td>'  + e.category + '</td>'
 		+ '<td>' + e.name + '</td>'
-        		+ '<td>'  + e.quantity + '</td>'
+        + '<td>'  + e.quantity + '</td>'
 		+ '<td>' + buttonHtml + '</td>'
 		+ '</tr>';
         $tbody.append(row);

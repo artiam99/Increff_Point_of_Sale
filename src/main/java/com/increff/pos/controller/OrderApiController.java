@@ -39,7 +39,7 @@ public class OrderApiController {
 
     @ApiOperation(value = "Gets a Order by ID")
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public OrderData get(@PathVariable int id) throws ApiException {
+    public OrderData get(@PathVariable Integer id) throws ApiException {
         return orderDto.get(id);
     }
 
@@ -51,7 +51,7 @@ public class OrderApiController {
 
     @ApiOperation(value = "Updates a Order")
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable int id, @RequestBody OrderItemForm[] orderItemForms) throws ApiException {
+    public void update(@PathVariable Integer id, @RequestBody OrderItemForm[] orderItemForms) throws ApiException {
 
         List<OrderItemForm> orderItems = new LinkedList<OrderItemForm>(Arrays.asList(orderItemForms));
         orderDto.update(id, orderItems);
@@ -59,7 +59,7 @@ public class OrderApiController {
 
     @ApiOperation(value = "Generates invoice")
     @RequestMapping(value = "/invoice/{id}",method = RequestMethod.POST)
-    public void generateInvoice(@PathVariable int id, @RequestBody OrderItemForm[] orderItemForms, HttpServletResponse response)
+    public void generateInvoice(@PathVariable Integer id, @RequestBody OrderItemForm[] orderItemForms, HttpServletResponse response)
             throws ApiException, ParserConfigurationException, TransformerException, FOPException, IOException {
         List<BillData> list = orderDto.generateInvoice(id, orderItemForms);
         GenerateXML.createXml(id, orderDto.get(id).getDatetime(), list);

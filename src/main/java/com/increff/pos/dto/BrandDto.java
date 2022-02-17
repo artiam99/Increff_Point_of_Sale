@@ -37,7 +37,7 @@ public class BrandDto {
         return brandService.searchByBrandCategory(brandPojo);
     }
 
-    public BrandData get(int id) throws ApiException {
+    public BrandData get(Integer id) throws ApiException {
         return ConvertUtil.convertBrandPojotoBrandData(brandService.get(id));
     }
 
@@ -50,7 +50,7 @@ public class BrandDto {
         return brandDataList;
     }
 
-    public void update(int id, BrandForm brandForm) throws ApiException {
+    public void update(Integer id, BrandForm brandForm) throws ApiException {
         BrandPojo brandPojo = ConvertUtil.convertBrandFormtoBrandPojo(brandForm);
         brandService.update(id, brandPojo);
     }

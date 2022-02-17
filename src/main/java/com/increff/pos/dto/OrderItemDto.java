@@ -23,7 +23,7 @@ public class OrderItemDto {
     @Autowired
     private BrandService brandService;
 
-    public List<OrderItemData> get(int orderId) throws ApiException {
+    public List<OrderItemData> get(Integer orderId) throws ApiException {
         List<OrderItemPojo> orderItemPojoList = orderItemService.getByOrderId(orderId);
         List<OrderItemData> orderItemDataList = new ArrayList<>();
         for (OrderItemPojo orderItemPojo : orderItemPojoList) {
