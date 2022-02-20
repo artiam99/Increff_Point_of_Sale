@@ -6,7 +6,7 @@ __PoSify__ is a PoS (Point of Sale) system where you can add brands & products, 
 
 ## Functionalities
 
-1.	Upload brand/category details (Brand Master) using TSV, from UI
+1.	Upload brand/category details using TSV, from UI
 2.	View + Create + Edit a brand detail using UI
 3.	Upload product details using TSV, from UI
 4.	View + Create + Edit a product detail using UI
