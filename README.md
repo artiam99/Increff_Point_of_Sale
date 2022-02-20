@@ -25,9 +25,9 @@ PoSify is a PoS (Point of Sale) system where you can add brands & products, keep
 
 ## Commands
 
-Build: mvn clean install
+Build: __mvn clean install__
 
-Run: mvn jetty:run
+Run: __mvn jetty:run__
 
 ## Home Page
 
