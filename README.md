@@ -2,7 +2,7 @@
 
 A PoS (Point of Sale) system is what we see in grocery stores, where the sales manager scans our products and gives us a receipt.
 
-PoSify is a PoS (Point of Sale) system where you can add brands & products, keep track of inventory and create orders and their reports.
+__PoSify__ is a PoS (Point of Sale) system where you can add brands & products, keep track of inventory and create orders and their reports.
 
 ## Functionalities
 
@@ -21,6 +21,9 @@ PoSify is a PoS (Point of Sale) system where you can add brands & products, keep
     1.	Inventory report 
     2.	Brand
     3.	reportSales report (for a duration)
+
+## Tech Stack
+__Spring__, __Hibernate__, __MySQL__, __Thymeleaf__, __JQuery__
 
 
 ## Commands
