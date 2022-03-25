@@ -23,7 +23,7 @@ __PoSify__ is a PoS (Point of Sale) system where you can add brands & products, 
     3.	reportSales report (for a duration)
 
 ## Tech Stack
-__Spring__, __Hibernate__, __MySQL__, __Thymeleaf__, __JQuery__
+__Spring__, __Hibernate__, __MySQL__, __JQuery__, __Thymeleaf__
 
 
 ## Commands
